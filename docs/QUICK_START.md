@@ -158,7 +158,7 @@ Semua komponen sudah dibuat! ✅
    - ✅ CertificateCard (for certificates section)
 
 2. **Shared Components** (`components/shared/`)
-   - ✅ Navbar
+   - ✅ Navbar (glassmorphism, centered floating)
    - ✅ Footer
    - ✅ Theme Toggle (dark mode)
    - ✅ Back to top, Container

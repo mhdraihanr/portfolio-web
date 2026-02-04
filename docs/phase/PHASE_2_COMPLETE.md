@@ -13,7 +13,6 @@
 ### Base UI Components (`components/ui/`)
 
 1. **Button Component** (`button.tsx`)
-
    - ✅ 5 variants: primary, secondary, outline, ghost, danger
    - ✅ 4 sizes: sm, md, lg, icon
    - ✅ Loading state with spinner
@@ -22,7 +21,6 @@
    - ✅ Dark mode support
 
 2. **Input Component** (`input.tsx`)
-
    - ✅ Label support
    - ✅ Error messages
    - ✅ Helper text
@@ -31,7 +29,6 @@
    - ✅ Dark mode support
 
 3. **Textarea Component** (`textarea.tsx`)
-
    - ✅ Label support
    - ✅ Error messages
    - ✅ Helper text
@@ -40,7 +37,6 @@
    - ✅ Dark mode support
 
 4. **Card Component** (`card.tsx`)
-
    - ✅ Card container
    - ✅ CardHeader with spacing
    - ✅ CardTitle (h1-h6 support)
@@ -51,7 +47,6 @@
    - ✅ Dark mode support
 
 5. **Modal Component** (`modal.tsx`)
-
    - ✅ Portal rendering (renders outside DOM)
    - ✅ Keyboard navigation (ESC to close)
    - ✅ Backdrop click to close
@@ -63,7 +58,6 @@
    - ✅ Dark mode support
 
 6. **Spinner/Loading Component** (`spinner.tsx`)
-
    - ✅ Spinner with 4 sizes: sm, md, lg, xl
    - ✅ 3 variants: primary, secondary, white
    - ✅ Loading component with text
@@ -72,7 +66,6 @@
    - ✅ Dark mode support
 
 7. **Toast Notification System** (`toast.tsx`)
-
    - ✅ 5 variants: default, success, error, warning, info
    - ✅ useToast hook for easy usage
    - ✅ ToastContainer with 6 positions
@@ -88,19 +81,17 @@
 ### Shared Components (`components/shared/`)
 
 1. **Navbar Component** (`navbar.tsx`)
-
+   - ✅ Glassmorphism design (backdrop blur, transparency)
+   - ✅ Centered floating layout (top-4, auto width)
    - ✅ Responsive design (mobile + desktop)
    - ✅ Mobile hamburger menu
-   - ✅ Smooth scroll effects
-   - ✅ Logo/brand link
-   - ✅ Navigation links
+   - ✅ Navigation links (Home, About, Certificates, Projects, Experience, Contact)
    - ✅ Theme toggle integration
-   - ✅ Body scroll lock when mobile menu open
-   - ✅ Backdrop blur on scroll
+   - ✅ Glass border effects with top edge shine
+   - ✅ Layered shadows (external + inset highlight)
    - ✅ Dark mode support
 
 2. **Footer Component** (`footer.tsx`)
-
    - ✅ 3-column grid layout (responsive)
    - ✅ Brand section with description
    - ✅ Navigation links
@@ -111,7 +102,6 @@
    - ✅ Dark mode support
 
 3. **Theme Toggle** (`theme-toggle.tsx`)
-
    - ✅ Dark/Light mode switcher
    - ✅ Icon changes based on theme
    - ✅ Smooth transitions
@@ -124,7 +114,6 @@
 ### Providers (`components/providers/`)
 
 1. **Theme Provider** (`theme-provider.tsx`)
-
    - ✅ Wraps next-themes ThemeProvider
    - ✅ System theme detection
    - ✅ Configurable defaults
@@ -140,7 +129,6 @@
 ### Dependencies Added
 
 1. **class-variance-authority** (v0.7.1)
-
    - Purpose: Manage component variants cleanly
    - Used in: Button, Spinner, Toast
 
@@ -157,7 +145,6 @@
 ### Configuration Updates
 
 1. **Tailwind Config** (`tailwind.config.ts`)
-
    - ✅ Already had `darkMode: "class"` configured
    - ✅ Already had custom colors (primary, secondary)
    - ✅ Already had animations configured
@@ -367,7 +354,6 @@ Now that Phase 2 (UI Components) is complete, the next steps are:
 ### Immediate Next Steps
 
 1. **Complete Environment Setup** (if not done)
-
    - [ ] Create Supabase account & project
    - [ ] Run `supabase-schema.sql` in SQL Editor
    - [ ] Create admin user in Supabase Auth
@@ -383,7 +369,6 @@ Now that Phase 2 (UI Components) is complete, the next steps are:
 ### Future Phases
 
 3. **Phase 3: Public Pages** (Week 3)
-
    - [ ] Hero section
    - [ ] About section (with integrated skills)
    - [ ] Certificate section

@@ -63,7 +63,7 @@ Task list untuk development portfolio website. Update status seiring progress.
 
 ### Shared Components (components/shared/)
 
-- [x] Navbar with logo & navigation
+- [x] Navbar with glassmorphism effect (centered, floating design)
 - [x] Footer with links & social
 - [x] Theme toggle (dark/light mode) - **Tailwind v4 class-based dark mode with `@custom-variant`**
 - [x] Back to top button
@@ -627,7 +627,7 @@ Future ideas to consider:
 
 **Shared Components:**
 
-- Navbar with responsive mobile menu
+- Navbar with glassmorphism effect (centered floating design, backdrop blur)
 - Footer with social links
 - Theme toggle (dark/light mode)
 - Back to top button with smooth scroll
@@ -701,14 +701,15 @@ Future ideas to consider:
 - ✅ Hero component (`app/(public)/components/hero.tsx`)
 - ✅ Greeting text: "Hello, I'm Raihan"
 - ✅ Main title: "Fullstack Developer" (large, bold)
-- ✅ Tagline about fullstack development
+- ✅ Tagline & CTA horizontal layout (button left, tagline right with padding-left spacing)
+- ✅ Tagline text-right aligned on desktop (16px base font)
 - ✅ Single CTA button: "See My CV" (links to /cv.pdf)
 - ✅ Social links: GitHub, LinkedIn, Email with hover effects
 - ✅ LightRays animated background (WebGL, OGL)
 - ✅ LightRays TypeScript wrapper with dynamic import
 - ✅ Mouse-following light rays effect
-- ✅ Compact spacing (space-y-4, h-screen)
-- ✅ Left-aligned layout
+- ✅ Compact spacing with increased gap between title and tagline section
+- ✅ Full-width content layout (no max-width constraint)
 - ✅ Light & dark mode support with theme switching
 - ✅ Fade-in-up animations with staggered delays
 - ✅ No scroll indicator (cleaner design)
@@ -1268,7 +1269,7 @@ Future ideas to consider:
    - Full dark mode support
 
 2. **Shared Components** (`components/shared/`)
-   - Navbar with responsive mobile menu and scroll effects
+   - Navbar with glassmorphism effect (centered, backdrop blur, floating design)
    - Footer with navigation and social links
    - Theme Toggle component for dark/light mode switching
 

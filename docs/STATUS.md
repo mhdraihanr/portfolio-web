@@ -61,7 +61,7 @@
 
 #### Shared Components (`components/shared/`) - 5 components
 
-- ✅ Navbar (responsive with mobile menu)
+- ✅ Navbar (glassmorphism effect, centered floating design)
 - ✅ Footer (with social links)
 - ✅ Theme Toggle (dark/light mode)
 - ✅ Back to Top button (with smooth scroll) ⭐ NEW
@@ -83,7 +83,6 @@
 ### Completed Features
 
 1. **✅ Admin Login Page** (`app/kingpersib/login/page.tsx`)
-
    - ✅ Email/password form
    - ✅ Form validation
    - ✅ Supabase Auth integration
@@ -92,28 +91,24 @@
    - ✅ Redirect after login
 
 2. **✅ Admin Layout** (`app/kingpersib/layout.tsx`)
-
    - ✅ Sidebar navigation
    - ✅ Protected routes
    - ✅ Logout button
    - ✅ User profile display
 
 3. **✅ Admin Components** (`components/admin/`)
-
    - ✅ Sidebar with mobile menu
    - ✅ Header with theme toggle
    - ✅ Active route highlighting
    - ✅ Responsive design
 
 4. **✅ Dashboard** (`app/kingpersib/page.tsx`)
-
    - ✅ Statistics cards (Projects, Experience, Featured, Last Updated)
    - ✅ Quick action buttons
    - ✅ Fetch data from Supabase
    - ✅ Icon-based UI
 
 5. **✅ Projects CRUD** 🆕
-
    - ✅ List page with card view (`app/kingpersib/projects/page.tsx`)
    - ✅ Create page with form validation (`app/kingpersib/projects/new/page.tsx`)
    - ✅ Edit page with pre-filled data (`app/kingpersib/projects/[id]/edit/page.tsx`)
@@ -124,7 +119,6 @@
    - ✅ Loading states
 
 6. **✅ Experience CRUD** 🆕
-
    - ✅ List page with card view (`app/kingpersib/experience/page.tsx`)
    - ✅ Create page with form validation (`app/kingpersib/experience/new/page.tsx`)
    - ✅ Edit page with pre-filled data (`app/kingpersib/experience/[id]/edit/page.tsx`)
@@ -135,13 +129,11 @@
    - ✅ Loading states
 
 7. **✅ Validation Schemas** 🆕
-
    - ✅ Project validation (`lib/validations/project.ts`)
    - ✅ Experience validation (`lib/validations/experience.ts`)
    - ✅ React Hook Form + Zod integration
 
 8. **✅ Helper Functions** 🆕
-
    - ✅ CRUD helpers (`lib/supabase/helpers.ts`)
    - ✅ Type-safe operations
    - ✅ Supabase type inference workarounds

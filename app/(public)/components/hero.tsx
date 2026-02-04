@@ -32,14 +32,14 @@ export function Hero() {
   const bgClass = isDark ? "bg-gray-950" : "bg-white";
   const textGreeting = isDark ? "text-gray-300" : "text-gray-600";
   const textTitle = isDark ? "text-white" : "text-gray-900";
-  const textTagline = isDark ? "text-gray-200" : "text-gray-700";
-  const socialBg = isDark ? "bg-white/10" : "bg-gray-900/10";
-  const socialBorder = isDark ? "border-white/20" : "border-gray-900/20";
-  const socialHoverBg = isDark ? "hover:bg-white/20" : "hover:bg-gray-900/20";
+  const textTagline = isDark ? "text-gray-200" : "text-gray-900";
+  const socialBg = isDark ? "bg-white/15" : "bg-gray-900/5";
+  const socialBorder = isDark ? "border-white/30" : "border-gray-900/70";
+  const socialHoverBg = isDark ? "hover:bg-white/25" : "hover:bg-gray-900/15";
   const socialText = isDark ? "text-white" : "text-gray-900";
   const socialHoverText = isDark
-    ? "hover:text-primary-400"
-    : "hover:text-primary-600";
+    ? "hover:text-primary-500"
+    : "hover:text-primary-700";
 
   return (
     <section className="relative min-h-[calc(100vh-4rem)] md:min-h-screen flex items-center overflow-hidden py-12 md:py-0">
@@ -70,8 +70,8 @@ export function Hero() {
       ></div>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-5xl space-y-4">
+      <div className="relative z-10 container mx-auto mt-12 px-4 sm:px-6 lg:px-8">
+        <div className="space-y-4">
           {/* Greeting */}
           <div className="animate-fade-in-up">
             <p className={`text-lg md:text-xl ${textGreeting} font-medium`}>
@@ -82,43 +82,43 @@ export function Hero() {
           {/* Main Title */}
           <div className="animate-fade-in-up delay-200">
             <h1
-              className={`text-5xl md:text-7xl lg:text-8xl font-bold ${textTitle} leading-tight ${delargoDT.className}`}
+              className={`text-5xl md:text-6xl lg:text-7xl font-bold ${textTitle} leading-tight ${delargoDT.className}`}
             >
-              Fullstack Developer
+              Fullstack Developer ━ designing clarity inside powerful systems
             </h1>
           </div>
 
-          {/* Tagline */}
-          <div className="pt-2 animate-fade-in-up delay-400">
-            <p
-              className={`text-lg md:text-xl lg:text-2xl ${textTagline} max-w-3xl leading-relaxed`}
-            >
-              Building modern web applications with passion.
-              <br />
-              Turning ideas into elegant, scalable solutions.
-            </p>
-          </div>
+          {/* Tagline & CTA Button - Horizontal Layout */}
+          <div className="flex flex-col md:flex-row items-start gap-6 pt-10 animate-fade-in-up delay-400">
+            {/* CTA Button - Left */}
+            <div className="order-2 md:order-1">
+              <Link href="/cv.pdf" target="_blank">
+                <Button size="lg" rightIcon={<FileText className="h-5 w-5" />}>
+                  See My CV
+                </Button>
+              </Link>
+            </div>
 
-          {/* CTA Button */}
-          <div className="flex items-start pt-6 animate-fade-in-up delay-600">
-            <Link href="/cv.pdf" target="_blank" className="w-full sm:w-auto">
-              <Button
-                size="lg"
-                className="w-full"
-                rightIcon={<FileText className="h-5 w-5" />}
-              >
-                See My CV
-              </Button>
-            </Link>
+            {/* Tagline - Right */}
+            <div className="order-1 md:order-2 md:text-right md:pl-16 flex-1">
+              <p className={`text-base ${textTagline} leading-relaxed`}>
+                I&apos;m a Fullstack Developer passionate about building web
+                applications that are fast, responsive and
+                <br />
+                easy to use. From designing interfaces to structuring backend
+                systems, focus on writing clean
+                <br /> code and using modern tools to bring ideas to life.
+              </p>
+            </div>
           </div>
 
           {/* Social Links */}
-          <div className="flex gap-4 pt-4 animate-fade-in-up delay-800">
+          <div className="flex gap-4 pt-4 animate-fade-in-up delay-600">
             <a
               href="https://github.com/yourusername"
               target="_blank"
               rel="noopener noreferrer"
-              className={`p-3 rounded-full ${socialBg} backdrop-blur-sm border ${socialBorder} ${socialHoverBg} hover:scale-110 transition-all duration-300 ${socialText} ${socialHoverText}`}
+              className={`p-3 rounded-full ${socialBg} backdrop-blur-md border-2 ${socialBorder} ${socialHoverBg} hover:scale-110 transition-all duration-300 ${socialText} ${socialHoverText} shadow-lg`}
               aria-label="GitHub"
             >
               <Github className="h-6 w-6" />
@@ -127,14 +127,14 @@ export function Hero() {
               href="https://linkedin.com/in/yourusername"
               target="_blank"
               rel="noopener noreferrer"
-              className={`p-3 rounded-full ${socialBg} backdrop-blur-sm border ${socialBorder} ${socialHoverBg} hover:scale-110 transition-all duration-300 ${socialText} ${socialHoverText}`}
+              className={`p-3 rounded-full ${socialBg} backdrop-blur-md border-2 ${socialBorder} ${socialHoverBg} hover:scale-110 transition-all duration-300 ${socialText} ${socialHoverText} shadow-lg`}
               aria-label="LinkedIn"
             >
               <Linkedin className="h-6 w-6" />
             </a>
             <a
               href="mailto:your.email@example.com"
-              className={`p-3 rounded-full ${socialBg} backdrop-blur-sm border ${socialBorder} ${socialHoverBg} hover:scale-110 transition-all duration-300 ${socialText} ${socialHoverText}`}
+              className={`p-3 rounded-full ${socialBg} backdrop-blur-md border-2 ${socialBorder} ${socialHoverBg} hover:scale-110 transition-all duration-300 ${socialText} ${socialHoverText} shadow-lg`}
               aria-label="Email"
             >
               <Mail className="h-6 w-6" />
