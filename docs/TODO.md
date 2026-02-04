@@ -1,0 +1,1309 @@
+# 📋 Development TODO
+
+Task list untuk development portfolio website. Update status seiring progress.
+
+## 🏗️ Phase 1: Core Setup & Environment
+
+### Infrastructure (Code Setup)
+
+- [x] Initialize Next.js project
+- [x] Install dependencies
+- [x] Setup Supabase client (lib/supabase/)
+- [x] Create database schema (supabase-schema.sql)
+- [x] Setup environment variables template (.env.example)
+- [x] Configure Tailwind CSS
+- [x] Setup middleware for auth
+- [x] Create type definitions (types/)
+- [x] Create auth helpers (lib/auth.ts)
+- [x] Create email service (lib/email.ts)
+- [x] Create utility functions (lib/utils.ts)
+
+### Documentation
+
+- [x] Create README.md
+- [x] Create DOCUMENTATION.md
+- [x] Create SETUP_GUIDE.md
+- [x] Create API_REFERENCE.md
+- [x] Create PROJECT_STRUCTURE.md
+- [x] Create DEPLOYMENT.md
+- [x] Create QUICK_START.md
+- [x] Create TODO.md
+- [x] Create TECH_STACK.md
+- [x] Create INDEX.md
+
+### Environment Setup (User Action Required)
+
+- [x] Create Supabase account & project
+- [x] Run database schema in Supabase SQL Editor
+- [x] Create admin user in Supabase Auth
+- [x] Copy Supabase URL & keys
+- [x] Configure .env.local with credentials
+- [x] Test `npm run dev` - homepage loads
+- [ ] Setup Gmail App Password (optional, for contact form)
+
+---
+
+## 🎨 Phase 2: UI Components
+
+**Note:** Build these components first before building pages!
+
+### Base Components (components/ui/)
+
+- [x] Button component (primary, secondary, outline, ghost variants)
+- [x] Input component (text, email, password, etc)
+- [x] Textarea component
+- [ ] Select component (dropdown) - **Optional, can add later**
+- [x] Card component
+- [x] Modal/Dialog component
+- [x] Toast notification component
+- [x] Spinner/Loading component
+- [x] Badge component
+- [x] Label component
+- [ ] Form error message component - **Not needed, integrated in Input/Textarea**
+
+### Shared Components (components/shared/)
+
+- [x] Navbar with logo & navigation
+- [x] Footer with links & social
+- [x] Theme toggle (dark/light mode) - **Tailwind v4 class-based dark mode with `@custom-variant`**
+- [x] Back to top button
+- [x] Mobile menu (hamburger) - **Integrated in Navbar**
+- [x] Container/Section wrapper
+
+### Dark Mode Configuration (Tailwind v4)
+
+- [x] Setup `next-themes` ThemeProvider
+- [x] Configure `enableSystem={false}` for manual control
+- [x] Migrate from `tailwind.config.ts` to CSS-first config (Tailwind v4)
+- [x] Add `@variant dark (.dark &)` in globals.css for class-based dark mode
+- [x] Define custom colors in `@theme` (primary: red, secondary: green)
+- [x] Theme toggle component with localStorage persistence
+
+**Note:** Tailwind v4 uses CSS-first configuration. `tailwind.config.ts` is backed up to `.backup` and not used.
+
+**Color Theme:** Primary colors changed from purple/indigo to **red theme** (#dc2626).
+
+---
+
+## 🏠 Phase 3: Public Pages
+
+**Prerequisites:** Phase 2 (UI Components) must be completed first!
+
+### Setup Public Routes Structure
+
+- [ ] Create `app/(public)/` folder
+- [ ] Create `app/(public)/layout.tsx`
+- [ ] Create `app/(public)/components/` folder
+
+### Homepage Sections (app/(public)/components/)
+
+- [x] Hero section ✅ **COMPLETE**
+  - [x] Name & title ("Hello, I'm Raihan" + "Fullstack Developer")
+  - [x] Short intro tagline
+  - [x] CTA button ("See My CV" with link to /cv.pdf)
+  - [x] LightRays animated background (WebGL, react-bits, OGL)
+  - [x] Social links (GitHub, LinkedIn, Email)
+  - [x] Compact spacing (space-y-4)
+  - [x] Left-aligned layout
+  - [x] Light & dark mode support
+  - [x] Fully responsive design
+  - [x] No scroll indicator (cleaner look)
+- [x] About section ✅ **COMPLETE**
+  - [x] Two-column layout (profile photo left, info right)
+  - [x] Real profile photo (public/profile.jpg) with next/image
+  - [x] Name, position (Fullstack Developer), and location (Indonesia)
+  - [x] Bio text (3 paragraphs)
+  - [x] Skills/tech stack integration with categories (Frontend, Backend, Tools)
+  - [x] Devicon logos for all skills (https://devicon.dev/)
+  - [x] Hybrid icon approach (font icons + SVG for Next.js, Express, Vercel, GitHub)
+  - [x] Icons with proper sizing and dark mode support (invert SVGs)
+  - [x] Hover effects on skill tags (background + text color transition)
+  - [x] Light & dark mode support
+  - [x] Fully responsive design (stacks vertically on mobile)
+  - [x] Clean, solid background (no animations)
+  - [x] No section header (cleaner look)
+  - [x] Smooth gradient transition from Hero section
+- [x] Certificate section ✅ **COMPLETE**
+  - [x] Certificate cards with infinite scroll
+  - [x] Card layout (icon/image, title, provider)
+  - [x] View Details button with external link
+  - [x] Pause on hover functionality
+  - [x] React Bits LogoLoop integration
+  - [x] Issue date badge display
+  - [x] Professional certificate icon
+  - [x] Responsive card designs
+- [ ] Projects section
+  - [ ] Fetch from Supabase database
+  - [ ] Project cards with image
+  - [ ] Filter by technology (optional)
+  - [ ] Featured projects highlight
+  - [ ] View project details modal
+  - [ ] Link to project/GitHub
+- [ ] Work Experience section
+  - [ ] Fetch from Supabase database
+  - [ ] Timeline layout
+  - [ ] Company & position
+  - [ ] Date ranges (format: "Jan 2023 - Present")
+  - [ ] Description
+- [ ] Contact section
+  - [ ] Contact form (name, email, message)
+  - [ ] Form validation (React Hook Form + Zod)
+  - [ ] Email integration (Nodemailer)
+  - [ ] Social links (GitHub, LinkedIn, Email)
+  - [ ] WhatsApp link (optional)
+
+### Homepage Integration
+
+- [ ] Integrate all sections in `app/(public)/page.tsx`
+- [ ] Add smooth scroll between sections
+- [ ] Add animations (Framer Motion)
+- [ ] Test responsive design
+
+### Additional Pages
+
+- [ ] 404 page (`app/not-found.tsx`)
+- [ ] 500 error page (`app/error.tsx`)
+- [ ] Loading page (`app/loading.tsx`)
+
+---
+
+## 🔐 Phase 4: Admin Panel
+
+**Prerequisites:** Phase 2 (UI Components) must be completed first!
+
+### Setup Admin Routes Structure
+
+- [x] Create `app/[ADMIN_ROUTE]/` folder (use env variable name)
+- [x] Create `app/[ADMIN_ROUTE]/layout.tsx`
+- [x] Create `app/[ADMIN_ROUTE]/page.tsx` (dashboard)
+
+### Authentication Pages
+
+- [x] Login page (`app/[ADMIN_ROUTE]/login/page.tsx`)
+  - [x] Email/password form
+  - [x] Form validation (client-side)
+  - [x] Supabase Auth integration
+  - [x] Error handling & display
+  - [x] Loading state
+  - [x] Redirect after login
+- [x] Auth state management
+  - [x] Check session on page load
+  - [x] Auto-refresh session (via middleware)
+  - [x] Redirect to login if not authenticated
+- [x] Logout functionality
+  - [x] Logout button in admin layout
+  - [x] Clear session
+  - [x] Redirect to login
+
+### Admin Layout (`app/[ADMIN_ROUTE]/layout.tsx`)
+
+- [x] Sidebar navigation
+  - [x] Dashboard link
+  - [x] Projects link
+  - [x] Experience link
+  - [x] Logout button
+- [x] Header
+  - [x] Page title
+  - [x] User profile display (email)
+  - [x] Theme toggle button
+- [x] Mobile responsive
+  - [x] Collapsible sidebar
+  - [x] Hamburger menu
+
+### Dashboard (`app/[ADMIN_ROUTE]/page.tsx`)
+
+- [x] Overview stats cards
+  - [x] Total projects count
+  - [x] Total experience count
+  - [x] Featured projects count
+  - [x] Last updated date
+- [x] Quick actions
+  - [x] "Add New Project" button
+  - [x] "Add New Experience" button
+- [ ] Recent items list (optional, can add later)
+  - [ ] Recent projects (last 5)
+  - [ ] Recent experience (last 5)
+
+### Projects Management
+
+- [x] List projects page (`app/[ADMIN_ROUTE]/projects/page.tsx`)
+  - [x] Fetch all projects from Supabase
+  - [x] Card view with full information
+  - [x] Show: title, technologies, featured status, order
+  - [x] Edit button (link to edit page)
+  - [x] Delete button (with confirmation modal)
+  - [x] "Add New" button
+  - [x] Empty state with CTA
+  - [x] Sort by order_index
+  - [x] Featured badge display
+  - [x] Technologies tags display
+  - [x] Project & GitHub URL links
+- [x] Create project page (`app/[ADMIN_ROUTE]/projects/new/page.tsx`)
+  - [x] Form with all fields:
+    - [x] Title (required)
+    - [x] Slug (auto-generated from title, editable)
+    - [x] Description (required)
+    - [x] Problem (required)
+    - [x] Solution (required)
+    - [x] Impact (required)
+    - [x] Technologies (tags input with add/remove)
+    - [x] Image URL (text input)
+    - [x] Project URL (optional)
+    - [x] GitHub URL (optional)
+    - [x] Featured (checkbox)
+    - [x] Order index (number)
+  - [x] Form validation (React Hook Form + Zod)
+  - [x] Slug uniqueness check
+  - [x] Submit to Supabase via helper function
+  - [x] Toast notifications (success/error)
+  - [x] Loading states
+  - [x] Redirect after success
+- [x] Edit project page (`app/[ADMIN_ROUTE]/projects/[id]/edit/page.tsx`)
+  - [x] Fetch project data by ID
+  - [x] Pre-filled form with current data
+  - [x] Update functionality via helper function
+  - [x] Delete button with confirmation modal
+  - [x] Toast notifications (success/error)
+  - [x] Loading states
+  - [x] Redirect after success/delete
+
+### Experience Management
+
+- [x] List experience page (`app/[ADMIN_ROUTE]/experience/page.tsx`)
+  - [x] Fetch all experience from Supabase
+  - [x] Card view with full information
+  - [x] Show: company, position, dates, current status
+  - [x] Current job badge
+  - [x] Date range formatting (MMM YYYY - Present)
+  - [x] Edit button (link to edit page)
+  - [x] Delete button (with confirmation modal)
+  - [x] "Add New" button
+  - [x] Empty state with CTA
+  - [x] Sort by start_date (most recent first)
+- [x] Create experience page (`app/[ADMIN_ROUTE]/experience/new/page.tsx`)
+  - [x] Form with all fields:
+    - [x] Company (required)
+    - [x] Position (required)
+    - [x] Description (required, textarea)
+    - [x] Start date (required, date picker)
+    - [x] End date (optional, disabled if current)
+    - [x] Is current (checkbox, auto-clears end date)
+    - [x] Order index (number)
+  - [x] Form validation (React Hook Form + Zod)
+  - [x] Date validation (end date after start date)
+  - [x] Submit to Supabase via helper function
+  - [x] Toast notifications (success/error)
+  - [x] Loading states
+  - [x] Redirect after success
+- [x] Edit experience page (`app/[ADMIN_ROUTE]/experience/[id]/edit/page.tsx`)
+  - [x] Fetch experience data by ID
+  - [x] Pre-filled form with current data
+  - [x] Update functionality via helper function
+  - [x] Delete button with confirmation modal
+  - [x] Toast notifications (success/error)
+  - [x] Loading states
+  - [x] Redirect after success/delete
+
+---
+
+## 🔌 Phase 5: API Routes
+
+**Note:** API routes are optional if using Supabase client directly. But recommended for contact form and additional validation.
+
+### Contact API
+
+- [ ] POST /api/contact (`app/api/contact/route.ts`)
+  - [ ] Accept: name, email, message
+  - [ ] Validate input (Zod schema)
+  - [ ] Send email using Nodemailer
+  - [ ] Error handling
+  - [ ] Return success/error response
+  - [ ] Rate limiting (optional)
+
+### Projects API (Optional - can use Supabase client directly)
+
+- [ ] GET /api/projects (`app/api/projects/route.ts`)
+  - [ ] List all projects
+  - [ ] Query params: featured, limit, offset
+  - [ ] Sort by order_index
+  - [ ] Return JSON
+- [ ] POST /api/projects (`app/api/projects/route.ts`)
+  - [ ] Create project
+  - [ ] Validate input (Zod)
+  - [ ] Check authentication (Supabase session)
+  - [ ] Check unique slug
+  - [ ] Insert to database
+  - [ ] Return created project
+
+### Experience API (Optional - can use Supabase client directly)
+
+- [ ] GET /api/experience (`app/api/experience/route.ts`)
+  - [ ] List all experience
+  - [ ] Query params: current, limit, offset
+  - [ ] Sort by start_date DESC
+  - [ ] Return JSON
+- [ ] POST /api/experience (`app/api/experience/route.ts`)
+  - [ ] Create experience
+  - [ ] Validate input (Zod)
+  - [ ] Check authentication (Supabase session)
+  - [ ] Insert to database
+  - [ ] Return created experience
+
+**Note:** For admin panel CRUD, you can use Supabase client directly from client components instead of creating API routes. API routes are mainly needed for contact form.
+
+---
+
+## 🪝 Phase 6: Custom Hooks (Optional)
+
+**Note:** These hooks are optional. You can use Supabase client directly in components. But hooks provide better code organization and reusability.
+
+### Data Fetching Hooks (hooks/)
+
+- [ ] useProjects (`hooks/useProjects.ts`)
+  - [ ] Fetch all projects
+  - [ ] Fetch featured projects only
+  - [ ] Loading state
+  - [ ] Error handling
+  - [ ] Return: { projects, loading, error }
+- [ ] useExperience (`hooks/useExperience.ts`)
+  - [ ] Fetch all experience
+  - [ ] Fetch current experience only
+  - [ ] Loading state
+  - [ ] Error handling
+  - [ ] Return: { experience, loading, error }
+
+### Auth Hook (hooks/)
+
+- [ ] useAuth (`hooks/useAuth.ts`)
+  - [ ] Get current user from Supabase
+  - [ ] Loading state
+  - [ ] Return: { user, loading, signOut }
+
+### UI Hooks (hooks/)
+
+- [ ] useToast (`hooks/useToast.ts`)
+  - [ ] Show success toast
+  - [ ] Show error toast
+  - [ ] Show info toast
+  - [ ] Auto dismiss after 3s
+  - [ ] Return: { toast, dismiss }
+
+**Alternative:** You can skip custom hooks and use Supabase client + React Query for data fetching.
+
+---
+
+## 🎭 Phase 7: Animations
+
+- [ ] Page transitions
+- [ ] Scroll animations
+- [ ] Hover effects
+- [ ] Loading animations
+- [ ] Skeleton loaders
+- [ ] Smooth scrolling
+- [ ] Parallax effects
+
+---
+
+## 📱 Phase 8: Responsive Design
+
+- [ ] Mobile (< 640px)
+  - [ ] Navigation menu
+  - [ ] All sections
+  - [ ] Forms
+  - [ ] Admin panel
+- [ ] Tablet (640px - 1024px)
+  - [ ] Layout adjustments
+  - [ ] Grid columns
+- [ ] Desktop (> 1024px)
+  - [ ] Full layout
+  - [ ] Optimal spacing
+
+---
+
+## 🔍 Phase 9: SEO & Performance
+
+### SEO
+
+- [ ] Meta tags
+  - [ ] Title
+  - [ ] Description
+  - [ ] Keywords
+  - [ ] Author
+- [ ] Open Graph tags
+  - [ ] og:title
+  - [ ] og:description
+  - [ ] og:image
+  - [ ] og:url
+- [ ] Twitter Card tags
+- [ ] Structured data (JSON-LD)
+- [ ] Sitemap.xml
+- [ ] Robots.txt
+- [ ] Canonical URLs
+
+### Performance
+
+- [ ] Image optimization
+  - [ ] Use Next.js Image
+  - [ ] WebP format
+  - [ ] Lazy loading
+  - [ ] Blur placeholder
+- [ ] Code splitting
+- [ ] Bundle optimization
+- [ ] Caching strategy
+- [ ] Compression (gzip/brotli)
+- [ ] Lighthouse score > 90
+
+---
+
+## 🧪 Phase 10: Testing
+
+### Unit Tests
+
+- [ ] Component tests
+- [ ] Utility function tests
+- [ ] Hook tests
+
+### Integration Tests
+
+- [ ] API route tests
+- [ ] Database operation tests
+- [ ] Email sending tests
+
+### E2E Tests
+
+- [ ] User flow tests
+- [ ] Admin flow tests
+- [ ] Form submission tests
+
+---
+
+## 🚢 Phase 11: Deployment
+
+### Pre-Deploy
+
+- [ ] Environment variables documented
+- [ ] Build succeeds locally
+- [ ] No TypeScript errors
+- [ ] No ESLint errors
+- [ ] All features tested
+
+### Vercel Deployment
+
+- [ ] Push to GitHub
+- [ ] Import to Vercel
+- [ ] Configure environment variables
+- [ ] Deploy
+- [ ] Test production site
+- [ ] Configure custom domain
+- [ ] Setup SSL
+
+### Post-Deploy
+
+- [ ] Update Supabase redirect URLs
+- [ ] Test contact form in production
+- [ ] Test admin login in production
+- [ ] Monitor error logs
+- [ ] Setup analytics (optional)
+
+---
+
+## 🔧 Phase 12: Enhancements (Future)
+
+### Features
+
+- [ ] Blog section
+- [ ] Project case studies (detailed pages)
+- [ ] Testimonials management
+- [ ] Newsletter subscription
+- [ ] RSS feed
+- [ ] Search functionality
+- [ ] Tags/categories for projects
+- [ ] Project filtering by technology
+
+### Admin Panel
+
+- [ ] Dashboard analytics
+- [ ] Activity logs
+- [ ] Bulk operations
+- [ ] Export data (CSV/JSON)
+- [ ] Image management
+- [ ] Settings page
+- [ ] User management (multi-admin)
+
+### Integrations
+
+- [ ] Google Analytics
+- [ ] Vercel Analytics
+- [ ] Sentry error tracking
+- [ ] Hotjar heatmaps
+- [ ] Calendly integration
+- [ ] GitHub API (auto-sync projects)
+
+### Performance
+
+- [ ] Service Worker (PWA)
+- [ ] Offline support
+- [ ] Push notifications
+- [ ] Background sync
+
+---
+
+## 🐛 Known Issues
+
+Track bugs here:
+
+- [ ] Issue 1: [Description]
+- [ ] Issue 2: [Description]
+
+---
+
+## 💡 Ideas / Backlog
+
+Future ideas to consider:
+
+- [ ] Multi-language support (i18n)
+- [ ] Project comments/feedback
+- [ ] Visitor guestbook
+- [ ] Live chat integration
+- [ ] Video portfolio
+- [ ] Interactive resume
+- [ ] Downloadable resume PDF
+- [ ] Client portal
+
+---
+
+## 📊 Progress Tracking
+
+### Overall Progress
+
+- Phase 1: ██████████ 100% (Core Setup - Code ✅, Environment Setup ✅)
+- Phase 2: ██████████ 100% (UI Components - All Essential Components ✅)
+- Phase 3: █████░░░░░ 50% (Public Pages - Hero ✅, About ✅, Certificates ✅)
+- Phase 4: ██████████ 100% (Admin Panel - Complete CRUD ✅)
+- Phase 5: ███░░░░░░░ 30% (API Routes - Auth routes ✅)
+- Phase 6: ░░░░░░░░░░ 0% (Custom Hooks - Optional)
+- Phase 7: ░░░░░░░░░░ 0% (Animations)
+- Phase 8: ░░░░░░░░░░ 0% (Responsive)
+- Phase 9: ░░░░░░░░░░ 0% (SEO)
+- Phase 10: ░░░░░░░░░░ 0% (Testing)
+- Phase 11: ░░░░░░░░░░ 0% (Deployment)
+
+**Total: ~58% Complete**
+
+### What's Actually Done
+
+✅ **Phase 1: Code Infrastructure (100%)**
+
+- Next.js project setup
+- All dependencies installed
+- Supabase client configuration
+- Type definitions
+- Middleware & auth helpers
+- Database schema file
+- All documentation
+
+✅ **Phase 1: Environment Setup (100%)**
+
+- Supabase account & project created
+- Database schema executed successfully
+- Admin user created in Supabase Auth
+- Supabase URL & keys configured in .env.local
+- Environment variables properly set
+- Development server tested and working
+
+✅ **Phase 2: UI Components (100%)**
+
+**Base Components:**
+
+- Button component with all variants (primary, secondary, outline, ghost, danger)
+- Input component with label, error, and helper text
+- Textarea component with validation support
+- Card component with header, content, and footer
+- Modal/Dialog component with portal rendering
+- Spinner/Loading component with variants
+- Toast notification system with useToast hook
+- Badge component with multiple variants (default, success, warning, error, info, outline)
+- Label component with variants and required indicator
+
+**Shared Components:**
+
+- Navbar with responsive mobile menu
+- Footer with social links
+- Theme toggle (dark/light mode)
+- Back to top button with smooth scroll
+- Container/Section wrapper components
+- Theme provider integration
+- Dark mode support configured
+
+⏳ **Optional (Can be done later)**
+
+- Setup Gmail App Password for contact form
+
+✅ **Phase 4: Admin Panel - Complete (100%)**
+
+**Admin Components:**
+
+- Sidebar with navigation (Dashboard, Projects, Experience)
+- Header with theme toggle
+- Mobile responsive hamburger menu
+- Active route highlighting
+- User info display
+- Logout functionality
+
+**Admin Pages:**
+
+- Login page with Supabase Auth
+- Dashboard with statistics cards
+- Quick action buttons
+- Protected routes via middleware
+
+**Projects CRUD:**
+
+- List page with card view
+- Create page with full form validation
+- Edit page with pre-filled data
+- Delete with confirmation modal
+- Technologies tags input
+- Auto-generate slug
+- Toast notifications
+
+**Experience CRUD:**
+
+- List page with card view
+- Create page with full form validation
+- Edit page with pre-filled data
+- Delete with confirmation modal
+- Date pickers with validation
+- Current job checkbox
+- Toast notifications
+
+**Helper Functions:**
+
+- `lib/supabase/helpers.ts` - CRUD operations
+- `lib/validations/project.ts` - Project validation schema
+- `lib/validations/experience.ts` - Experience validation schema
+
+**API Routes:**
+
+- `/api/auth/login` - Login endpoint
+- `/api/auth/logout` - Logout endpoint
+
+🎯 **Phase 3: Public Pages - In Progress (50%)**
+
+**Public Routes Structure:**
+
+- ✅ `app/(public)/layout.tsx` - Public pages layout with Navbar, Footer, BackToTop
+- ✅ `app/(public)/page.tsx` - Homepage (imports all sections)
+- ✅ `app/(public)/components/` - Homepage section components
+
+**Hero Section (100% Complete):**
+
+- ✅ Hero component (`app/(public)/components/hero.tsx`)
+- ✅ Greeting text: "Hello, I'm Raihan"
+- ✅ Main title: "Fullstack Developer" (large, bold)
+- ✅ Tagline about fullstack development
+- ✅ Single CTA button: "See My CV" (links to /cv.pdf)
+- ✅ Social links: GitHub, LinkedIn, Email with hover effects
+- ✅ LightRays animated background (WebGL, OGL)
+- ✅ LightRays TypeScript wrapper with dynamic import
+- ✅ Mouse-following light rays effect
+- ✅ Compact spacing (space-y-4, h-screen)
+- ✅ Left-aligned layout
+- ✅ Light & dark mode support with theme switching
+- ✅ Fade-in-up animations with staggered delays
+- ✅ No scroll indicator (cleaner design)
+- ✅ Fully responsive (mobile, tablet, desktop)
+- ✅ No linter errors
+
+**About Section (100% Complete):**
+
+- ✅ About component (`app/(public)/components/about.tsx`)
+- ✅ Two-column grid layout (profile photo left 4 cols, content right 8 cols)
+- ✅ Real profile photo using `next/image` (`public/profile.jpg`)
+- ✅ Clean photo frame with border and shadow (removed decorative background)
+- ✅ No section header (cleaner, minimal design)
+- ✅ Name: "Raihan" (large, bold)
+- ✅ Position with icon: "Fullstack Developer" (Code2 icon)
+- ✅ Location with icon: "Indonesia" (MapPin icon)
+- ✅ Bio text (3 paragraphs about passion, journey, interests)
+- ✅ Skills & Technologies section with 3 categories:
+  - Frontend Development (Globe icon): React, Next.js, TypeScript, Tailwind CSS, JavaScript, HTML5, CSS3
+  - Backend Development (Database icon): Node.js, Express, PostgreSQL, Supabase, REST API, GraphQL
+  - Tools & Others (Code2 icon): Git, Docker, VS Code, Vercel, GitHub, npm
+- ✅ **Devicon integration** (https://devicon.dev/):
+  - CDN link added to root layout (`app/layout.tsx`)
+  - Font icons for most technologies (colored versions)
+  - SVG images for Next.js, Express, Vercel, GitHub (hybrid approach)
+  - Icons auto-invert in dark mode (`dark:invert` class)
+  - Consistent `w-5 h-5` sizing
+- ✅ Skill tags with hover effects (background + text color transition to primary)
+- ✅ TypeScript interface for Skill type (icon + iconSvg support)
+- ✅ Light & dark mode support
+- ✅ Clean, solid background (no animations)
+- ✅ Fade-in-up animations with staggered delays
+- ✅ Fully responsive (stacks vertically on mobile)
+- ✅ Smooth gradient transition from Hero section (fade overlay)
+
+**Certificate Section (100% Complete):**
+
+- ✅ Certificate component (`app/(public)/components/certificates.tsx`)
+- ✅ CertificateCard component (`components/ui/certificate-card.tsx`)
+- ✅ Certificate type definition (`types/certificate.ts`)
+- ✅ React Bits LogoLoop integration for infinite scroll
+- ✅ Card layout with icon/image, title, provider, date badge
+- ✅ "View Details" button with external credential link
+- ✅ Pause on hover functionality
+- ✅ Sample certificate data (6 certificates)
+- ✅ Section header with Award icon
+- ✅ Responsive design (280-320px card width)
+- ✅ Light & dark mode support
+- ✅ Smooth animations and fade effects
+
+**Remaining Sections:**
+
+- ❌ Projects section (fetch from database) - 0%
+- ❌ Work Experience section (fetch from database) - 0%
+- ❌ Contact form - 0%
+
+---
+
+## 🎯 Current Sprint
+
+**Sprint Goal:** Build Public Homepage Sections! 🎨
+
+**✅ COMPLETED: Phase 1 - Environment Setup**
+
+- [x] Create Supabase account & project
+- [x] Run `supabase-schema.sql` in SQL Editor
+- [x] Create admin user in Supabase Auth
+- [x] Copy Supabase URL & keys to `.env.local`
+- [x] Test `npm run dev` - verify homepage loads
+
+**✅ COMPLETED: Phase 2 - Build UI Components (Week 1) - 100%**
+
+- [x] Button component (all variants)
+- [x] Input & Textarea components
+- [x] Card component
+- [x] Spinner/Loading component
+- [x] Modal component
+- [x] Toast notification system
+- [x] Badge component
+- [x] Label component
+- [x] Navbar with responsive navigation
+- [x] Footer with social links
+- [x] Theme toggle (dark mode)
+- [x] Back to top button
+- [x] Container/Section wrapper
+- [x] Theme provider integration
+
+**✅ COMPLETED: Phase 4 - Admin Layout & Authentication (80%)**
+
+- [x] Admin login page
+- [x] Admin layout with sidebar
+- [x] Admin dashboard with statistics
+- [x] API routes for auth (login/logout)
+- [x] Protected routes via middleware
+
+**✅ COMPLETED Sprint: Projects & Experience CRUD (Week 2)**
+
+- [x] Projects CRUD pages
+  - [x] List projects page
+  - [x] Create project page
+  - [x] Edit project page
+- [x] Experience CRUD pages
+  - [x] List experience page
+  - [x] Create experience page
+  - [x] Edit experience page
+
+**🎯 NEXT Sprint: Public Homepage (Week 3)**
+
+- [x] Hero section ✅
+- [x] About section (with integrated skills) ✅
+- [x] Certificate section ✅
+- [ ] Projects section (fetch from database)
+- [ ] Work Experience section (fetch from database)
+- [ ] Contact form
+
+---
+
+**Last Updated:** February 3, 2026 (Phase 1, 2, 4 Complete ✅ | Phase 3: Hero, About & Certificates ✅)
+**Next Review:** February 10, 2026
+
+---
+
+## 📝 Recent Updates
+
+### February 3, 2026 - Certificates Section Complete! 🎓
+
+**✅ Phase 3 Progress: Certificates Section (3/6 Sections Done!)**
+
+**Certificate Section Implementation:**
+
+1. **React Bits LogoLoop Installation**
+   - Command: `pnpm dlx shadcn@latest add @react-bits/LogoLoop-JS-CSS`
+   - Installed LogoLoop component for infinite scrolling carousel
+   - Components added: `LogoLoop.jsx`, `LogoLoop.css`
+
+2. **`types/certificate.ts`** - Certificate type definition
+   - Certificate interface with id, title, provider, issueDate, credentialUrl, image, description
+   - CertificateFormData for future database integration
+   - Type-safe implementation
+
+3. **`components/ui/certificate-card.tsx`** - Certificate Card component
+   - Card layout with gradient header background
+   - Certificate icon (SVG badge) or custom image display
+   - Title (bold, line-clamp-2 for long titles)
+   - Provider name in muted color
+   - Issue date badge (outline variant)
+   - Optional description text (line-clamp-2)
+   - "View Details" button with ExternalLink icon
+   - Hover effects: shadow lift, icon translation
+   - Dark mode support with proper contrast
+   - Min-width 280px, max-width 320px
+   - Full height flex layout
+
+4. **`app/(public)/components/certificates.tsx`** - Certificates section
+   - Section header with Award icon badge
+   - Title: "Professional Certificates"
+   - Subtitle: Learning and staying updated message
+   - LogoLoop integration with certificate cards
+   - 6 sample certificates:
+     - AWS Certified Solutions Architect (Amazon Web Services, 2024)
+     - Google Cloud Professional Developer (Google Cloud, 2023)
+     - Certified Kubernetes Administrator (CNCF, 2023)
+     - Meta Front-End Developer Professional (Meta, 2023)
+     - Full Stack Web Development Bootcamp (Udemy, 2022)
+     - TypeScript Advanced Patterns (Frontend Masters, 2023)
+   - Infinite scroll animation (speed: 50, direction: left)
+   - Pause on hover (hoverSpeed: 0)
+   - Scale on hover effect
+   - Fade out edges for smooth visual
+   - Card gap: 32px, height: 320px
+   - Helper text: "Hover over a certificate to pause and view details"
+
+5. **`app/(public)/components/index.ts`** - Export certificates
+   - Added Certificates to component exports
+
+6. **`app/(public)/page.tsx`** - Homepage integration
+   - Imported and added Certificates section
+   - Positioned after Hero and About sections
+
+**Features Implemented:**
+
+- ✅ **Infinite scroll carousel** with React Bits LogoLoop
+- ✅ **Pause on hover** - Users can stop scrolling to read details
+- ✅ **Professional card design** - Clean layout with gradient header
+- ✅ **Certificate icon** - SVG badge icon with primary color
+- ✅ **Image support** - Can display custom certificate images
+- ✅ **External credential links** - "View Details" button opens credential URL
+- ✅ **Issue date badges** - Outline badges showing year
+- ✅ **Responsive cards** - Min/max width constraints for consistency
+- ✅ **Dark mode support** - Proper color schemes and contrast
+- ✅ **Smooth animations** - Fade effects and hover transitions
+- ✅ **Type-safe** - Full TypeScript implementation
+- ✅ **Accessible** - ARIA labels and semantic HTML
+- ✅ **Sample data included** - 6 professional certificates as examples
+
+**Technical Stack:**
+
+- React Bits LogoLoop for infinite scroll
+- Lucide React for icons (Award, ExternalLink)
+- Tailwind CSS for styling
+- TypeScript for type safety
+- Next.js Image optimization support
+
+**Technical Notes:**
+
+- **Fade Gradient Fix:** LogoLoop CSS uses `@media (prefers-color-scheme: dark)` for fade gradient, which conflicts with Tailwind's class-based dark mode. Solution: Override `--logoloop-fadeColor` CSS variable using Tailwind dark mode variant:
+  ```tsx
+  <div className="[--logoloop-fadeColor:rgb(255_255_255)] dark:[--logoloop-fadeColor:rgb(3_7_18)]">
+  ```
+  This ensures fade gradient matches section background in both light (white) and dark (gray-950) modes.
+
+**📊 Next Steps:**
+
+1. Build Projects section (fetch from Supabase database)
+2. Build Work Experience section (fetch from Supabase database)
+3. Build Contact form with email integration
+
+---
+
+### February 3, 2026 - Hero & About Sections Complete! 🎨
+
+**✅ Phase 3 Progress: Hero & About Sections (2/6 Sections Done!)**
+
+**Hero Section Implementation:**
+
+1. **`app/(public)/layout.tsx`** - Public pages layout
+   - Navbar, Footer, BackToTop integration
+   - Clean layout structure
+
+2. **`app/(public)/page.tsx`** - Homepage
+   - Imports Hero section
+   - Ready for additional sections
+
+3. **`app/(public)/components/hero.tsx`** - Hero component
+   - **Greeting:** "Hello, I'm Raihan" (adaptive colors)
+   - **Main Title:** "Fullstack Developer" (large, bold)
+   - **Tagline:** Building modern web applications with passion
+   - **CTA Button:** "See My CV" (links to /cv.pdf)
+   - **Social Links:** GitHub, LinkedIn, Email with hover effects
+   - **Background:** LightRays animation (react-bits, WebGL, OGL)
+   - **Layout:** Left-aligned design
+   - **Theme:** Light & dark mode support with automatic color switching
+
+4. **`app/(public)/components/about.tsx`** - About component (NEW)
+   - **Layout:** Two-column grid (profile left, content right)
+   - **Profile Photo:** Real photo using `next/image` (`public/profile.jpg`)
+   - **Name:** "Raihan" (large, bold)
+   - **Position:** "Fullstack Developer" with Code2 icon
+   - **Location:** "Indonesia" with MapPin icon
+   - **Bio:** 3 paragraphs about passion, journey, and interests
+   - **Skills:** Organized into Frontend, Backend, and Tools categories
+   - **Devicon Integration:** Technology logos from https://devicon.dev/
+   - **Skill Tags:** Hover effects with primary color transition
+   - **Theme:** Light & dark mode support
+   - **Background:** Clean, solid (no animations)
+   - **No Header:** Removed "About Me" title for cleaner look
+
+5. **`components/LightRays.tsx`** - LightRays wrapper
+   - TypeScript wrapper untuk LightRays.jsx
+   - Dynamic import dengan SSR disabled
+   - Proper TypeScript interface
+   - Loading fallback
+
+6. **`app/layout.tsx`** - Devicon CDN integration
+   - Added devicon CSS link in head
+   - Enables font-based icons for technologies
+
+**Features Implemented:**
+
+**Hero Section:**
+
+- ✅ LightRays animated background (WebGL powered by OGL)
+- ✅ Light & dark mode support with theme detection
+- ✅ Dynamic color switching (white rays in dark, gray rays in light)
+- ✅ Single CTA button with CV link
+- ✅ Social media icons with hover effects
+- ✅ Left-aligned content layout
+- ✅ Compact spacing (h-screen, space-y-4)
+- ✅ Fade-in-up animations with staggered delays
+- ✅ No scroll indicator (cleaner design)
+- ✅ Fully responsive (mobile, tablet, desktop)
+- ✅ TypeScript types and linting passed
+
+**About Section:**
+
+- ✅ Two-column grid layout (responsive, stacks on mobile)
+- ✅ Real profile photo using `next/image` optimization
+- ✅ Clean photo frame (removed decorative red shadow)
+- ✅ No section header (minimal design)
+- ✅ Name, position, and location with Lucide icons
+- ✅ Professional bio text (3 paragraphs)
+- ✅ Skills organized into 3 categories (Frontend, Backend, Tools)
+- ✅ **Devicon logos integration** (https://devicon.dev/):
+  - Font icons: React, TypeScript, Tailwind CSS, JavaScript, HTML5, CSS3, Node.js, PostgreSQL, Supabase, REST API, GraphQL, Git, Docker, VS Code, npm
+  - SVG icons: Next.js, Express, Vercel, GitHub (for compatibility)
+  - Auto-invert in dark mode for SVG icons
+  - Hybrid approach (font + SVG) with TypeScript interface
+- ✅ Skill tags: 19 technologies with logos
+- ✅ Hover effects on skill tags (background + text color)
+- ✅ Light & dark mode support
+- ✅ Clean, solid background
+- ✅ Smooth gradient transition from Hero section
+- ✅ Fade-in-up animations with staggered delays
+- ✅ Fully responsive
+- ✅ TypeScript types and linting passed
+
+**📊 Next Steps:**
+
+1. Build Certificate section
+2. Build Projects section (fetch from database)
+3. Build Work Experience section (fetch from database)
+4. Build Contact form
+
+---
+
+### February 3, 2026 - Phase 4 Complete! 🎉
+
+**✅ Phase 4 Complete: Admin CRUD (100%)**
+
+**Projects CRUD Implementation:**
+
+1. **`app/kingpersib/projects/page.tsx`** - List Projects
+   - Card view with full project information
+   - Featured badge and technologies tags
+   - Edit and Delete buttons
+   - Delete confirmation modal
+   - Empty state with CTA
+   - Toast notifications
+   - Responsive design
+
+2. **`app/kingpersib/projects/new/page.tsx`** - Create Project
+   - Complete form with all fields
+   - Auto-generate slug from title
+   - Technologies tags input (add/remove)
+   - Form validation with React Hook Form + Zod
+   - Slug uniqueness check
+   - Image, Project, and GitHub URL fields
+   - Featured checkbox and order index
+   - Toast notifications for feedback
+   - Loading states
+
+3. **`app/kingpersib/projects/[id]/edit/page.tsx`** - Edit Project
+   - Pre-filled form with existing data
+   - Update functionality
+   - Delete button with confirmation
+   - Slug uniqueness check (excluding current)
+   - All features from create page
+   - Redirect after success/delete
+
+**Experience CRUD Implementation:**
+
+1. **`app/kingpersib/experience/page.tsx`** - List Experience
+   - Card view with full information
+   - Current job badge
+   - Date range formatting (MMM YYYY - Present)
+   - Edit and Delete buttons
+   - Delete confirmation modal
+   - Empty state with CTA
+   - Sort by start date (most recent first)
+
+2. **`app/kingpersib/experience/new/page.tsx`** - Create Experience
+   - Complete form with all fields
+   - Date pickers for start/end dates
+   - "Is Current" checkbox (auto-disables end date)
+   - Form validation with React Hook Form + Zod
+   - Date validation (end date after start date)
+   - Order index field
+   - Toast notifications
+   - Loading states
+
+3. **`app/kingpersib/experience/[id]/edit/page.tsx`** - Edit Experience
+   - Pre-filled form with existing data
+   - Update functionality
+   - Delete button with confirmation
+   - Date validation
+   - All features from create page
+   - Redirect after success/delete
+
+**Supporting Files Created:**
+
+1. **`lib/validations/project.ts`**
+   - Zod schema for project validation
+   - Title, slug, description validation
+   - Problem, solution, impact validation
+   - Technologies array validation
+   - URL validation for image, project, GitHub
+   - Featured and order_index validation
+
+2. **`lib/validations/experience.ts`**
+   - Zod schema for experience validation
+   - Company and position validation
+   - Description validation
+   - Date validation with refinements
+   - Current job logic
+   - Order index validation
+
+3. **`lib/supabase/helpers.ts`**
+   - `insertProject()` - Create new project
+   - `updateProject()` - Update existing project
+   - `insertWorkExperience()` - Create new experience
+   - `updateWorkExperience()` - Update existing experience
+   - Type-safe with Database types
+   - Handles Supabase type inference issues
+
+**Features Implemented:**
+
+- ✅ Full CRUD operations for Projects and Experience
+- ✅ Form validation with React Hook Form + Zod
+- ✅ Auto-generate slug from title
+- ✅ Technologies tags input with add/remove
+- ✅ Delete confirmation modals
+- ✅ Toast notifications for all actions
+- ✅ Loading states for better UX
+- ✅ Error handling with user-friendly messages
+- ✅ Responsive design (mobile-friendly)
+- ✅ Dark mode support
+- ✅ Type-safe TypeScript implementation
+- ✅ Clean and maintainable code structure
+
+**🎯 What's Working Now:**
+
+1. Navigate to `/kingpersib` to see dashboard
+2. Create, edit, and delete projects
+3. Create, edit, and delete work experience
+4. All form validations working
+5. Toast notifications for feedback
+6. Delete confirmations
+7. Mobile responsive
+8. Full dark mode support
+
+**📊 Next Steps:**
+
+1. Build Public Homepage (Phase 3)
+   - Hero section
+   - About section (with integrated skills)
+   - Certificate section
+   - Projects showcase (fetch from database)
+   - Work Experience timeline (fetch from database)
+   - Contact form
+
+---
+
+### January 31, 2026 - Phase 4 Admin Layout Complete! 🎉
+
+**✅ Phase 4 Partial Complete: Admin Layout & Authentication (80%)**
+
+**Admin Components Created:**
+
+1. **`components/admin/sidebar.tsx`**
+   - Navigation links (Dashboard, Projects, Experience)
+   - Mobile hamburger menu with smooth transitions
+   - Active route highlighting
+   - User email display
+   - Logout button with API integration
+   - Full dark mode support
+   - Responsive design (mobile-first)
+
+2. **`components/admin/header.tsx`**
+   - Page title and description props
+   - Theme toggle integration
+   - Sticky positioning
+   - Clean minimal design
+
+**Admin Pages Created:**
+
+1. **`app/kingpersib/layout.tsx`** - Main admin layout
+   - Sidebar integration
+   - Protected route handling
+   - Conditional rendering for login page
+   - Responsive flex layout
+
+2. **`app/kingpersib/page.tsx`** - Dashboard
+   - Statistics cards (Total Projects, Featured Projects, Work Experience, Last Updated)
+   - Fetch real data from Supabase
+   - Quick action buttons
+   - Beautiful icon-based UI with Lucide icons
+   - Type-safe TypeScript implementation
+
+3. **`app/kingpersib/login/page.tsx`** - Login page
+   - Email/password form
+   - Client-side validation
+   - Loading states
+   - Toast notifications for success/error
+   - Redirect after successful login
+   - API integration
+
+4. **`app/kingpersib/login/layout.tsx`** - Login layout override
+
+**API Routes Created:**
+
+1. **`app/api/auth/login/route.ts`**
+   - POST endpoint for authentication
+   - Supabase Auth integration
+   - Type-safe error handling
+   - Proper HTTP status codes (400, 401)
+
+2. **`app/api/auth/logout/route.ts`**
+   - POST endpoint for logout
+   - Session clearing
+   - Error handling
+
+**Features Implemented:**
+
+- ✅ Full authentication flow (login, logout, session management)
+- ✅ Protected routes via existing middleware
+- ✅ Modular middleware architecture (`lib/middleware/auth-middleware.ts`)
+- ✅ Dashboard with real-time statistics from Supabase
+- ✅ Mobile responsive design with hamburger menu
+- ✅ Complete dark mode support (Tailwind v4 with red theme)
+- ✅ Toast notifications for user feedback
+- ✅ Loading states for better UX
+- ✅ Type-safe implementation (no TypeScript errors)
+- ✅ Clean linting (no ESLint errors)
+
+**🎯 What's Working Now:**
+
+1. Navigate to `/kingpersib/login` to access login page
+2. Login with Supabase credentials
+3. View dashboard with statistics
+4. Navigate between admin sections
+5. Logout functionality
+6. Mobile responsive with hamburger menu
+7. Full dark mode support
+
+**📊 Next Steps:**
+
+1. Build Projects CRUD pages (list, create, edit, delete)
+2. Build Experience CRUD pages (list, create, edit, delete)
+3. Add form validation with Zod schemas
+4. Add confirmation modals for delete actions
+
+---
+
+### January 31, 2026 - Phase 1 & 2 Complete! 🎉
+
+**✅ Phase 1 Complete: Environment Setup**
+
+- Supabase project created and configured (mlbmdfdwjxgnocqclxaz.supabase.co)
+- Database schema executed successfully
+- Admin user created in Supabase Auth
+- All environment variables configured in .env.local
+- Development server tested and running
+
+**✅ Phase 2 Complete: UI Components**
+
+**✅ Completed:**
+
+1. **Base UI Components** (`components/ui/`)
+   - Button with variants (primary, secondary, outline, ghost, danger)
+   - Input with label, error handling, and helper text
+   - Textarea with validation support
+   - Card with header, content, footer subcomponents
+   - Modal/Dialog with portal rendering and keyboard navigation
+   - Spinner/Loading with size variants
+   - Toast notification system with useToast hook
+   - All components use TypeScript and forwardRef
+   - Full dark mode support
+
+2. **Shared Components** (`components/shared/`)
+   - Navbar with responsive mobile menu and scroll effects
+   - Footer with navigation and social links
+   - Theme Toggle component for dark/light mode switching
+
+3. **Infrastructure Improvements**
+   - Installed `class-variance-authority` for variant management
+   - Installed `next-themes` for theme management
+   - Created Theme Provider wrapper
+   - Updated root layout with ThemeProvider
+   - Dark mode configured with Tailwind CSS
+
+**📦 New Dependencies:**
+
+- `class-variance-authority@0.7.1` - Variant management for components
+- `next-themes@0.4.6` - Theme switching functionality
+
+**📁 New Files Created:**
+
+- `components/ui/button.tsx`
+- `components/ui/input.tsx`
+- `components/ui/textarea.tsx`
+- `components/ui/card.tsx`
+- `components/ui/modal.tsx`
+- `components/ui/spinner.tsx`
+- `components/ui/toast.tsx`
+- `components/ui/index.ts`
+- `components/shared/navbar.tsx`
+- `components/shared/footer.tsx`
+- `components/shared/theme-toggle.tsx`
+- `components/shared/index.ts`
+- `components/providers/theme-provider.tsx`
+- `components/providers/index.ts`
+
+**🎯 Next Steps:**
+
+1. Complete environment setup (Supabase configuration)
+2. Start Admin Panel development (Phase 4)
+3. Build admin login page
+4. Create admin layout with sidebar

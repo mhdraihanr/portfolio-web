@@ -1,0 +1,389 @@
+# Portfolio Website - Documentation
+
+## 📋 Overview
+
+Portfolio website untuk Raffael Jonathan N.H - Fullstack Web Developer dengan fitur admin panel untuk manage projects dan work experience secara dinamis.
+
+## 🛠 Tech Stack
+
+- **Frontend**: Next.js 15 (App Router), React, TypeScript
+- **Styling**: Tailwind CSS
+- **Animation**: Framer Motion
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Supabase Auth (untuk admin panel)
+- **Email**: Nodemailer
+- **Icons**: Lucide React
+- **Form Handling**: React Hook Form + Zod validation
+- **Deployment**: Vercel
+
+## 📁 Project Structure
+
+```
+portfolio-web/
+├── app/
+│   ├── (public)/              # Public routes (homepage, etc)
+│   │   ├── layout.tsx
+│   │   ├── page.tsx           # Homepage
+│   │   └── components/        # Public components
+│   │       ├── Hero.tsx
+│   │       ├── Services.tsx
+│   │       ├── Projects.tsx
+│   │       ├── WorkExperience.tsx
+│   │       ├── Skills.tsx
+│   │       ├── About.tsx
+│   │       └── Contact.tsx
+│   │
+│   ├── [ADMIN_ROUTE]/         # Admin panel (unique route)
+│   │   ├── layout.tsx
+│   │   ├── page.tsx           # Admin dashboard
+│   │   ├── login/
+│   │   │   └── page.tsx
+│   │   ├── projects/
+│   │   │   ├── page.tsx       # List projects
+│   │   │   ├── new/
+│   │   │   │   └── page.tsx   # Create project
+│   │   │   └── [id]/
+│   │   │       └── edit/
+│   │   │           └── page.tsx # Edit project
+│   │   └── experience/
+│   │       ├── page.tsx       # List experience
+│   │       ├── new/
+│   │       │   └── page.tsx   # Create experience
+│   │       └── [id]/
+│   │           └── edit/
+│   │               └── page.tsx # Edit experience
+│   │
+│   ├── api/
+│   │   ├── contact/
+│   │   │   └── route.ts       # Send email endpoint
+│   │   ├── projects/
+│   │   │   └── route.ts       # CRUD projects
+│   │   └── experience/
+│   │       └── route.ts       # CRUD experience
+│   │
+│   ├── layout.tsx             # Root layout
+│   └── globals.css
+│
+├── components/
+│   ├── ui/                    # Reusable UI components
+│   │   ├── Button.tsx
+│   │   ├── Card.tsx
+│   │   ├── Input.tsx
+│   │   ├── Textarea.tsx
+│   │   └── Modal.tsx
+│   └── shared/                # Shared components
+│       ├── Navbar.tsx
+│       └── Footer.tsx
+│
+├── lib/
+│   ├── supabase/
+│   │   ├── client.ts          # Supabase client (browser)
+│   │   ├── server.ts          # Supabase server client
+│   │   └── admin.ts           # Supabase admin client
+│   ├── email.ts               # Email service
+│   ├── auth.ts                # Auth helpers
+│   └── utils.ts               # Utility functions
+│
+├── types/
+│   ├── database.types.ts      # Supabase generated types
+│   ├── project.ts
+│   └── experience.ts
+│
+├── hooks/
+│   ├── useProjects.ts
+│   └── useExperience.ts
+│
+├── public/
+│   └── images/                # Static images
+│
+├── .env.local                 # Environment variables (not committed)
+├── .env.example               # Example env file
+├── supabase-schema.sql        # Database schema
+└── README.md
+```
+
+## 🗄 Database Schema
+
+### Tables
+
+#### 1. projects
+
+```sql
+- id (uuid, primary key)
+- title (text)
+- slug (text, unique)
+- description (text)
+- problem (text)
+- solution (text)
+- impact (text)
+- technologies (text[])
+- image_url (text)
+- project_url (text, nullable)
+- github_url (text, nullable)
+- featured (boolean, default: false)
+- order_index (integer)
+- created_at (timestamp)
+- updated_at (timestamp)
+```
+
+#### 2. work_experience
+
+```sql
+- id (uuid, primary key)
+- company (text)
+- position (text)
+- description (text)
+- start_date (date)
+- end_date (date, nullable)
+- is_current (boolean, default: false)
+- order_index (integer)
+- created_at (timestamp)
+- updated_at (timestamp)
+```
+
+## 🚀 Setup Instructions
+
+### 1. Clone & Install Dependencies
+
+```bash
+cd portfolio-web
+npm install
+```
+
+### 2. Setup Supabase
+
+1. Buat project baru di [Supabase](https://supabase.com)
+2. Copy URL dan Anon Key dari Project Settings > API
+3. Jalankan SQL schema dari file `supabase-schema.sql` di SQL Editor
+4. Setup Authentication:
+   - Enable Email provider di Authentication > Providers
+   - Buat user admin pertama di Authentication > Users
+
+### 3. Setup Environment Variables
+
+Copy `.env.example` ke `.env.local` dan isi dengan nilai yang sesuai:
+
+```bash
+cp .env.example .env.local
+```
+
+**Isi variabel berikut:**
+
+- `NEXT_PUBLIC_SUPABASE_URL`: URL project Supabase Anda
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Anon key dari Supabase
+- `SUPABASE_SERVICE_ROLE_KEY`: Service role key (untuk admin operations)
+- `EMAIL_USER`: Email Gmail Anda
+- `EMAIL_PASSWORD`: App password Gmail (bukan password biasa)
+- `EMAIL_TO`: Email tujuan untuk menerima contact form
+- `ADMIN_ROUTE_SECRET`: Nama route unik untuk admin panel (contoh: `my-secret-dashboard-2024`)
+- `ADMIN_PASSWORD_HASH`: Bcrypt hash dari password admin
+
+**Generate password hash:**
+
+```bash
+node -e "console.log(require('bcrypt').hashSync('your_password', 10))"
+```
+
+### 4. Setup Gmail App Password
+
+1. Buka Google Account Settings
+2. Security > 2-Step Verification (harus aktif)
+3. App passwords > Generate new
+4. Copy password dan masukkan ke `EMAIL_PASSWORD`
+
+### 5. Run Development Server
+
+```bash
+npm run dev
+```
+
+Buka [http://localhost:3000](http://localhost:3000)
+
+Admin panel: `http://localhost:3000/[ADMIN_ROUTE_SECRET]`
+
+## 🔐 Authentication Flow
+
+### Admin Panel Access
+
+1. User mengakses route admin yang unik (dari `ADMIN_ROUTE_SECRET`)
+2. Jika belum login, redirect ke `/[ADMIN_ROUTE_SECRET]/login`
+3. Login menggunakan Supabase Auth (email + password)
+4. Setelah login, dapat manage projects dan experience
+5. Session disimpan di Supabase (auto refresh)
+
+### Middleware Protection
+
+Middleware akan:
+
+- Check apakah route adalah admin route
+- Verify Supabase session
+- Redirect ke login jika tidak authenticated
+- Allow access jika authenticated
+
+## 📧 Contact Form Flow
+
+1. User mengisi form di homepage
+2. Form submit ke `/api/contact`
+3. API route validate data dengan Zod
+4. Kirim email menggunakan Nodemailer
+5. Return success/error response
+6. Show toast notification ke user
+
+## 🎨 Styling Guidelines
+
+### Tailwind Configuration
+
+Menggunakan custom theme yang match dengan referensi website:
+
+```js
+// tailwind.config.ts
+colors: {
+  primary: '#...',    // Main brand color
+  secondary: '#...',
+  accent: '#...',
+}
+```
+
+### Dark Mode
+
+- Menggunakan `next-themes` untuk dark mode toggle
+- Class-based dark mode (`dark:`)
+- Persist preference di localStorage
+
+## 🔄 Data Fetching Strategy
+
+### Public Pages (Server Components)
+
+- Fetch data di server component
+- Use Supabase server client
+- Cache dengan Next.js cache
+- Revalidate on-demand atau time-based
+
+### Admin Panel (Client Components)
+
+- Use React hooks untuk CRUD operations
+- Optimistic updates untuk better UX
+- Loading states dan error handling
+
+## 📝 Content Management
+
+### Adding New Project
+
+1. Login ke admin panel
+2. Navigate ke Projects
+3. Click "Add New Project"
+4. Fill form:
+   - Title, description
+   - Problem, solution, impact
+   - Technologies (multiple select)
+   - Upload image
+   - Set featured status
+   - Set order
+5. Save
+
+### Adding Work Experience
+
+1. Login ke admin panel
+2. Navigate ke Experience
+3. Click "Add New Experience"
+4. Fill form:
+   - Company, position
+   - Description
+   - Start date, end date
+   - Check "Current" if still working
+   - Set order
+5. Save
+
+## 🚢 Deployment
+
+### Deploy to Vercel
+
+1. Push code ke GitHub
+2. Import project di Vercel
+3. Add environment variables di Vercel dashboard
+4. Deploy
+
+**Environment Variables di Vercel:**
+
+- Semua variable dari `.env.local`
+- Set `NEXT_PUBLIC_SITE_URL` ke production URL
+
+### Post-Deployment
+
+1. Update Supabase redirect URLs:
+   - Authentication > URL Configuration
+   - Add production URL
+2. Test contact form
+3. Test admin login
+4. Verify all features
+
+## 🧪 Testing Checklist
+
+### Public Website
+
+- [ ] Homepage loads correctly
+- [ ] All sections visible
+- [ ] Projects display from database
+- [ ] Work experience display from database
+- [ ] Contact form sends email
+- [ ] Dark mode toggle works
+- [ ] Responsive on mobile
+- [ ] Smooth animations
+
+### Admin Panel
+
+- [ ] Login works
+- [ ] Can create project
+- [ ] Can edit project
+- [ ] Can delete project
+- [ ] Can reorder projects
+- [ ] Can create experience
+- [ ] Can edit experience
+- [ ] Can delete experience
+- [ ] Logout works
+- [ ] Protected routes work
+
+## 🔧 Common Issues & Solutions
+
+### Issue: Email not sending
+
+**Solution:**
+
+- Check Gmail app password
+- Enable "Less secure app access" if needed
+- Verify SMTP settings
+
+### Issue: Supabase connection error
+
+**Solution:**
+
+- Verify URL and keys in `.env.local`
+- Check Supabase project status
+- Verify RLS policies
+
+### Issue: Admin route not working
+
+**Solution:**
+
+- Check `ADMIN_ROUTE_SECRET` matches in code
+- Clear browser cache
+- Verify middleware configuration
+
+## 📚 Additional Resources
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Supabase Documentation](https://supabase.com/docs)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Framer Motion Documentation](https://www.framer.com/motion/)
+
+## 🤝 Support
+
+Jika ada pertanyaan atau issue, silakan hubungi:
+
+- Email: jonathanraffael098@gmail.com
+- LinkedIn: [Connect on LinkedIn](https://linkedin.com/in/raffaeljonathan)
+
+---
+
+**Last Updated:** January 2026
+**Version:** 1.0.0
