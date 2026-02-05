@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./theme-toggle";
@@ -13,12 +14,13 @@ const navLinks = [
   { href: "#certificates", label: "Certificates" },
   { href: "#projects", label: "Projects" },
   { href: "#experience", label: "Experience" },
-  { href: "#contact", label: "Contact" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export function Navbar() {
   const [isOpen, setIsOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
+  const pathname = usePathname();
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -63,16 +65,24 @@ export function Navbar() {
         <div className="flex h-14 md:h-16 items-center justify-between md:justify-center">
           {/* Desktop Navigation - Center */}
           <div className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-200"
-                style={{ textShadow: "0 1px 2px rgba(0, 0, 0, 0.3)" }}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              // If on contact page and link is a hash link, redirect to home with hash
+              const href =
+                pathname === "/contact" && link.href.startsWith("#")
+                  ? `/${link.href}`
+                  : link.href;
+
+              return (
+                <Link
+                  key={link.href}
+                  href={href}
+                  className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-200"
+                  style={{ textShadow: "0 1px 2px rgba(0, 0, 0, 0.3)" }}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
             <div className="ml-2">
               <ThemeToggle />
             </div>
@@ -101,17 +111,25 @@ export function Navbar() {
         {/* Mobile Navigation */}
         {isOpen && (
           <div className="md:hidden mt-2 pb-4 px-2 space-y-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 rounded-lg transition-all duration-200 text-center"
-                style={{ textShadow: "0 1px 2px rgba(0, 0, 0, 0.3)" }}
-                onClick={() => setIsOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              // If on contact page and link is a hash link, redirect to home with hash
+              const href =
+                pathname === "/contact" && link.href.startsWith("#")
+                  ? `/${link.href}`
+                  : link.href;
+
+              return (
+                <Link
+                  key={link.href}
+                  href={href}
+                  className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 rounded-lg transition-all duration-200 text-center"
+                  style={{ textShadow: "0 1px 2px rgba(0, 0, 0, 0.3)" }}
+                  onClick={() => setIsOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>

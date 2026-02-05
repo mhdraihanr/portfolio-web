@@ -8,3 +8,4 @@ export * from "./spinner";
 export * from "./toast";
 export * from "./badge";
 export * from "./label";
+export * from "./shine-border";

@@ -3,6 +3,7 @@ import nodemailer from "nodemailer";
 export interface ContactFormData {
   name: string;
   email: string;
+  subject: string;
   message: string;
 }
 
@@ -21,7 +22,7 @@ export async function sendContactEmail(data: ContactFormData) {
     from: `"Portfolio Contact Form" <${process.env.EMAIL_USER}>`,
     to: process.env.EMAIL_TO,
     replyTo: data.email,
-    subject: `New Contact Form Message from ${data.name}`,
+    subject: data.subject || `New Contact Form Message from ${data.name}`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -87,6 +88,11 @@ export async function sendContactEmail(data: ContactFormData) {
               <div class="field">
                 <div class="label">Email:</div>
                 <div class="value"><a href="mailto:${data.email}">${data.email}</a></div>
+              </div>
+              
+              <div class="field">
+                <div class="label">Subject:</div>
+                <div class="value">${data.subject}</div>
               </div>
               
               <div class="field">
