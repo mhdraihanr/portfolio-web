@@ -54,15 +54,20 @@ Main application directory menggunakan Next.js 15 App Router.
 ```
 app/
 ├── (public)/                    # Public routes group
-│   ├── layout.tsx              # Public layout
+│   ├── layout.tsx              # Public layout with Navbar, Footer
 │   ├── page.tsx                # Homepage
 │   └── components/             # Public page components
 │       ├── hero.tsx            # Hero section ✅
 │       ├── about.tsx           # About section (with integrated skills) ✅
 │       ├── certificates.tsx    # Certificates section ✅
-│       ├── Projects.tsx        # Projects showcase
+│       ├── projects.tsx        # Projects showcase ✅
 │       ├── WorkExperience.tsx  # Work experience section
 │       └── Contact.tsx         # Contact form
+│
+├── projects/                    # Project detail pages (outside public group)
+│   └── [slug]/                 # Dynamic project detail route
+│       ├── layout.tsx          # Detail layout (no Navbar, only Footer) ✅
+│       └── page.tsx            # Project detail page ✅
 │
 ├── [ADMIN_ROUTE]/              # Admin panel (dynamic route)
 │   ├── layout.tsx              # Admin layout
@@ -115,9 +120,30 @@ Homepage dengan semua sections:
 - Hero ✅
 - About (with integrated skills) ✅
 - Certificates ✅
-- Projects (fetch dari database)
+- Projects ✅ (fetch dari database, links to detail pages)
 - Work Experience (fetch dari database)
 - Contact
+
+#### `app/projects/[slug]/layout.tsx` ✅
+
+Layout khusus untuk project detail pages:
+
+- Tidak menggunakan Navbar (clean, focused view)
+- Footer tetap ditampilkan
+- BackToTop button
+- Memungkinkan full-screen immersive experience
+
+#### `app/projects/[slug]/page.tsx` ✅
+
+Dynamic project detail page:
+
+- Server component dengan SSR
+- Fetch project by slug dari Supabase
+- Display full project information (title, description, image, technologies, problem, solution, impact)
+- Action buttons (GitHub, Live Site)
+- Back navigation ke projects section
+- Not found handling (404)
+- Light & dark mode support
 
 #### `app/[ADMIN_ROUTE]/layout.tsx`
 

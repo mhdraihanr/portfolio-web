@@ -246,7 +246,7 @@ Admin panel dengan full CRUD sudah selesai! ✅
 
 **Guide:** Lihat `docs/TODO.md` Phase 4 ✅
 
-### 🎯 Priority 3: Public Homepage (In Progress - 50%)
+### 🎯 Priority 3: Public Homepage (In Progress - 67%)
 
 **Location:** `app/(public)/`
 
@@ -256,7 +256,7 @@ Yang sudah dan perlu dibangun:
    - [x] Hero section ✅
    - [x] About section (with integrated skills) ✅
    - [x] Certificate section ✅
-   - [ ] Projects section (fetch dari database)
+   - [x] Projects section ✅ (fetch from database)
    - [ ] Work Experience section (fetch dari database)
    - [ ] Contact form
 
@@ -271,7 +271,7 @@ Build homepage sections:
 1. ✅ Hero section (COMPLETE)
 2. ✅ About section (with integrated skills) (COMPLETE)
 3. ✅ Certificate section (COMPLETE)
-4. ❌ Projects section (fetch dari database)
+4. ✅ Projects section (COMPLETE) - fetch from database with SSR
 5. ❌ Work Experience section (fetch dari database)
 6. ❌ Contact form
 
@@ -436,7 +436,7 @@ npm install
 - [x] Build Hero section ✅
 - [x] Build About section (with integrated skills) ✅
 - [x] Build Certificate section ✅
-- [ ] Build Projects section (fetch from DB)
+- [x] Build Projects section (fetch from DB) ✅
 - [ ] Build Work Experience section (fetch from DB)
 - [ ] Build Contact form
 - [ ] Test all sections

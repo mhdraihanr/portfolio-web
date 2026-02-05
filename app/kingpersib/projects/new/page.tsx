@@ -390,7 +390,11 @@ export default function NewProjectPage() {
                 Cancel
               </Button>
             </Link>
-            <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full sm:w-auto"
+            >
               {isSubmitting ? (
                 <>
                   <Spinner size="sm" className="mr-2" />

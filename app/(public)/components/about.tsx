@@ -120,17 +120,17 @@ export function About() {
               </div>
 
               {/* Skills Section */}
-              <div className="pt-6">
-                <h4 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+              <div className="pt-4">
+                <h4 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                   Skills & Technologies
                 </h4>
 
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {/* Frontend Skills */}
                   <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Globe className="h-5 w-5 text-primary-600 dark:text-primary-500" />
-                      <h5 className="font-semibold text-gray-900 dark:text-white">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Globe className="h-4 w-4 text-primary-600 dark:text-primary-500" />
+                      <h5 className="font-semibold text-gray-900 dark:text-white text-sm">
                         Frontend Development
                       </h5>
                     </div>
@@ -138,16 +138,16 @@ export function About() {
                       {skills.frontend.map((skill) => (
                         <span
                           key={skill.name}
-                          className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 flex items-center gap-2"
+                          className="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 flex items-center gap-2"
                         >
                           {skill.iconSvg ? (
                             <img
                               src={skill.iconSvg}
                               alt={skill.name}
-                              className="w-5 h-5 dark:invert"
+                              className="w-4 h-4 dark:invert"
                             />
                           ) : (
-                            <i className={`${skill.icon} text-xl`}></i>
+                            <i className={`${skill.icon} text-lg`}></i>
                           )}
                           {skill.name}
                         </span>
@@ -157,9 +157,9 @@ export function About() {
 
                   {/* Backend Skills */}
                   <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Database className="h-5 w-5 text-primary-600 dark:text-primary-500" />
-                      <h5 className="font-semibold text-gray-900 dark:text-white">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Database className="h-4 w-4 text-primary-600 dark:text-primary-500" />
+                      <h5 className="font-semibold text-gray-900 dark:text-white text-sm">
                         Backend Development
                       </h5>
                     </div>
@@ -167,16 +167,16 @@ export function About() {
                       {skills.backend.map((skill) => (
                         <span
                           key={skill.name}
-                          className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 flex items-center gap-2"
+                          className="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 flex items-center gap-2"
                         >
                           {skill.iconSvg ? (
                             <img
                               src={skill.iconSvg}
                               alt={skill.name}
-                              className="w-5 h-5 dark:invert"
+                              className="w-4 h-4 dark:invert"
                             />
                           ) : (
-                            <i className={`${skill.icon} text-xl`}></i>
+                            <i className={`${skill.icon} text-lg`}></i>
                           )}
                           {skill.name}
                         </span>
@@ -186,9 +186,9 @@ export function About() {
 
                   {/* Tools & Others */}
                   <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Code2 className="h-5 w-5 text-primary-600 dark:text-primary-500" />
-                      <h5 className="font-semibold text-gray-900 dark:text-white">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Code2 className="h-4 w-4 text-primary-600 dark:text-primary-500" />
+                      <h5 className="font-semibold text-gray-900 dark:text-white text-sm">
                         Tools & Others
                       </h5>
                     </div>
@@ -196,16 +196,16 @@ export function About() {
                       {skills.tools.map((skill) => (
                         <span
                           key={skill.name}
-                          className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 flex items-center gap-2"
+                          className="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 flex items-center gap-2"
                         >
                           {skill.iconSvg ? (
                             <img
                               src={skill.iconSvg}
                               alt={skill.name}
-                              className="w-5 h-5 dark:invert"
+                              className="w-4 h-4 dark:invert"
                             />
                           ) : (
-                            <i className={`${skill.icon} text-xl`}></i>
+                            <i className={`${skill.icon} text-lg`}></i>
                           )}
                           {skill.name}
                         </span>

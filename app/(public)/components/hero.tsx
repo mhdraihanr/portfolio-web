@@ -93,7 +93,11 @@ export function Hero() {
             {/* CTA Button - Left */}
             <div className="order-2 md:order-1">
               <Link href="/cv.pdf" target="_blank">
-                <Button size="lg" rightIcon={<FileText className="h-5 w-5" />}>
+                <Button
+                  size="lg"
+                  className="rounded-full px-8"
+                  rightIcon={<FileText className="h-5 w-5" />}
+                >
                   See My CV
                 </Button>
               </Link>

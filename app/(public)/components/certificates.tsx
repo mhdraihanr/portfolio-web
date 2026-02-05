@@ -66,7 +66,10 @@ export function Certificates() {
   }));
 
   return (
-    <section id="certificates" className="py-20 bg-white dark:bg-gray-950">
+    <section
+      id="certificates"
+      className="pt-12 pb-20 bg-white dark:bg-gray-950"
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
