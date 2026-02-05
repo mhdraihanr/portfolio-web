@@ -5,7 +5,6 @@ import type { Project } from "@/types/project";
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -87,15 +86,30 @@ export async function Projects() {
                     animationDelay: `${index * 100}ms`,
                   }}
                 >
-                  {/* Project Image */}
+                  {/* Project Image with Overlay */}
                   {project.image_url && (
-                    <div className="relative h-64 overflow-hidden bg-gray-100 dark:bg-gray-800">
+                    <div className="relative h-80 overflow-hidden bg-gray-100 dark:bg-gray-800">
                       <Image
                         src={project.image_url}
                         alt={project.title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
+                      
+                      {/* Overlay with See Details Button */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <Link href={`/projects/${project.slug}`}>
+                          <Button
+                            size="lg"
+                            className="shadow-lg backdrop-blur-sm bg-white/95 dark:bg-gray-900/95 hover:bg-white dark:hover:bg-gray-900 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700"
+                            rightIcon={
+                              <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                            }
+                          >
+                            See Details
+                          </Button>
+                        </Link>
+                      </div>
                     </div>
                   )}
 
@@ -158,22 +172,6 @@ export async function Projects() {
                         </div>
                       )}
                   </CardContent>
-
-                  {/* See Details Button - Fade in on hover, right aligned */}
-                  <CardFooter className="justify-end opacity-0 max-h-0 group-hover:opacity-100 group-hover:max-h-20 transition-all duration-300 overflow-hidden">
-                    <Link href={`/projects/${project.slug}`}>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="group/btn"
-                        rightIcon={
-                          <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                        }
-                      >
-                        See Details
-                      </Button>
-                    </Link>
-                  </CardFooter>
                 </Card>
               ))}
             </div>

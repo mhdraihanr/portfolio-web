@@ -21,6 +21,7 @@ import {
   type ExperienceFormData,
 } from "@/lib/validations/experience";
 import type { WorkExperience, WorkExperienceUpdate } from "@/types/experience";
+import { EMPLOYMENT_TYPES } from "@/types/experience";
 
 export default function EditExperiencePage() {
   const router = useRouter();
@@ -84,6 +85,8 @@ export default function EditExperiencePage() {
         end_date: experienceData.end_date || "",
         is_current: experienceData.is_current,
         order_index: experienceData.order_index,
+        logo_url: experienceData.logo_url || "",
+        employment_type: experienceData.employment_type || "",
       });
     } catch (error) {
       console.error("Error fetching experience:", error);
@@ -117,6 +120,8 @@ export default function EditExperiencePage() {
         end_date: data.is_current ? null : data.end_date || null,
         is_current: data.is_current,
         order_index: data.order_index,
+        logo_url: data.logo_url || null,
+        employment_type: data.employment_type || null,
       };
 
       const { error } = await updateWorkExperience(
@@ -316,19 +321,54 @@ export default function EditExperiencePage() {
           {/* Display Settings */}
           <Card className="p-6">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Display Settings
+              Additional Information
             </h2>
-            <div className="space-y-2">
-              <Label htmlFor="order_index">Display Order</Label>
-              <Input
-                id="order_index"
-                type="number"
-                min="0"
-                placeholder="0"
-                {...register("order_index", { valueAsNumber: true })}
-                error={errors.order_index?.message}
-                helperText="Lower numbers appear first in the timeline"
-              />
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="logo_url">Company Logo URL</Label>
+                <Input
+                  id="logo_url"
+                  type="url"
+                  placeholder="https://example.com/logo.png"
+                  {...register("logo_url")}
+                  error={errors.logo_url?.message}
+                  helperText="URL to company logo (optional)"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="employment_type">Employment Type</Label>
+                <select
+                  id="employment_type"
+                  {...register("employment_type")}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent"
+                >
+                  <option value="">Select employment type</option>
+                  {EMPLOYMENT_TYPES.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+                {errors.employment_type && (
+                  <p className="text-sm text-red-600 dark:text-red-400">
+                    {errors.employment_type.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="order_index">Display Order</Label>
+                <Input
+                  id="order_index"
+                  type="number"
+                  min="0"
+                  placeholder="0"
+                  {...register("order_index", { valueAsNumber: true })}
+                  error={errors.order_index?.message}
+                  helperText="Lower numbers appear first in the timeline"
+                />
+              </div>
             </div>
           </Card>
 
@@ -384,7 +424,11 @@ export default function EditExperiencePage() {
             >
               Cancel
             </Button>
-            <Button variant="danger" onClick={handleDelete} disabled={isDeleting}>
+            <Button
+              variant="danger"
+              onClick={handleDelete}
+              disabled={isDeleting}
+            >
               {isDeleting ? (
                 <>
                   <Spinner size="sm" className="mr-2" />

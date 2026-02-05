@@ -21,6 +21,12 @@ export const experienceSchema = z
       .number()
       .int("Must be a whole number")
       .min(0, "Order must be 0 or greater"),
+    logo_url: z
+      .string()
+      .url("Must be a valid URL")
+      .optional()
+      .or(z.literal("")),
+    employment_type: z.string().optional().or(z.literal("")),
   })
   .refine(
     (data) => {
@@ -33,7 +39,7 @@ export const experienceSchema = z
     {
       message: "End date is required when position is not current",
       path: ["end_date"],
-    }
+    },
   )
   .refine(
     (data) => {
@@ -46,7 +52,7 @@ export const experienceSchema = z
     {
       message: "End date must be after start date",
       path: ["end_date"],
-    }
+    },
   );
 
 export type ExperienceFormData = z.infer<typeof experienceSchema>;

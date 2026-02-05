@@ -15,4 +15,23 @@ export interface ExperienceFormData {
   end_date?: string;
   is_current: boolean;
   order_index: number;
+  logo_url?: string;
+  employment_type?: string;
 }
+
+export type EmploymentType =
+  | "Full-time"
+  | "Part-time"
+  | "Internship"
+  | "Freelance"
+  | "Contract"
+  | "Organization";
+
+export const EMPLOYMENT_TYPES: EmploymentType[] = [
+  "Full-time",
+  "Part-time",
+  "Internship",
+  "Freelance",
+  "Contract",
+  "Organization",
+];

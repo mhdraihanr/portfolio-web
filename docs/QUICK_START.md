@@ -257,7 +257,7 @@ Yang sudah dan perlu dibangun:
    - [x] About section (with integrated skills) ✅
    - [x] Certificate section ✅
    - [x] Projects section ✅ (fetch from database)
-   - [ ] Work Experience section (fetch dari database)
+   - [x] Work Experience section ✅ (fetch from database with modern zigzag timeline)
    - [ ] Contact form
 
 **Guide:** Lihat `docs/TODO.md` Phase 3
@@ -272,7 +272,7 @@ Build homepage sections:
 2. ✅ About section (with integrated skills) (COMPLETE)
 3. ✅ Certificate section (COMPLETE)
 4. ✅ Projects section (COMPLETE) - fetch from database with SSR
-5. ❌ Work Experience section (fetch dari database)
+5. ✅ Work Experience section (COMPLETE) - fetch from database with modern zigzag timeline
 6. ❌ Contact form
 
 **Guide:** Lihat `docs/TODO.md` Phase 3
@@ -437,7 +437,7 @@ npm install
 - [x] Build About section (with integrated skills) ✅
 - [x] Build Certificate section ✅
 - [x] Build Projects section (fetch from DB) ✅
-- [ ] Build Work Experience section (fetch from DB)
+- [x] Build Work Experience section (fetch from DB) ✅
 - [ ] Build Contact form
 - [ ] Test all sections
 

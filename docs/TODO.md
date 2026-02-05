@@ -134,21 +134,27 @@ Task list untuk development portfolio website. Update status seiring progress.
   - [x] Responsive card designs
 - [x] Projects section ✅ **COMPLETE**
   - [x] Fetch from Supabase database
-  - [x] Project cards with image (h-64, larger display)
+  - [x] Project cards with image (h-80, taller display to prevent cropping)
   - [x] Featured projects filter
   - [x] Technologies badges (max 5 visible)
   - [x] GitHub & live site icon links
   - [x] Responsive grid layout (1 col mobile, 2 col desktop)
   - [x] Hover animations (card scale + image zoom)
   - [x] Server component with SSR
-  - [x] "See Details" button with slide animation
-  - [x] Auto-width button aligned right
-- [ ] Work Experience section
-  - [ ] Fetch from Supabase database
-  - [ ] Timeline layout
-  - [ ] Company & position
-  - [ ] Date ranges (format: "Jan 2023 - Present")
-  - [ ] Description
+  - [x] "See Details" button as centered overlay on image
+  - [x] Gradient overlay effect with backdrop blur on hover
+- [x] Work Experience section ✅ **COMPLETE**
+  - [x] Fetch from Supabase database
+  - [x] React Bits Orb animated background
+  - [x] Modern zigzag timeline layout
+  - [x] Company logo display (logo_url field)
+  - [x] Employment type badge (Full-time, Part-time, Internship, etc)
+  - [x] Company & position
+  - [x] Date ranges (format: "Jan 2023 - Present")
+  - [x] Hover effects and animations
+  - [x] Mobile responsive (stacks vertically)
+  - [x] Light & dark mode support
+  - [x] See More/Show Less button (shows 3 initially, expand to show all)
 - [ ] Contact section
   - [ ] Contact form (name, email, message)
   - [ ] Form validation (React Hook Form + Zod)
@@ -582,7 +588,7 @@ Future ideas to consider:
 
 - Phase 1: ██████████ 100% (Core Setup - Code ✅, Environment Setup ✅)
 - Phase 2: ██████████ 100% (UI Components - All Essential Components ✅)
-- Phase 3: ███████░░░ 75% (Public Pages - Hero ✅, About ✅, Certificates ✅, Projects ✅, Project Details ✅)
+- Phase 3: ████████░░ 83% (Public Pages - Hero ✅, About ✅, Certificates ✅, Projects ✅, Project Details ✅, Work Experience ✅)
 - Phase 4: ██████████ 100% (Admin Panel - Complete CRUD ✅)
 - Phase 5: ███░░░░░░░ 30% (API Routes - Auth routes ✅)
 - Phase 6: ░░░░░░░░░░ 0% (Custom Hooks - Optional)
@@ -592,7 +598,7 @@ Future ideas to consider:
 - Phase 10: ░░░░░░░░░░ 0% (Testing)
 - Phase 11: ░░░░░░░░░░ 0% (Deployment)
 
-**Total: ~65% Complete**
+**Total: ~68% Complete**
 
 ### What's Actually Done
 
@@ -771,15 +777,16 @@ Future ideas to consider:
 - ✅ Fetch featured projects from Supabase (`eq('featured', true)`)
 - ✅ Responsive grid layout (1 col mobile, 2 col desktop)
 - ✅ Project cards with:
-  - Large image display (h-64/256px) with zoom on hover
+  - Large image display (h-80/320px) with zoom on hover
   - Title with GitHub & live site icon links
   - Description (line-clamp-3)
   - Technology badges (max 5 visible, "+X more" indicator)
-  - "See Details" button (auto-width, right-aligned)
+  - "See Details" button as centered overlay on image hover
 - ✅ Card hover effects:
   - Scale up (1.02x)
   - Image zoom (1.05x)
-  - "See Details" button slide-in animation
+  - Gradient overlay (from-black/70 via-black/30 to-transparent)
+  - Button fade-in with backdrop blur effect
 - ✅ Light & dark mode support
 - ✅ Staggered fade-in animations
 - ✅ Links to `/projects/[slug]` for detail pages
@@ -800,7 +807,6 @@ Future ideas to consider:
 
 **Remaining Sections:**
 
-- ❌ Work Experience section (fetch from database) - 0%
 - ❌ Contact form - 0%
 
 ---
@@ -859,17 +865,160 @@ Future ideas to consider:
 - [x] About section (with integrated skills) ✅
 - [x] Certificate section ✅
 - [x] Projects section ✅ (fetch from database)
-- [ ] Work Experience section (fetch from database)
+- [x] Work Experience section ✅ (fetch from database with modern zigzag timeline)
 - [ ] Contact form
 
 ---
 
-**Last Updated:** February 4, 2026 (Phase 1, 2, 4 Complete ✅ | Phase 3: Hero, About, Certificates & Projects ✅)
+**Last Updated:** February 5, 2026 (Phase 1, 2, 4 Complete ✅ | Phase 3: Hero, About, Certificates, Projects & Work Experience ✅)
 **Next Review:** February 10, 2026
 
 ---
 
 ## 📝 Recent Updates
+
+### February 5, 2026 - Work Experience Section Complete! 💼
+
+**✅ Phase 3 Progress: Work Experience Section with Modern Timeline (5/6 Sections Done!)**
+
+**Work Experience Implementation:**
+
+1. **`app/(public)/components/experience.tsx`** - Server component wrapper
+   - Server component with SSR for SEO optimization
+   - Fetch from Supabase `work_experience` table
+   - Sort by `start_date` descending (newest first)
+   - Passes data to client component for rendering
+
+2. **`app/(public)/components/experience-client.tsx`** - Client component with Orb background
+   - Client component for interactive Orb background
+   - Modern zigzag timeline layout (alternating left-right)
+   - React Bits Orb integration for animated WebGL background
+
+3. **Orb Background (React Bits WebGL):**
+   - **Dynamic Import** - Orb loaded with no SSR to avoid hydration issues
+   - **Theme-aware Colors** - Adapts to light/dark mode
+     - Light mode: White background (#ffffff), hollow center effect
+     - Dark mode: Dark background (#030712), filled orb
+   - **Hue Setting** - Blue orb (hue=206) for professional look
+   - **Hover Intensity** - 0.35 for subtle interactive effect
+   - **Force Hover State** - Always animated for dynamic background
+   - **Positioning** - Absolute behind content with proper z-index
+   - **Mounted State** - Prevents hydration mismatch with client-side check
+
+4. **Timeline Features:**
+   - **Center Timeline Line** - Vertical gradient line (desktop only)
+   - **Zigzag Cards** - Alternating left-right placement (50% width each)
+   - **Timeline Dots** - Stroke-only in light mode, filled in dark mode
+   - **Mobile Stack** - Cards stack vertically on mobile for clean view
+
+5. **Experience Cards:**
+   - **Company Logo Display** - 48x48 rounded image with border
+     - Light mode: Border outline only (border-2 border-primary-500/30)
+     - Dark mode: Filled background (bg-primary-500/10)
+   - **Employment Type Badge** - Secondary badge (Full-time, Part-time, Internship, Freelance, Contract, Organization)
+   - **Position Title** - Large, bold with hover color change
+   - **Company Name** - Medium font below position
+   - **Date Range** - "Jan 2024 - Present" format with Calendar icon
+   - **Current Job Indicator** - "Present" in primary color for ongoing roles
+
+6. **Visual Enhancements:**
+   - Decorative corner accent (top-right)
+   - Hover glow effect (gradient overlay)
+   - Scale animation on hover (1.02x)
+   - Shadow enhancement on hover
+   - Staggered fade-in animations
+   - Border accent on hover
+   - Animated WebGL Orb background (React Bits)
+
+7. **Database Schema Updates:**
+   - Added `logo_url` field (TEXT, nullable)
+   - Added `employment_type` field (TEXT, nullable)
+   - Check constraint for employment_type values
+   - **Migration file:** `migration-add-logo-employment-type.sql`
+
+8. **Type Definitions Updates:**
+   - **`types/experience.ts`:**
+     - Added `logo_url` and `employment_type` to `ExperienceFormData`
+     - New `EmploymentType` union type
+     - Exported `EMPLOYMENT_TYPES` constant array
+   - **`types/database.types.ts`:**
+     - Updated `work_experience` Row, Insert, Update types
+
+9. **Validation Schema Updates:**
+   - **`lib/validations/experience.ts`:**
+     - Added `logo_url` validation (URL format, optional)
+     - Added `employment_type` validation (optional)
+
+10. **Admin Panel Updates:**
+    - **List Page (`app/kingpersib/experience/page.tsx`):**
+      - Display company logo in grid and table views
+      - Show employment type badge
+      - Image component for logo display
+    - **Create Page (`app/kingpersib/experience/new/page.tsx`):**
+      - Company Logo URL input field
+      - Employment Type dropdown with predefined options
+      - Form validation for new fields
+    - **Edit Page (`app/kingpersib/experience/[id]/edit/page.tsx`):**
+      - Pre-fill logo_url and employment_type
+      - Update logic for new fields
+
+**Features Implemented:**
+
+- ✅ **Animated Orb Background** - React Bits WebGL animation behind timeline
+- ✅ **Theme-aware Orb** - Different appearance in light/dark mode
+- ✅ **Hollow Center Effect** - Light mode shows stroke-only for cleaner look
+- ✅ **Modern Zigzag Timeline** - Alternating left-right card placement
+- ✅ **Company Logo Integration** - Display company logos (48x48 rounded)
+- ✅ **Light/Dark Mode Styling** - Stroke-only in light, filled in dark
+- ✅ **Employment Type Badges** - 6 predefined types (Full-time, Part-time, Internship, Freelance, Contract, Organization)
+- ✅ **Server-side rendering** with Supabase SSR client
+- ✅ **Animated timeline dots** with theme-aware styling
+- ✅ **Center timeline line** with gradient (desktop)
+- ✅ **Mobile responsive** - Stack vertically on mobile
+- ✅ **Current job indicator** - "Present" for ongoing roles
+- ✅ **Date formatting** - "Jan 2024 - Present" format
+- ✅ **Hover effects** - Scale, shadow, glow animations
+- ✅ **Dark mode support** - Proper colors and contrast
+- ✅ **Hydration fix** - Mounted state prevents mismatch
+- ✅ **Empty state** - User-friendly message when no data
+- ✅ **Type-safe** - Full TypeScript implementation
+- ✅ **SEO optimized** - Server component with metadata support
+- ✅ **Admin CRUD complete** - Create, edit, delete with logo and type fields
+- ✅ **Database migration** - SQL file for schema updates
+- ✅ **See More/Show Less functionality** - Initially shows 3 experiences, expandable to view all
+  - Text link styled like "View All Projects" for consistency
+  - Toggle state with React useState
+  - Dynamic counter showing remaining items
+  - Animated chevron icon (rotates 180deg on toggle)
+  - Only appears when more than 3 experiences exist
+
+**Technical Stack:**
+
+- Next.js 15 App Router with Server & Client Components
+- Supabase SSR client (`@supabase/ssr`)
+- React Bits Orb (WebGL animated background with OGL library)
+- Tailwind CSS for styling and animations
+- TypeScript for type safety
+- Lucide React for icons (Briefcase, Calendar)
+- Next.js Image component for logo optimization
+- next-themes for theme detection
+- Zod for form validation
+
+**Design Highlights:**
+
+- **Color Consistency:** Primary red theme (#dc2626)
+- **Card Design:** Clean white/gray-900 cards with border and shadow
+- **Timeline Aesthetics:** Professional vertical timeline with dots
+- **Spacing:** 12-16 gap between entries for visual breathing room
+- **Typography:** Hierarchical font sizes (xl/2xl for position, base/lg for company)
+
+**📊 Next Steps:**
+
+1. Build Contact form with email integration
+2. Add smooth scroll between sections
+3. Implement page transitions and animations
+
+---
 
 ### February 5, 2026 - Project Detail Pages Layout Improvement! 🎨
 

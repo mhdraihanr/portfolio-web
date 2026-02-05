@@ -72,6 +72,8 @@ export interface Database {
           end_date: string | null;
           is_current: boolean;
           order_index: number;
+          logo_url: string | null;
+          employment_type: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -84,6 +86,8 @@ export interface Database {
           end_date?: string | null;
           is_current?: boolean;
           order_index?: number;
+          logo_url?: string | null;
+          employment_type?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -96,6 +100,8 @@ export interface Database {
           end_date?: string | null;
           is_current?: boolean;
           order_index?: number;
+          logo_url?: string | null;
+          employment_type?: string | null;
           created_at?: string;
           updated_at?: string;
         };

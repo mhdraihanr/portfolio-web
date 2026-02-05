@@ -13,6 +13,7 @@ import {
   Table as TableIcon,
   MapPin,
 } from "lucide-react";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -286,19 +287,40 @@ export default function ExperiencePage() {
                 )}
 
                 <div className="flex items-start gap-6">
-                  {/* Icon */}
-                  <div
-                    className={`shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${experience.is_current
-                        ? "bg-green-100 dark:bg-green-900/30"
-                        : "bg-gray-100 dark:bg-gray-800"
-                      }`}
-                  >
-                    <Briefcase
-                      className={`w-6 h-6 ${experience.is_current
-                          ? "text-green-600 dark:text-green-400"
-                          : "text-gray-600 dark:text-gray-400"
+                  {/* Icon or Logo */}
+                  <div className="shrink-0">
+                    {experience.logo_url ? (
+                      <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                        <Image
+                          src={experience.logo_url}
+                          alt={`${experience.company} logo`}
+                          width={48}
+                          height={48}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                          experience.is_current
+                            ? "bg-green-100 dark:bg-green-900/30"
+                            : "bg-gray-100 dark:bg-gray-800"
                         }`}
-                    />
+                      >
+                        <Briefcase
+                          className={`w-6 h-6 ${
+                            experience.is_current
+                              ? "text-green-600 dark:text-green-400"
+                              : "text-gray-600 dark:text-gray-400"
+                          }`}
+                        />
+                      </div>
+                    )}{" "}
+                    {experience.employment_type && (
+                      <Badge variant="secondary" className="shrink-0">
+                        {experience.employment_type}
+                      </Badge>
+                    )}
                   </div>
 
                   {/* Content */}
@@ -390,6 +412,9 @@ export default function ExperiencePage() {
                       Company
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Type
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Period
                     </th>
                     <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -428,6 +453,15 @@ export default function ExperiencePage() {
                         </p>
                       </td>
                       <td className="px-6 py-4">
+                        {experience.employment_type ? (
+                          <Badge variant="secondary" className="text-xs">
+                            {experience.employment_type}
+                          </Badge>
+                        ) : (
+                          <span className="text-xs text-gray-400">—</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4">
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                           {formatDateRange(
                             experience.start_date,
@@ -462,11 +496,7 @@ export default function ExperiencePage() {
                           <Link
                             href={`/kingpersib/experience/${experience.id}/edit`}
                           >
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              title="Edit"
-                            >
+                            <Button variant="outline" size="sm" title="Edit">
                               <Pencil className="w-4 h-4" />
                             </Button>
                           </Link>

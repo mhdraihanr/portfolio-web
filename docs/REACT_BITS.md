@@ -17,6 +17,7 @@ pnpm dlx shadcn@latest add @react-bits/LightRays-JS-CSS
   />
 </div>
 
+//------LOOP CARD--------///
 import LogoLoop from './LogoLoop';
 import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss } from 'react-icons/si';
 
@@ -36,6 +37,7 @@ const imageLogos = [
 
 function App() {
 return (
+
 <div style={{ height: '200px', position: 'relative', overflow: 'hidden'}}>
 {/_ Basic horizontal loop _/}
 <LogoLoop
@@ -63,6 +65,75 @@ return (
 
 useCustomRender={false}
 />
+
 </div>
 );
 }
+
+//---------- ORB BACKGROUND FOR WORK EXPERIENCE SECTION ------////
+
+pnpm dlx shadcn@latest add @react-bits/Orb-JS-CSS
+
+<div style={{ width: '1080px', height: '1080px', position: 'relative' }}>
+  <Orb
+    hue={206}
+    hoverIntensity={0.35}
+    rotateOnHover={false}
+    forceHoverState
+  />
+</div>
+
+// IMPLEMENTATION IN EXPERIENCE SECTION:
+// File: app/(public)/components/experience-client.tsx
+//
+// "use client";
+// import Orb from "@/components/Orb";
+// import { useTheme } from "next-themes";
+// import { useEffect, useState } from "react";
+//
+// export function ExperienceClient({ experiences }) {
+// const { theme, resolvedTheme } = useTheme();
+// const [mounted, setMounted] = useState(false);
+//
+// // Prevent hydration mismatch
+// useEffect(() => {
+// const timer = setTimeout(() => setMounted(true), 0);
+// return () => clearTimeout(timer);
+// }, []);
+//
+// const currentTheme = mounted ? theme || resolvedTheme : "dark";
+// const isDark = currentTheme === "dark";
+// const bgClass = isDark ? "bg-gray-950" : "bg-white";
+//
+// return (
+// <section className="relative pt-12 pb-20 overflow-hidden">
+// {/_ Orb Background _/}
+// <div className={`absolute inset-0 ${bgClass}`}>
+// {mounted && (
+// <Orb
+// hue={206}
+// hoverIntensity={0.35}
+// rotateOnHover={false}
+// forceHoverState
+// backgroundColor={isDark ? "#030712" : "#ffffff"}
+// className="w-full h-full"
+// />
+// )}
+// </div>
+//
+// {/_ Content with z-10 _/}
+// <div className="relative z-10 container mx-auto">
+// {/_ Timeline content _/}
+// </div>
+// </section>
+// );
+// }
+//
+// KEY IMPLEMENTATION NOTES:
+// 1. Split into Server (experience.tsx) and Client (experience-client.tsx) components
+// 2. Server component fetches data, Client component renders Orb
+// 3. Mounted state prevents hydration mismatch
+// 4. Theme-aware background color (white for light, dark for dark mode)
+// 5. forceHoverState keeps animation always active
+// 6. className="w-full h-full" ensures Orb fills container
+// 7. Content uses z-10 to stay above Orb background

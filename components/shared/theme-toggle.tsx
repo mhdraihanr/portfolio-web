@@ -21,13 +21,22 @@ export function ThemeToggle() {
 
   const isDark = resolvedTheme === "dark";
 
+  // Prevent hydration mismatch by not rendering icon until mounted
+  if (!mounted) {
+    return (
+      <Button variant="ghost" size="icon" aria-label="Toggle theme" disabled>
+        <div className="h-5 w-5" />
+      </Button>
+    );
+  }
+
   return (
     <Button
       variant="ghost"
       size="icon"
       onClick={handleToggle}
       aria-label={`Toggle theme (current: ${resolvedTheme})`}
-      title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+      title={`Switch to ${isDark ? "light" : "dark"} mode`}
     >
       {isDark ? (
         <Sun className="h-5 w-5 transition-all hover:rotate-45" />
