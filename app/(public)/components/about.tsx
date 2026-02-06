@@ -1,65 +1,65 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { MapPin, Code2, Database, Globe } from "lucide-react";
 import Image from "next/image";
 import SplitText from "@/components/SplitText";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
+import { createClient } from "@/lib/supabase/client";
 
 interface Skill {
   name: string;
-  icon?: string;
-  iconSvg?: string;
+  icon?: string | null;
+  icon_svg?: string | null;
 }
 
 export function About() {
-  // Skills data with categories and devicon classes or SVG urls
-  const skills: {
+  const [skills, setSkills] = useState<{
     frontend: Skill[];
     backend: Skill[];
     tools: Skill[];
-  } = {
-    frontend: [
-      { name: "React", icon: "devicon-react-original colored" },
-      {
-        name: "Next.js",
-        iconSvg:
-          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg",
-      },
-      { name: "TypeScript", icon: "devicon-typescript-plain colored" },
-      { name: "Tailwind CSS", icon: "devicon-tailwindcss-original colored" },
-      { name: "JavaScript", icon: "devicon-javascript-plain colored" },
-      { name: "HTML5", icon: "devicon-html5-plain colored" },
-      { name: "CSS3", icon: "devicon-css3-plain colored" },
-    ],
-    backend: [
-      { name: "Node.js", icon: "devicon-nodejs-plain colored" },
-      {
-        name: "Express",
-        iconSvg:
-          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg",
-      },
-      { name: "PostgreSQL", icon: "devicon-postgresql-plain colored" },
-      { name: "Supabase", icon: "devicon-supabase-plain colored" },
-      { name: "REST API", icon: "devicon-fastapi-plain colored" },
-      { name: "GraphQL", icon: "devicon-graphql-plain colored" },
-    ],
-    tools: [
-      { name: "Git", icon: "devicon-git-plain colored" },
-      { name: "Docker", icon: "devicon-docker-plain colored" },
-      { name: "VS Code", icon: "devicon-vscode-plain colored" },
-      {
-        name: "Vercel",
-        iconSvg:
-          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vercel/vercel-original.svg",
-      },
-      {
-        name: "GitHub",
-        iconSvg:
-          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg",
-      },
-      { name: "npm", icon: "devicon-npm-original-wordmark colored" },
-    ],
-  };
+  }>({
+    frontend: [],
+    backend: [],
+    tools: [],
+  });
+
+  useEffect(() => {
+    async function fetchSkills() {
+      try {
+        const supabase = createClient();
+        const { data, error } = await supabase
+          .from("skills")
+          .select("name, icon, icon_svg, category")
+          .eq("is_visible", true)
+          .order("order_index", { ascending: true });
+
+        if (error) throw error;
+
+        if (data) {
+          const typedData = data as {
+            name: string;
+            icon: string | null;
+            icon_svg: string | null;
+            category: string;
+          }[];
+          const grouped = {
+            frontend: typedData.filter((s) => s.category === "frontend"),
+            backend: typedData.filter((s) => s.category === "backend"),
+            tools: typedData.filter(
+              (s) => s.category === "tools" || s.category === "others",
+            ),
+          };
+          setSkills(grouped);
+        }
+      } catch (error) {
+        console.error("Error fetching skills:", error);
+        // Fallback to empty - skills section will just be empty
+      }
+    }
+
+    fetchSkills();
+  }, []);
 
   return (
     <section id="about" className="py-20 bg-white dark:bg-gray-950">
@@ -165,15 +165,15 @@ export function About() {
                           key={skill.name}
                           className="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 flex items-center gap-2"
                         >
-                          {skill.iconSvg ? (
+                          {skill.icon_svg ? (
                             <img
-                              src={skill.iconSvg}
+                              src={skill.icon_svg}
                               alt={skill.name}
                               className="w-4 h-4 dark:invert"
                             />
-                          ) : (
+                          ) : skill.icon ? (
                             <i className={`${skill.icon} text-lg`}></i>
-                          )}
+                          ) : null}
                           {skill.name}
                         </span>
                       ))}
@@ -194,15 +194,15 @@ export function About() {
                           key={skill.name}
                           className="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 flex items-center gap-2"
                         >
-                          {skill.iconSvg ? (
+                          {skill.icon_svg ? (
                             <img
-                              src={skill.iconSvg}
+                              src={skill.icon_svg}
                               alt={skill.name}
                               className="w-4 h-4 dark:invert"
                             />
-                          ) : (
+                          ) : skill.icon ? (
                             <i className={`${skill.icon} text-lg`}></i>
-                          )}
+                          ) : null}
                           {skill.name}
                         </span>
                       ))}
@@ -223,15 +223,15 @@ export function About() {
                           key={skill.name}
                           className="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 flex items-center gap-2"
                         >
-                          {skill.iconSvg ? (
+                          {skill.icon_svg ? (
                             <img
-                              src={skill.iconSvg}
+                              src={skill.icon_svg}
                               alt={skill.name}
                               className="w-4 h-4 dark:invert"
                             />
-                          ) : (
+                          ) : skill.icon ? (
                             <i className={`${skill.icon} text-lg`}></i>
-                          )}
+                          ) : null}
                           {skill.name}
                         </span>
                       ))}

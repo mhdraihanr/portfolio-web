@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   Briefcase,
   FolderKanban,
+  Code2,
   Menu,
   X,
   LogOut,
@@ -44,6 +45,11 @@ export function Sidebar({ adminRoute, userEmail }: SidebarProps) {
       label: "Experience",
       href: `/${adminRoute}/experience`,
       icon: Briefcase,
+    },
+    {
+      label: "Skills",
+      href: `/${adminRoute}/skills`,
+      icon: Code2,
     },
   ];
 
@@ -94,7 +100,7 @@ export function Sidebar({ adminRoute, userEmail }: SidebarProps) {
         className={cn(
           "fixed left-0 top-0 z-40 h-screen w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-transform duration-300 ease-in-out",
           "md:translate-x-0",
-          isMobileOpen ? "translate-x-0" : "-translate-x-full"
+          isMobileOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         <div className="flex flex-col h-full">
@@ -122,7 +128,7 @@ export function Sidebar({ adminRoute, userEmail }: SidebarProps) {
                         "hover:bg-gray-100 dark:hover:bg-gray-800",
                         active
                           ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400"
-                          : "text-gray-700 dark:text-gray-300"
+                          : "text-gray-700 dark:text-gray-300",
                       )}
                     >
                       <Icon
@@ -130,7 +136,7 @@ export function Sidebar({ adminRoute, userEmail }: SidebarProps) {
                           "h-5 w-5",
                           active
                             ? "text-primary-600 dark:text-primary-400"
-                            : "text-gray-500 dark:text-gray-400"
+                            : "text-gray-500 dark:text-gray-400",
                         )}
                       />
                       <span className="font-medium">{item.label}</span>

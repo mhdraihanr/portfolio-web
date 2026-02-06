@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import {
   FolderKanban,
   Briefcase,
+  Code2,
   Star,
   Calendar,
   TrendingUp,
@@ -14,11 +15,12 @@ export default async function AdminDashboard() {
   const supabase = await createClient();
 
   // Fetch statistics
-  const [projectsResult, experienceResult] = await Promise.all([
+  const [projectsResult, experienceResult, skillsResult] = await Promise.all([
     supabase.from("projects").select("id, featured", { count: "exact" }),
     supabase.from("work_experience").select("id, is_current", {
       count: "exact",
     }),
+    supabase.from("skills").select("id, is_visible", { count: "exact" }),
   ]);
 
   const totalProjects = projectsResult.count || 0;
@@ -38,6 +40,16 @@ export default async function AdminDashboard() {
   if (experienceResult.data) {
     currentPositions = experienceResult.data.filter(
       (e) => (e as { id: string; is_current: boolean }).is_current,
+    ).length;
+  }
+
+  const totalSkills = skillsResult.count || 0;
+
+  // Count visible skills
+  let visibleSkills = 0;
+  if (skillsResult.data) {
+    visibleSkills = skillsResult.data.filter(
+      (s) => (s as { id: string; is_visible: boolean }).is_visible,
     ).length;
   }
 
@@ -70,17 +82,12 @@ export default async function AdminDashboard() {
       changeColor: "text-green-600",
     },
     {
-      label: "Last Updated",
-      value: new Date().toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      }),
-      icon: Calendar,
+      label: "Skills",
+      value: totalSkills,
+      icon: Code2,
       color: "text-purple-600 dark:text-purple-400",
       bgColor: "bg-purple-50 dark:bg-purple-900/20",
-      isText: true,
-      change: "Today",
+      change: `${visibleSkills} visible`,
       changeColor: "text-purple-600",
     },
   ];
@@ -114,13 +121,22 @@ export default async function AdminDashboard() {
       hoverColor: "hover:border-purple-500",
     },
     {
-      title: "Manage Experience",
-      description: "View and edit your work history",
-      icon: Briefcase,
-      href: "/kingpersib/experience",
+      title: "Add New Skill",
+      description: "Add a new skill or technology",
+      icon: Code2,
+      href: "/kingpersib/skills/new",
       color: "text-orange-600 dark:text-orange-400",
       bgColor: "bg-orange-50 dark:bg-orange-900/20",
       hoverColor: "hover:border-orange-500",
+    },
+    {
+      title: "Manage Skills",
+      description: "View and edit your skills & technologies",
+      icon: Code2,
+      href: "/kingpersib/skills",
+      color: "text-cyan-600 dark:text-cyan-400",
+      bgColor: "bg-cyan-50 dark:bg-cyan-900/20",
+      hoverColor: "hover:border-cyan-500",
     },
   ];
 
@@ -186,7 +202,9 @@ export default async function AdminDashboard() {
                     className={`p-6 h-full hover:shadow-lg transition-all border-2 border-transparent ${action.hoverColor} group cursor-pointer`}
                   >
                     <div className="flex flex-col h-full">
-                      <div className={`p-3 rounded-lg ${action.bgColor} w-fit mb-4`}>
+                      <div
+                        className={`p-3 rounded-lg ${action.bgColor} w-fit mb-4`}
+                      >
                         <Icon className={`h-6 w-6 ${action.color}`} />
                       </div>
                       <h3 className="font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">

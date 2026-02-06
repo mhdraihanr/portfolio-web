@@ -62,6 +62,41 @@ export interface Database {
           updated_at?: string;
         };
       };
+      skills: {
+        Row: {
+          id: string;
+          name: string;
+          category: "frontend" | "backend" | "tools" | "others";
+          icon: string | null;
+          icon_svg: string | null;
+          order_index: number;
+          is_visible: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          category: "frontend" | "backend" | "tools" | "others";
+          icon?: string | null;
+          icon_svg?: string | null;
+          order_index?: number;
+          is_visible?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          category?: "frontend" | "backend" | "tools" | "others";
+          icon?: string | null;
+          icon_svg?: string | null;
+          order_index?: number;
+          is_visible?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
       work_experience: {
         Row: {
           id: string;
