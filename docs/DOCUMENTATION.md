@@ -8,7 +8,8 @@ Portfolio website untuk Raffael Jonathan N.H - Fullstack Web Developer dengan fi
 
 - **Frontend**: Next.js 15 (App Router), React, TypeScript
 - **Styling**: Tailwind CSS
-- **Animation**: Framer Motion
+- **Animation**: Framer Motion, GSAP (via React Bits), CSS Animations
+- **Loading**: react-loading-indicators
 - **Database**: Supabase (PostgreSQL)
 - **Authentication**: Supabase Auth (untuk admin panel)
 - **Email**: Nodemailer

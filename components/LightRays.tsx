@@ -1,15 +1,20 @@
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
-// Dynamically import LightRays with no SSR to avoid hydration issues
-const LightRaysClient = dynamic(() => import('./LightRays.jsx'), {
+// Dynamically import LightRays with no SSR - optimized for no flicker
+const LightRaysClient = dynamic(() => import("./LightRays.jsx"), {
   ssr: false,
-  loading: () => (
-    <div className="w-full h-full bg-gray-950 dark:bg-black" />
-  ),
 });
 
 interface LightRaysProps {
-  raysOrigin?: 'top-center' | 'top-left' | 'top-right' | 'left' | 'right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
+  raysOrigin?:
+    | "top-center"
+    | "top-left"
+    | "top-right"
+    | "left"
+    | "right"
+    | "bottom-left"
+    | "bottom-center"
+    | "bottom-right";
   raysColor?: string;
   raysSpeed?: number;
   lightSpread?: number;
@@ -22,8 +27,12 @@ interface LightRaysProps {
   noiseAmount?: number;
   distortion?: number;
   className?: string;
+  mounted?: boolean;
+  onReady?: () => void;
 }
 
 export default function LightRays(props: LightRaysProps) {
+  // Only render if mounted to prevent SSR issues
+  if (!props.mounted) return null;
   return <LightRaysClient {...props} />;
 }

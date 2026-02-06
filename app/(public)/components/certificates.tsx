@@ -4,6 +4,7 @@ import { CertificateCard } from "@/components/ui/certificate-card";
 import type { Certificate } from "@/types/certificate";
 import LogoLoop from "@/components/LogoLoop";
 import { Award } from "lucide-react";
+import { ScrollReveal } from "@/components/shared/scroll-reveal";
 
 // Sample certificate data - replace with real data or fetch from database
 const certificates: Certificate[] = [
@@ -73,7 +74,7 @@ export function Certificates() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
-          <div className="text-center mb-6">
+          <ScrollReveal className="text-center mb-6">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4">
               <Award className="w-4 h-4" />
               <span className="text-sm font-medium">Certifications</span>
@@ -85,22 +86,24 @@ export function Certificates() {
               Continuously learning and staying up-to-date with the latest
               technologies and industry best practices.
             </p>
-          </div>
+          </ScrollReveal>
 
           {/* Certificates Infinite Scroll */}
-          <div className="relative overflow-hidden [--logoloop-fadeColor:rgb(255_255_255)] dark:[--logoloop-fadeColor:rgb(3_7_18)]">
-            <LogoLoop
-              logos={certificateNodes}
-              speed={50}
-              direction="left"
-              logoHeight={100}
-              gap={32}
-              hoverSpeed={0}
-              scaleOnHover
-              fadeOut
-              ariaLabel="Professional certifications"
-            />
-          </div>
+          <ScrollReveal delay={0.2} duration={0.6}>
+            <div className="relative overflow-hidden [--logoloop-fadeColor:rgb(255_255_255)] dark:[--logoloop-fadeColor:rgb(3_7_18)]">
+              <LogoLoop
+                logos={certificateNodes}
+                speed={50}
+                direction="left"
+                logoHeight={100}
+                gap={32}
+                hoverSpeed={0}
+                scaleOnHover
+                fadeOut
+                ariaLabel="Professional certifications"
+              />
+            </div>
+          </ScrollReveal>
 
           {/* Optional: Add note */}
           <p className="text-center text-sm text-gray-500 dark:text-gray-500 mt-8">

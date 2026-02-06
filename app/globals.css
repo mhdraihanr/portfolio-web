@@ -35,11 +35,28 @@
 /* Tailwind v4: Enable class-based dark mode */
 @variant dark (.dark &);
 
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem; /* Offset for fixed navbar (80px) */
+}
+
 /* Custom Animations */
 @keyframes fade-in-up {
   from {
     opacity: 0;
     transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
   }
   to {
     opacity: 1;
@@ -59,8 +76,19 @@
   }
 }
 
+/* Initially hide animated elements */
+.animate-fade-in-up,
+.animate-fade-in-down {
+  opacity: 0;
+}
+
+/* Animation classes */
 .animate-fade-in-up {
   animation: fade-in-up 0.8s ease-out forwards;
+}
+
+.animate-fade-in-down {
+  animation: fade-in-down 0.8s ease-out forwards;
 }
 
 .animate-scroll {
@@ -91,11 +119,6 @@
   animation-delay: 2s;
 }
 
-/* Initially hide animated elements */
-.animate-fade-in-up {
-  opacity: 0;
-}
-
 /* Shine Border Animation */
 @keyframes shine {
   0% {
@@ -124,6 +147,18 @@
     }
     to {
       background-position: 0% 0%;
+    }
+  }
+  --animate-shiny-text: shiny-text 3s infinite;
+  @keyframes shiny-text {
+    0%,
+    90%,
+    100% {
+      background-position: calc(-100% - var(--shiny-width)) 0;
+    }
+    30%,
+    60% {
+      background-position: calc(100% + var(--shiny-width)) 0;
     }
   }
 }

@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { ShineBorder } from "@/components/ui/shine-border";
 import { useTheme } from "next-themes";
+import { usePageLoading } from "@/contexts/PageLoadingContext";
 
 interface FormData {
   name: string;
@@ -25,6 +26,7 @@ interface FormErrors {
 export default function ContactPage() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const { setPageReady } = usePageLoading();
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -41,7 +43,12 @@ export default function ContactPage() {
   // Prevent hydration mismatch by only using theme after mount
   useEffect(() => {
     setMounted(true);
-  }, []);
+    // Notify that page is ready after a short delay for smooth transition
+    const timer = setTimeout(() => {
+      setPageReady();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [setPageReady]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -271,37 +278,6 @@ export default function ContactPage() {
                   </Button>
                 </div>
               </form>
-            </div>
-          </div>
-
-          {/* Additional Contact Info */}
-          <div className="mt-12 text-center">
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
-              You can also reach me via:
-            </p>
-            <div className="flex flex-wrap justify-center gap-6">
-              <a
-                href="mailto:your-email@example.com"
-                className="text-primary-600 hover:text-primary-700 dark:text-primary-500 dark:hover:text-primary-400 transition-colors"
-              >
-                📧 Email
-              </a>
-              <a
-                href="https://linkedin.com/in/yourprofile"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary-600 hover:text-primary-700 dark:text-primary-500 dark:hover:text-primary-400 transition-colors"
-              >
-                💼 LinkedIn
-              </a>
-              <a
-                href="https://github.com/yourhandle"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary-600 hover:text-primary-700 dark:text-primary-500 dark:hover:text-primary-400 transition-colors"
-              >
-                🔗 GitHub
-              </a>
             </div>
           </div>
         </div>

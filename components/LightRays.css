@@ -5,4 +5,14 @@
   pointer-events: none;
   z-index: 3;
   overflow: hidden;
+  /* Optimize rendering performance */
+  will-change: transform;
+  contain: layout style paint;
+}
+
+.light-rays-container canvas {
+  display: block;
+  /* Prevent canvas flash during load */
+  opacity: 1;
+  transition: none;
 }

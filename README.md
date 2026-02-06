@@ -13,7 +13,8 @@ Modern portfolio website dengan admin panel untuk manage projects dan work exper
 
 - 🎨 Modern, responsive design dengan dark mode
 - ⚡ Fast performance dengan Next.js 15 App Router
-- 🎭 Smooth animations dengan Framer Motion
+- 🎭 Smooth animations (Framer Motion + GSAP via React Bits)
+- 🔄 Global loading state dengan page transitions
 - 📱 Mobile-first responsive design
 - 📧 Contact form dengan email integration
 - 🔍 SEO optimized
@@ -45,7 +46,8 @@ Modern portfolio website dengan admin panel untuk manage projects dan work exper
 - **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
-- **Animation**: Framer Motion
+- **Animation**: Framer Motion, GSAP (React Bits), CSS Animations
+- **Loading**: react-loading-indicators
 - **Database**: Supabase (PostgreSQL)
 - **Authentication**: Supabase Auth
 - **Email**: Nodemailer

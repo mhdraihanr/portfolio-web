@@ -7,6 +7,7 @@ import Image from "next/image";
 import Orb from "@/components/Orb";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { ScrollReveal } from "@/components/shared/scroll-reveal";
 
 interface ExperienceClientProps {
   experiences: WorkExperience[];
@@ -61,7 +62,7 @@ export function ExperienceClient({ experiences }: ExperienceClientProps) {
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
-          <div className="text-center mb-12">
+          <ScrollReveal className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4">
               <Briefcase className="w-4 h-4" />
               <span className="text-sm font-medium">Career</span>
@@ -73,7 +74,7 @@ export function ExperienceClient({ experiences }: ExperienceClientProps) {
               My professional journey and contributions across various roles and
               organizations.
             </p>
-          </div>
+          </ScrollReveal>
 
           {/* Experience Timeline */}
           {experiences.length === 0 ? (
@@ -92,98 +93,102 @@ export function ExperienceClient({ experiences }: ExperienceClientProps) {
                   const isLeft = index % 2 === 0;
 
                   return (
-                    <div
+                    <ScrollReveal
                       key={exp.id}
-                      className={`relative flex flex-col md:flex-row items-center gap-8 animate-fade-in-up ${
-                        isLeft ? "md:flex-row-reverse" : ""
-                      }`}
-                      style={{
-                        animationDelay: `${index * 100}ms`,
-                      }}
+                      delay={index * 0.1}
+                      duration={0.7}
+                      direction={isLeft ? "left" : "right"}
+                      distance={30}
                     >
-                      {/* Timeline Dot - Hidden on mobile */}
-                      <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-                        <div className="relative">
-                          {/* Outer ring - stroke only in light mode, filled in dark mode */}
-                          <div className="w-4 h-4 rounded-full border-2 border-primary-500 dark:bg-primary-500 dark:border-0 animate-pulse" />
-                          {/* Inner dot - only visible in dark mode */}
-                          <div className="absolute inset-0 w-4 h-4 rounded-full dark:bg-primary-500 dark:scale-50 hidden dark:block" />
+                      <div
+                        className={`relative flex flex-col md:flex-row items-center gap-8 ${
+                          isLeft ? "md:flex-row-reverse" : ""
+                        }`}
+                      >
+                        {/* Timeline Dot - Hidden on mobile */}
+                        <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                          <div className="relative">
+                            {/* Outer ring - stroke only in light mode, filled in dark mode */}
+                            <div className="w-4 h-4 rounded-full border-2 border-primary-500 dark:bg-primary-500 dark:border-0 animate-pulse" />
+                            {/* Inner dot - only visible in dark mode */}
+                            <div className="absolute inset-0 w-4 h-4 rounded-full dark:bg-primary-500 dark:scale-50 hidden dark:block" />
+                          </div>
                         </div>
-                      </div>
 
-                      {/* Spacer for zigzag alignment - Desktop only */}
-                      <div className="hidden md:block md:w-[calc(50%-2rem)]" />
+                        {/* Spacer for zigzag alignment - Desktop only */}
+                        <div className="hidden md:block md:w-[calc(50%-2rem)]" />
 
-                      {/* Experience Card */}
-                      <div className="w-full md:w-[calc(50%-2rem)]">
-                        <div className="group relative bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6 shadow-md hover:shadow-xl hover:border-primary-500/50 dark:hover:border-primary-500/50 hover:scale-[1.02] transition-all duration-300">
-                          {/* Decorative Corner Accent */}
-                          <div className="absolute top-0 right-0 w-20 h-20 bg-primary-500/5 rounded-bl-full" />
+                        {/* Experience Card */}
+                        <div className="w-full md:w-[calc(50%-2rem)]">
+                          <div className="group relative bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6 shadow-md hover:shadow-xl hover:border-primary-500/50 dark:hover:border-primary-500/50 hover:scale-[1.02] transition-all duration-300">
+                            {/* Decorative Corner Accent */}
+                            <div className="absolute top-0 right-0 w-20 h-20 bg-primary-500/5 rounded-bl-full" />
 
-                          <div className="relative space-y-3">
-                            {/* Company Logo & Position */}
-                            <div className="flex items-start gap-4">
-                              {/* Company Logo */}
-                              {exp.logo_url ? (
-                                <div className="flex-shrink-0 w-12 h-12 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                                  <Image
-                                    src={exp.logo_url}
-                                    alt={`${exp.company} logo`}
-                                    width={48}
-                                    height={48}
-                                    className="w-full h-full object-contain"
-                                  />
-                                </div>
-                              ) : (
-                                <div className="flex-shrink-0 w-12 h-12 rounded-lg border-2 border-primary-500/30 dark:border-0 dark:bg-primary-500/10 flex items-center justify-center">
-                                  <Briefcase className="w-6 h-6 text-primary-600 dark:text-primary-500" />
-                                </div>
-                              )}
-
-                              {/* Position & Type Badge */}
-                              <div className="flex-1 min-w-0">
-                                <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-500 transition-colors">
-                                  {exp.position}
-                                </h3>
-                                {exp.employment_type && (
-                                  <Badge
-                                    variant="secondary"
-                                    className="mt-1 text-xs"
-                                  >
-                                    {exp.employment_type}
-                                  </Badge>
+                            <div className="relative space-y-3">
+                              {/* Company Logo & Position */}
+                              <div className="flex items-start gap-4">
+                                {/* Company Logo */}
+                                {exp.logo_url ? (
+                                  <div className="flex-shrink-0 w-12 h-12 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                    <Image
+                                      src={exp.logo_url}
+                                      alt={`${exp.company} logo`}
+                                      width={48}
+                                      height={48}
+                                      className="w-full h-full object-contain"
+                                    />
+                                  </div>
+                                ) : (
+                                  <div className="flex-shrink-0 w-12 h-12 rounded-lg border-2 border-primary-500/30 dark:border-0 dark:bg-primary-500/10 flex items-center justify-center">
+                                    <Briefcase className="w-6 h-6 text-primary-600 dark:text-primary-500" />
+                                  </div>
                                 )}
+
+                                {/* Position & Type Badge */}
+                                <div className="flex-1 min-w-0">
+                                  <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-500 transition-colors">
+                                    {exp.position}
+                                  </h3>
+                                  {exp.employment_type && (
+                                    <Badge
+                                      variant="secondary"
+                                      className="mt-1 text-xs"
+                                    >
+                                      {exp.employment_type}
+                                    </Badge>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Company */}
+                              <div className="flex items-center gap-2">
+                                <p className="text-base font-medium text-gray-700 dark:text-gray-300">
+                                  {exp.company}
+                                </p>
+                              </div>
+
+                              {/* Date Range */}
+                              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                                <Calendar className="w-4 h-4 text-primary-600 dark:text-primary-500 flex-shrink-0" />
+                                <span className="text-sm font-medium">
+                                  {formatDate(exp.start_date)} -{" "}
+                                  {exp.is_current ? (
+                                    <span className="text-primary-600 dark:text-primary-500 font-semibold">
+                                      Present
+                                    </span>
+                                  ) : (
+                                    formatDate(exp.end_date)
+                                  )}
+                                </span>
                               </div>
                             </div>
 
-                            {/* Company */}
-                            <div className="flex items-center gap-2">
-                              <p className="text-base font-medium text-gray-700 dark:text-gray-300">
-                                {exp.company}
-                              </p>
-                            </div>
-
-                            {/* Date Range */}
-                            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                              <Calendar className="w-4 h-4 text-primary-600 dark:text-primary-500 flex-shrink-0" />
-                              <span className="text-sm font-medium">
-                                {formatDate(exp.start_date)} -{" "}
-                                {exp.is_current ? (
-                                  <span className="text-primary-600 dark:text-primary-500 font-semibold">
-                                    Present
-                                  </span>
-                                ) : (
-                                  formatDate(exp.end_date)
-                                )}
-                              </span>
-                            </div>
+                            {/* Hover Border Glow */}
+                            <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary-500/0 via-primary-500/0 to-primary-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                           </div>
-
-                          {/* Hover Border Glow */}
-                          <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary-500/0 via-primary-500/0 to-primary-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                         </div>
                       </div>
-                    </div>
+                    </ScrollReveal>
                   );
                 })}
               </div>

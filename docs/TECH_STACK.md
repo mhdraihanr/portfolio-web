@@ -195,7 +195,7 @@ Project ini menggunakan modern web development stack dengan fokus pada:
 
 ## 🎭 Animations
 
-### Framer Motion
+### Framer Motion (motion/react)
 
 **Why Framer Motion?**
 
@@ -210,11 +210,41 @@ Project ini menggunakan modern web development stack dengan fokus pada:
 
 **Features Used:**
 
-- Fade in/out
-- Slide animations
-- Scroll-triggered animations
+- Fade in/out (BlurText component)
 - Page transitions
-- Gesture animations
+- Blur-to-focus text reveal
+
+### React Bits (GSAP)
+
+**Why React Bits?**
+
+- ✅ Pre-built animation components
+- ✅ GSAP-powered (industry-standard animation library)
+- ✅ TypeScript support
+- ✅ Optimized performance
+
+**Components Used:**
+
+- **SplitText**: Character & word-by-word text reveal with GSAP ScrollTrigger (About section)
+- **Orb**: Animated WebGL background sphere (Experience section)
+- **LogoLoop**: Infinite auto-scrolling carousel (Certificates section)
+- **LightRays**: WebGL animated light rays background (Hero section)
+
+### Custom Components
+
+- **ScrollReveal**: IntersectionObserver-based scroll-triggered fade-up animations (all sections)
+- **AnimatedShinyText**: Shimmer text effect (Hero section)
+
+### react-loading-indicators
+
+**Why react-loading-indicators?**
+
+- ✅ Beautiful, modern spinners
+- ✅ Lightweight & performant
+- ✅ Theme-adaptive colors
+
+**Version:** 1.0.1  
+**Usage:** Atom spinner for global page loading overlay
 
 ---
 
@@ -378,21 +408,22 @@ npm install -D prettier
 
 ### Production Dependencies
 
-| Package               | Version | Purpose         |
-| --------------------- | ------- | --------------- |
-| next                  | 16.1.6  | Framework       |
-| react                 | 19.2.3  | UI library      |
-| react-dom             | 19.2.3  | React DOM       |
-| @supabase/supabase-js | 2.93.3  | Database client |
-| @supabase/ssr         | 0.8.0   | SSR helpers     |
-| framer-motion         | 12.29.2 | Animations      |
-| lucide-react          | 0.563.0 | Icons           |
-| react-hook-form       | 7.71.1  | Form management |
-| zod                   | 4.3.6   | Validation      |
-| @hookform/resolvers   | 5.2.2   | Form resolvers  |
-| nodemailer            | 7.0.13  | Email           |
-| clsx                  | 2.1.1   | Class utility   |
-| tailwind-merge        | 3.4.0   | Class merger    |
+| Package                  | Version | Purpose         |
+| ------------------------ | ------- | --------------- |
+| next                     | 16.1.6  | Framework       |
+| react                    | 19.2.3  | UI library      |
+| react-dom                | 19.2.3  | React DOM       |
+| @supabase/supabase-js    | 2.93.3  | Database client |
+| @supabase/ssr            | 0.8.0   | SSR helpers     |
+| framer-motion            | 12.29.2 | Animations      |
+| react-loading-indicators | 1.0.1   | Loading spinner |
+| lucide-react             | 0.563.0 | Icons           |
+| react-hook-form          | 7.71.1  | Form management |
+| zod                      | 4.3.6   | Validation      |
+| @hookform/resolvers      | 5.2.2   | Form resolvers  |
+| nodemailer               | 7.0.13  | Email           |
+| clsx                     | 2.1.1   | Class utility   |
+| tailwind-merge           | 3.4.0   | Class merger    |
 
 ### Development Dependencies
 
@@ -408,7 +439,7 @@ npm install -D prettier
 | eslint               | 9.x     | Linter           |
 | eslint-config-next   | 16.1.6  | Next.js ESLint   |
 
-**Total:** 24 packages  
+**Total:** 25 packages  
 **Bundle Size:** ~500KB (gzipped, estimated)
 
 ---

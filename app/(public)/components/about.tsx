@@ -2,6 +2,8 @@
 
 import { MapPin, Code2, Database, Globe } from "lucide-react";
 import Image from "next/image";
+import SplitText from "@/components/SplitText";
+import { ScrollReveal } from "@/components/shared/scroll-reveal";
 
 interface Skill {
   name: string;
@@ -60,13 +62,13 @@ export function About() {
   };
 
   return (
-    <section className="py-20 bg-white dark:bg-gray-950">
+    <section id="about" className="py-20 bg-white dark:bg-gray-950">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Two Column Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             {/* Left Column - Profile Photo */}
-            <div className="lg:col-span-4 animate-fade-in-up delay-200">
+            <ScrollReveal className="lg:col-span-4" delay={0.1}>
               <div className="relative w-full aspect-square max-w-sm mx-auto lg:mx-0">
                 <div className="relative bg-gray-200 dark:bg-gray-800 rounded-2xl overflow-hidden border-4 border-white dark:border-gray-900 shadow-xl">
                   <Image
@@ -79,48 +81,71 @@ export function About() {
                   />
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
 
             {/* Right Column - Information */}
-            <div className="lg:col-span-8 space-y-6 animate-fade-in-up delay-400">
+            <div className="lg:col-span-8 space-y-6">
               {/* Name and Title */}
               <div>
-                <h3 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
-                  Muhammad Raihan Rafliansyah
-                </h3>
-                <div className="flex flex-wrap items-center gap-4 text-gray-600 dark:text-gray-400">
-                  <div className="flex items-center gap-2">
-                    <Code2 className="h-5 w-5 text-primary-600 dark:text-primary-500" />
-                    <span className="text-lg font-medium">
-                      Fullstack Developer
-                    </span>
+                <SplitText
+                  text="Muhammad Raihan Rafliansyah"
+                  className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2"
+                  delay={50}
+                  duration={0.8}
+                  splitType="chars"
+                  tag="h3"
+                  textAlign="left"
+                  from={{ opacity: 0, y: 20 }}
+                  to={{ opacity: 1, y: 0 }}
+                  repeatable={true}
+                />
+                <ScrollReveal delay={0.2}>
+                  <div className="flex flex-wrap items-center gap-4 text-gray-600 dark:text-gray-400">
+                    <div className="flex items-center gap-2">
+                      <Code2 className="h-5 w-5 text-primary-600 dark:text-primary-500" />
+                      <span className="text-lg font-medium">
+                        Fullstack Developer
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <MapPin className="h-5 w-5 text-primary-600 dark:text-primary-500" />
+                      <span>Indonesia</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-5 w-5 text-primary-600 dark:text-primary-500" />
-                    <span>Indonesia</span>
-                  </div>
-                </div>
+                </ScrollReveal>
               </div>
 
               {/* Bio Text */}
-              <div className="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
-                <p>
-                  I&apos;m a passionate Fullstack Developer with a love for
-                  creating beautiful, functional, and user-friendly web
-                  applications. With expertise in both frontend and backend
-                  technologies, I bring ideas to life through clean code and
-                  modern design.
-                </p>
+              <div className="space-y-4 leading-relaxed">
+                <SplitText
+                  text="I'm a passionate Fullstack Developer with a love for creating beautiful, functional, and user-friendly web applications. With expertise in both frontend and backend technologies, I bring ideas to life through clean code and modern design."
+                  className="text-gray-700 dark:text-gray-300"
+                  delay={20}
+                  duration={0.6}
+                  splitType="words"
+                  tag="p"
+                  textAlign="left"
+                  from={{ opacity: 0, y: 15 }}
+                  to={{ opacity: 1, y: 0 }}
+                  repeatable={true}
+                />
 
-                <p>
-                  When I&apos;m not coding, you&apos;ll find me exploring new
-                  frameworks, contributing to open-source projects, or sharing
-                  knowledge with the developer community.
-                </p>
+                <SplitText
+                  text="When I'm not coding, you'll find me exploring new frameworks, contributing to open-source projects, or sharing knowledge with the developer community."
+                  className="text-gray-700 dark:text-gray-300"
+                  delay={20}
+                  duration={0.6}
+                  splitType="words"
+                  tag="p"
+                  textAlign="left"
+                  from={{ opacity: 0, y: 15 }}
+                  to={{ opacity: 1, y: 0 }}
+                  repeatable={true}
+                />
               </div>
 
               {/* Skills Section */}
-              <div className="pt-4">
+              <ScrollReveal className="pt-4" delay={0.1}>
                 <h4 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                   Skills & Technologies
                 </h4>
@@ -213,7 +238,7 @@ export function About() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </ScrollReveal>
             </div>
           </div>
         </div>

@@ -8,6 +8,7 @@ Dokumentasi lengkap tentang struktur folder dan file dalam project portfolio web
 portfolio-web/
 ├── app/                      # Next.js App Router
 ├── components/               # Reusable React components
+├── contexts/                 # React Context providers
 ├── lib/                      # Utility functions & configurations
 ├── types/                    # TypeScript type definitions
 ├── hooks/                    # Custom React hooks
@@ -181,16 +182,23 @@ components/
 │   ├── Modal.tsx              # Modal dialog
 │   ├── Toast.tsx              # Toast notification
 │   ├── Spinner.tsx            # Loading spinner
-│   └── Badge.tsx              # Badge component
+│   ├── Badge.tsx              # Badge component
+│   └── animated-shiny-text.tsx # Shimmer text animation (Magic UI) ✅
 │
-├── LogoLoop.tsx               # Infinite scroll carousel component ✅
-├── LogoLoop.jsx               # LogoLoop implementation (React Bits) ✅
+├── BlurText.tsx               # Blur-to-focus text animation (React Bits) ✅
+├── SplitText.tsx              # Character/word reveal animation (React Bits) ✅
+├── LightRays.tsx              # WebGL light rays background (OGL) ✅
+├── LightRays.jsx              # LightRays implementation ✅
+├── LogoLoop.tsx               # Infinite scroll carousel (React Bits) ✅
+├── LogoLoop.jsx               # LogoLoop implementation ✅
+├── Orb.tsx                    # Animated orb background ✅
 │
 └── shared/                     # Shared components
-    ├── Navbar.tsx             # Navigation bar
+    ├── Navbar.tsx             # Navigation bar with loading sync ✅
     ├── Footer.tsx             # Footer
     ├── ThemeToggle.tsx        # Dark mode toggle
-    └── BackToTop.tsx          # Back to top button
+    ├── BackToTop.tsx          # Back to top button
+    └── scroll-reveal.tsx      # Scroll-triggered fade animations ✅
 ```
 
 **Component Guidelines:**
@@ -203,9 +211,23 @@ components/
 
 **Special Components:**
 
+- **BlurText.tsx**: Text animation with blur-to-focus reveal effect from React Bits. Supports word-by-word or character-by-character animation. Used in Hero section for main title.
+
+- **BlurText.tsx**: Framer Motion-based blur-to-focus text animation. Supports word-by-word or letter-by-letter animation from top/bottom. Uses IntersectionObserver for bidirectional viewport detection - animates in when entering and reverses when exiting. Used in Hero section for main title.
+
+- **SplitText.tsx**: GSAP-powered text animation with split reveal. Supports chars/words/lines split types with customizable from/to states. New `repeatable` prop enables bidirectional animations via GSAP ScrollTrigger toggleActions. When `repeatable={true}`, animations reverse on scroll out. Used in About section for name (chars) and bio paragraphs (words) with repeatable enabled.
+
+- **AnimatedShinyText**: Shimmer/shine text effect from Magic UI. Used in Hero section for greeting text. Configurable shimmer width.
+
+- **LightRays**: WebGL-powered animated light rays background using OGL library. Supports mouse following, customizable colors, speed, and spread. Used in Hero section background.
+
+- **Orb**: Animated gradient orb background effect. Used in Experience section.
+
+- **ScrollReveal**: Intersection Observer-based bidirectional scroll animation wrapper. Animates elements IN when entering viewport and OUT when leaving. Supports configurable direction (up/down/left/right), delay, duration, distance, and threshold. Includes prefers-reduced-motion support for accessibility. By default animations repeat on every scroll, but can be set to `once={true}` for one-time animations. Used across all sections for dynamic content reveal.
+
 - **certificate-card.tsx**: Fixed-height (340px) card for displaying certificates with gradient header, icon, title, provider, issue date badge, description, and "View Details" link. Designed for consistent display in infinite scroll carousel.
 
-- **LogoLoop**: Infinite scroll carousel component from React Bits. Used for certificates section with pause-on-hover functionality. Includes TypeScript wrapper (LogoLoop.tsx) with SSR disabled and type definitions (LogoLoop.tsx).
+- **LogoLoop**: Infinite scroll carousel component from React Bits. Used for certificates section with pause-on-hover functionality. Includes TypeScript wrapper (LogoLoop.tsx) with SSR disabled and type definitions.
 
 **Example Component Structure:**
 
@@ -262,6 +284,43 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 Button.displayName = "Button";
+```
+
+---
+
+### `/contexts` - React Context Providers
+
+Global state management menggunakan React Context.
+
+```
+contexts/
+└── PageLoadingContext.tsx      # Global loading state management ✅
+```
+
+**PageLoadingContext:**
+
+- Manages global page loading state across all routes
+- Provides `isLoading` state and `setPageReady()` function
+- Used in layouts to show fullscreen Atom spinner during page initialization
+- Automatic fallback timeout (3 seconds) if setPageReady() not called
+- Syncs with LightRays background rendering in Hero section
+- Controls navbar visibility (hidden during loading)
+
+**Usage Example:**
+
+```tsx
+import { usePageLoading } from "@/contexts/PageLoadingContext";
+
+function MyComponent() {
+  const { isLoading, setPageReady } = usePageLoading();
+
+  useEffect(() => {
+    // Signal that component is ready
+    setPageReady();
+  }, []);
+
+  return <div>{isLoading ? "Loading..." : "Content"}</div>;
+}
 ```
 
 ---

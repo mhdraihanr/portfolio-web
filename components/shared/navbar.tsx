@@ -7,6 +7,7 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./theme-toggle";
 import { cn } from "@/lib/utils";
+import { usePageLoading } from "@/contexts/PageLoadingContext";
 
 const navLinks = [
   { href: "#home", label: "Home" },
@@ -21,6 +22,7 @@ export function Navbar() {
   const [isOpen, setIsOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
   const pathname = usePathname();
+  const { isLoading } = usePageLoading();
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -43,10 +45,43 @@ export function Navbar() {
     };
   }, [isOpen]);
 
+  // Smooth scroll handler for hash links
+  const handleHashClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    originalHref: string,
+    actualHref: string,
+  ) => {
+    // Only handle smooth scroll if we're on the same page and it's a hash link
+    if (originalHref.startsWith("#") && pathname !== "/contact") {
+      const targetId = originalHref.slice(1);
+      const targetElement = document.getElementById(targetId);
+
+      if (targetElement) {
+        e.preventDefault();
+        targetElement.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+
+        // Update URL hash without jumping
+        window.history.pushState(null, "", originalHref);
+      }
+
+      // Close mobile menu
+      setIsOpen(false);
+    } else if (!originalHref.startsWith("#")) {
+      // For non-hash links (like /contact), just close the menu
+      setIsOpen(false);
+    }
+    // For hash links on contact page, let default navigation happen (go to /#home)
+  };
+
   return (
     <nav
       className={cn(
         "fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 w-auto max-w-fit",
+        !isLoading && "animate-fade-in-down",
+        isLoading && "opacity-0",
         scrolled
           ? "bg-white/15 dark:bg-white/10 backdrop-blur-md saturate-[180%] shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-white/20 dark:border-white/10"
           : "bg-white/10 dark:bg-white/5 backdrop-blur-sm saturate-[150%] border border-white/10 dark:border-white/5",
@@ -76,6 +111,7 @@ export function Navbar() {
                 <Link
                   key={link.href}
                   href={href}
+                  onClick={(e) => handleHashClick(e, link.href, href)}
                   className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-200"
                   style={{ textShadow: "0 1px 2px rgba(0, 0, 0, 0.3)" }}
                 >
@@ -122,9 +158,9 @@ export function Navbar() {
                 <Link
                   key={link.href}
                   href={href}
+                  onClick={(e) => handleHashClick(e, link.href, href)}
                   className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 rounded-lg transition-all duration-200 text-center"
                   style={{ textShadow: "0 1px 2px rgba(0, 0, 0, 0.3)" }}
-                  onClick={() => setIsOpen(false)}
                 >
                   {link.label}
                 </Link>

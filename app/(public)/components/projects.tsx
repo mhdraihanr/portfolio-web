@@ -2,17 +2,13 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import type { Database } from "@/types/database.types";
 import type { Project } from "@/types/project";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Github, Code2, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { ScrollReveal } from "@/components/shared/scroll-reveal";
 
 async function getProjects(): Promise<Project[]> {
   const cookieStore = await cookies();
@@ -55,7 +51,7 @@ export async function Projects() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
-          <div className="text-center mb-12">
+          <ScrollReveal className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4">
               <Code2 className="w-4 h-4" />
               <span className="text-sm font-medium">Portfolio</span>
@@ -67,7 +63,7 @@ export async function Projects() {
               A showcase of my recent work, featuring applications and
               innovative solutions built with modern technologies.
             </p>
-          </div>
+          </ScrollReveal>
 
           {/* Projects Grid */}
           {projects.length === 0 ? (
@@ -79,100 +75,100 @@ export async function Projects() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
               {projects.map((project, index) => (
-                <Card
+                <ScrollReveal
                   key={project.id}
-                  className="group relative overflow-hidden hover:shadow-xl hover:scale-[1.02] transition-all duration-300 animate-fade-in-up"
-                  style={{
-                    animationDelay: `${index * 100}ms`,
-                  }}
+                  delay={index * 0.1}
+                  duration={0.6}
                 >
-                  {/* Project Image with Overlay */}
-                  {project.image_url && (
-                    <div className="relative h-80 overflow-hidden bg-gray-100 dark:bg-gray-800">
-                      <Image
-                        src={project.image_url}
-                        alt={project.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                      
-                      {/* Overlay with See Details Button */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <Link href={`/projects/${project.slug}`}>
-                          <Button
-                            size="lg"
-                            className="shadow-lg backdrop-blur-sm bg-white/95 dark:bg-gray-900/95 hover:bg-white dark:hover:bg-gray-900 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700"
-                            rightIcon={
-                              <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                            }
-                          >
-                            See Details
-                          </Button>
-                        </Link>
-                      </div>
-                    </div>
-                  )}
+                  <Card className="group relative overflow-hidden hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
+                    {/* Project Image with Overlay */}
+                    {project.image_url && (
+                      <div className="relative h-80 overflow-hidden bg-gray-100 dark:bg-gray-800">
+                        <Image
+                          src={project.image_url}
+                          alt={project.title}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
 
-                  <CardHeader>
-                    <CardTitle className="flex items-start justify-between gap-2">
-                      <span>{project.title}</span>
-                      <div className="flex gap-2 flex-shrink-0">
-                        {project.github_url && (
-                          <Link
-                            href={project.github_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-500 transition-colors"
-                            aria-label={`View ${project.title} on GitHub`}
-                          >
-                            <Github className="w-5 h-5" />
+                        {/* Overlay with See Details Button */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <Link href={`/projects/${project.slug}`}>
+                            <Button
+                              size="lg"
+                              className="shadow-lg backdrop-blur-sm bg-white/95 dark:bg-gray-900/95 hover:bg-white dark:hover:bg-gray-900 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700"
+                              rightIcon={
+                                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                              }
+                            >
+                              See Details
+                            </Button>
                           </Link>
-                        )}
-                        {project.project_url && (
-                          <Link
-                            href={project.project_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-500 transition-colors"
-                            aria-label={`Visit ${project.title} live site`}
-                          >
-                            <ExternalLink className="w-5 h-5" />
-                          </Link>
-                        )}
+                        </div>
                       </div>
-                    </CardTitle>
-                  </CardHeader>
+                    )}
 
-                  <CardContent className="space-y-4">
-                    {/* Description */}
-                    <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3">
-                      {project.description}
-                    </p>
-
-                    {/* Technologies */}
-                    {project.technologies &&
-                      project.technologies.length > 0 && (
-                        <div className="flex flex-wrap gap-2">
-                          {project.technologies
-                            .slice(0, 5)
-                            .map((tech: string) => (
-                              <Badge
-                                key={tech}
-                                variant="secondary"
-                                className="text-xs"
-                              >
-                                {tech}
-                              </Badge>
-                            ))}
-                          {project.technologies.length > 5 && (
-                            <Badge variant="secondary" className="text-xs">
-                              +{project.technologies.length - 5} more
-                            </Badge>
+                    <CardHeader>
+                      <CardTitle className="flex items-start justify-between gap-2">
+                        <span>{project.title}</span>
+                        <div className="flex gap-2 flex-shrink-0">
+                          {project.github_url && (
+                            <Link
+                              href={project.github_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-500 transition-colors"
+                              aria-label={`View ${project.title} on GitHub`}
+                            >
+                              <Github className="w-5 h-5" />
+                            </Link>
+                          )}
+                          {project.project_url && (
+                            <Link
+                              href={project.project_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-500 transition-colors"
+                              aria-label={`Visit ${project.title} live site`}
+                            >
+                              <ExternalLink className="w-5 h-5" />
+                            </Link>
                           )}
                         </div>
-                      )}
-                  </CardContent>
-                </Card>
+                      </CardTitle>
+                    </CardHeader>
+
+                    <CardContent className="space-y-4">
+                      {/* Description */}
+                      <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3">
+                        {project.description}
+                      </p>
+
+                      {/* Technologies */}
+                      {project.technologies &&
+                        project.technologies.length > 0 && (
+                          <div className="flex flex-wrap gap-2">
+                            {project.technologies
+                              .slice(0, 5)
+                              .map((tech: string) => (
+                                <Badge
+                                  key={tech}
+                                  variant="secondary"
+                                  className="text-xs"
+                                >
+                                  {tech}
+                                </Badge>
+                              ))}
+                            {project.technologies.length > 5 && (
+                              <Badge variant="secondary" className="text-xs">
+                                +{project.technologies.length - 5} more
+                              </Badge>
+                            )}
+                          </div>
+                        )}
+                    </CardContent>
+                  </Card>
+                </ScrollReveal>
               ))}
             </div>
           )}
