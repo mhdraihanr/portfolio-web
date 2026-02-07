@@ -167,9 +167,7 @@ export default async function AdminDashboard() {
                     <p className="text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">
                       {stat.label}
                     </p>
-                    <p
-                      className={`text-3xl font-bold mt-2 ${stat.isText ? "text-lg" : ""} text-gray-900 dark:text-white`}
-                    >
+                    <p className="text-3xl font-bold mt-2 text-gray-900 dark:text-white">
                       {stat.value}
                     </p>
                   </div>
