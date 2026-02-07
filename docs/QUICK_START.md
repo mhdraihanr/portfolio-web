@@ -118,6 +118,8 @@ Yang sudah ada:
 - ✅ **Authentication flow** ⭐
 - ✅ **Projects CRUD (List, Create, Edit, Delete)** 🆕
 - ✅ **Experience CRUD (List, Create, Edit, Delete)** 🆕
+- ✅ **Skills CRUD (List, Create, Edit, Delete)** ⭐ NEW
+- ✅ **Devicon Icon Picker** ⭐ NEW
 - ✅ **Form validation with Zod** 🆕
 - ✅ **Toast notifications** 🆕
 - ✅ **Delete confirmations** 🆕
@@ -153,6 +155,7 @@ Yang belum ada:
 
 - Create, edit, and delete projects
 - Create, edit, and delete work experience
+- Create, edit, and delete skills (with Devicon Icon Picker)
 - Send contact messages via email
 - Manage your portfolio content
 
@@ -247,12 +250,29 @@ Admin panel dengan full CRUD sudah selesai! ✅
      - Update & Delete functionality
      - Date validation
 
-6. **✅ Supporting Files**
+6. **✅ Skills CRUD** ⭐ NEW
+   - **List** (`app/kingpersib/skills/page.tsx`)
+     - Grid/Table view toggle
+     - Search & category filter
+     - Visibility indicator
+     - Stats cards
+   - **Create** (`app/kingpersib/skills/new/page.tsx`)
+     - Devicon Icon Picker (fetch from devicon.dev)
+     - Category selection
+     - Visibility control
+     - Toast notifications
+   - **Edit** (`app/kingpersib/skills/[id]/edit/page.tsx`)
+     - Pre-filled form with icon preview
+     - Update & Delete functionality
+
+7. **✅ Supporting Files**
    - `lib/validations/project.ts` - Zod schemas
    - `lib/validations/experience.ts` - Zod schemas
+   - `lib/validations/skill.ts` - Zod schemas ⭐ NEW
    - `lib/supabase/helpers.ts` - CRUD helpers
+   - `components/admin/devicon-picker.tsx` - Icon Picker ⭐ NEW
 
-7. **✅ API Routes** (`app/api/auth/`)
+8. **✅ API Routes** (`app/api/auth/`)
    - `/api/auth/login` - Login endpoint
    - `/api/auth/logout` - Logout endpoint
 
@@ -262,6 +282,7 @@ Admin panel dengan full CRUD sudah selesai! ✅
 
 - ✅ Manage projects (Create, Edit, Delete)
 - ✅ Manage work experience (Create, Edit, Delete)
+- ✅ Manage skills with Devicon Icon Picker (Create, Edit, Delete)
 - ✅ View dashboard statistics
 - ✅ All with form validation and toast notifications
 

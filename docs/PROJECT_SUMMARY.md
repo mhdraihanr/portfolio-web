@@ -143,8 +143,17 @@ portfolio-web/
 #### `work_experience`
 
 - Company dan position
+- Logo URL (company logo)
+- Employment type (Full-time, Part-time, etc.)
 - Start/end dates
 - Current job flag
+- Order index untuk sorting
+
+#### `skills`
+
+- Name dan category (Frontend, Backend, Tools, Others)
+- Devicon icon class & SVG URL
+- Visibility control (show/hide on homepage)
 - Order index untuk sorting
 
 ### Features
@@ -204,14 +213,12 @@ portfolio-web/
 ### Immediate (This Week)
 
 1. **Setup Supabase**
-
    - Create Supabase project
    - Run `supabase-schema.sql`
    - Create admin user
    - Get API keys
 
 2. **Configure Environment**
-
    - Update `.env.local` with Supabase credentials
    - Set admin route secret
    - Setup Gmail for contact form (optional)
@@ -230,13 +237,11 @@ portfolio-web/
 ### Short Term (Next 2 Weeks)
 
 5. **Build UI Components**
-
    - Button, Input, Card, etc.
    - Navbar & Footer
    - Theme toggle
 
 6. **Build Public Pages**
-
    - Hero section
    - About section (with integrated skills)
    - Certificate section
@@ -252,14 +257,12 @@ portfolio-web/
 ### Medium Term (Next Month)
 
 8. **Polish & Test**
-
    - Responsive design
    - Dark mode
    - Animations
    - Error handling
 
 9. **Deploy to Production**
-
    - Push to GitHub
    - Deploy to Vercel
    - Configure domain

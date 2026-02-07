@@ -10,7 +10,6 @@ Mulai dari sini jika Anda baru pertama kali setup project:
 
 1. **[QUICK_START.md](./QUICK_START.md)** ⚡  
    Panduan cepat untuk setup dalam 10 menit
-
    - Prerequisites
    - 5-minute setup
    - Quick commands
@@ -18,7 +17,6 @@ Mulai dari sini jika Anda baru pertama kali setup project:
 
 2. **[SETUP_GUIDE.md](./SETUP_GUIDE.md)** 📖  
    Panduan setup lengkap step-by-step
-
    - Detailed Supabase setup
    - Gmail configuration
    - Environment variables
@@ -41,7 +39,6 @@ Dokumentasi utama untuk memahami project:
 
 4. **[DOCUMENTATION.md](./DOCUMENTATION.md)** 📚  
    Dokumentasi teknis lengkap
-
    - Project overview
    - Architecture
    - Database schema
@@ -51,7 +48,6 @@ Dokumentasi utama untuk memahami project:
 
 5. **[PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md)** 🏗️  
    Struktur folder dan file organization
-
    - Directory structure
    - File naming conventions
    - Component organization
@@ -75,7 +71,6 @@ Dokumentasi untuk development:
 
 7. **[API_REFERENCE.md](./API_REFERENCE.md)** 🔌  
    API endpoints documentation
-
    - Contact API
    - Projects API (CRUD)
    - Experience API (CRUD)
@@ -92,13 +87,10 @@ Dokumentasi untuk development:
    - Future ideas
 
 8a. **[ADMIN_CRUD_GUIDE.md](./ADMIN_CRUD_GUIDE.md)** 🔐 🆕  
-    Admin CRUD quick reference
-    - Quick access URLs
-    - Form field requirements
-    - Validation rules
-    - Tips & tricks
-    - Troubleshooting
-    - Best practices
+ Admin CRUD quick reference - Quick access URLs - Projects, Experience & Skills management - Form field requirements - Validation rules - Devicon Icon Picker usage - Tips & tricks - Troubleshooting - Best practices
+
+8b. **[SKILLS_MANAGEMENT_SPEC.md](./SKILLS_MANAGEMENT_SPEC.md)** 🛠️ ⭐ NEW  
+ Skills management specification - Database schema - Devicon Icon Picker component - Admin CRUD pages - Homepage integration - Implementation checklist
 
 ---
 
@@ -124,7 +116,6 @@ Dokumentasi untuk kontribusi:
 
 10. **[CONTRIBUTING.md](./CONTRIBUTING.md)** 🤝  
     Guidelines untuk contribute
-
     - How to use as template
     - Code style
     - Git workflow
@@ -328,19 +319,16 @@ Jika ada perubahan pada project:
 If documentation doesn't answer your question:
 
 1. **Check Documentation First**
-
    - Use Ctrl+F to search
    - Check related sections
    - Look at examples
 
 2. **Check Code**
-
    - Look at similar implementations
    - Check comments in code
    - Review type definitions
 
 3. **External Resources**
-
    - Official documentation (Next.js, React, etc.)
    - Community forums
    - Stack Overflow

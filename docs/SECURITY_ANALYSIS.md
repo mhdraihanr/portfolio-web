@@ -92,6 +92,7 @@ export async function middleware(request: NextRequest) {
 -- Enable RLS on tables
 ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.work_experience ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.skills ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Public can READ
 CREATE POLICY "Allow public read access on projects"
@@ -488,19 +489,16 @@ const handleDelete = async () => {
 **Why it's secure:**
 
 1. **Multi-Layer Protection**
-
    - Middleware blocks non-authenticated page access
    - RLS blocks non-authenticated database operations
    - Both work independently (fail-safe)
 
 2. **Industry Standards**
-
    - Supabase Auth (trusted by thousands)
    - JWT tokens (industry standard)
    - Row Level Security (PostgreSQL feature)
 
 3. **Proper Implementation**
-
    - Authentication checked at multiple points
    - Tokens properly managed
    - Public/private separation clear

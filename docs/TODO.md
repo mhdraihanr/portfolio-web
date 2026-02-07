@@ -230,11 +230,13 @@ Task list untuk development portfolio website. Update status seiring progress.
 - [x] Overview stats cards
   - [x] Total projects count
   - [x] Total experience count
+  - [x] Total skills count
   - [x] Featured projects count
-  - [x] Last updated date
 - [x] Quick actions
   - [x] "Add New Project" button
   - [x] "Add New Experience" button
+  - [x] "Add New Skill" button
+  - [x] "Manage Skills" button
 - [ ] Recent items list (optional, can add later)
   - [ ] Recent projects (last 5)
   - [ ] Recent experience (last 5)
@@ -318,6 +320,57 @@ Task list untuk development portfolio website. Update status seiring progress.
   - [x] Toast notifications (success/error)
   - [x] Loading states
   - [x] Redirect after success/delete
+
+### Skills Management
+
+- [x] List skills page (`app/[ADMIN_ROUTE]/skills/page.tsx`)
+  - [x] Fetch all skills from Supabase
+  - [x] Grid view grouped by category
+  - [x] Table view with all columns
+  - [x] Grid/Table view toggle
+  - [x] Search by name
+  - [x] Category filter (All, Frontend, Backend, Tools, Others)
+  - [x] Stats cards (Total, Frontend, Backend, Tools, Visible)
+  - [x] Icon preview (Devicon SVG)
+  - [x] Visibility indicator
+  - [x] Edit button (link to edit page)
+  - [x] Delete button (with confirmation modal)
+  - [x] "Add New" button
+  - [x] Empty state with CTA
+- [x] Create skill page (`app/[ADMIN_ROUTE]/skills/new/page.tsx`)
+  - [x] Form with all fields:
+    - [x] Name (required)
+    - [x] Category (required, select)
+    - [x] Icon (auto-filled from Devicon Picker)
+    - [x] Icon SVG URL (auto-filled from Devicon Picker)
+    - [x] Order index (number)
+    - [x] Is Visible (checkbox)
+  - [x] Devicon Icon Picker component
+    - [x] Fetch icons from devicon.json API
+    - [x] Search by name/tags
+    - [x] Grid display with click to select
+    - [x] Auto-generate icon class & SVG URL
+    - [x] Preview selected icon
+    - [x] Clear selection
+  - [x] Form validation (React Hook Form + Zod)
+  - [x] Submit to Supabase via helper function
+  - [x] Toast notifications (success/error)
+  - [x] Loading states
+  - [x] Redirect after success
+- [x] Edit skill page (`app/[ADMIN_ROUTE]/skills/[id]/edit/page.tsx`)
+  - [x] Fetch skill data by ID
+  - [x] Pre-filled form with current data
+  - [x] Icon preview with current selection
+  - [x] Update functionality via helper function
+  - [x] Delete button with confirmation modal
+  - [x] Toast notifications (success/error)
+  - [x] Loading states
+  - [x] Redirect after success/delete
+
+### Database Migrations
+
+- [x] `migration-add-logo-employment-type.sql` - Add logo_url and employment_type to work_experience
+- [x] `migration-add-skills-table.sql` - Create skills table with RLS policies and seed data
 
 ---
 
@@ -604,7 +657,7 @@ Future ideas to consider:
 - Phase 1: ██████████ 100% (Core Setup - Code ✅, Environment Setup ✅)
 - Phase 2: ██████████ 100% (UI Components - All Essential Components ✅)
 - Phase 3: ██████████ 100% (Public Pages - Hero ✅, About ✅, Certificates ✅, Projects ✅, Project Details ✅, Work Experience ✅, Contact ✅, Smooth Scroll ✅)
-- Phase 4: ██████████ 100% (Admin Panel - Complete CRUD ✅)
+- Phase 4: ██████████ 100% (Admin Panel - Complete CRUD: Projects ✅, Experience ✅, Skills ✅)
 - Phase 5: ██████░░░░ 60% (API Routes - Auth routes ✅, Contact API ✅)
 - Phase 6: ░░░░░░░░░░ 0% (Custom Hooks - Optional)
 - Phase 7: ████████░░ 86% (Animations - Text animations ✅, Scroll animations ✅, Hover effects ✅, Loading ✅, Smooth scroll ✅, Entrance animations ✅, Global loading state ✅, Scroll-triggered animations ✅, Bidirectional animations ✅)
@@ -913,6 +966,60 @@ Future ideas to consider:
 ---
 
 ## 📝 Recent Updates
+
+### February 6-7, 2026 - Skills Management CRUD Complete! 🛠️
+
+**✅ Full Skills CRUD with Devicon Icon Picker**
+
+**What was built:**
+
+1. **Database**
+   - Skills table with categories (frontend, backend, tools, others)
+   - RLS policies (public read, authenticated write)
+   - Indexes for performance
+   - Seed data (19 skills matching original hardcoded data)
+   - Migration file: `migration-add-skills-table.sql`
+
+2. **Admin Panel - Skills CRUD**
+   - **List Page** (`app/kingpersib/skills/page.tsx`)
+     - Grid/Table view toggle
+     - Search by name + category filter
+     - Stats cards (Total, Frontend, Backend, Tools, Visible)
+     - Icon preview, visibility indicator
+     - Delete with confirmation modal
+   - **Create Page** (`app/kingpersib/skills/new/page.tsx`)
+     - Form with Devicon Icon Picker
+     - Category selection, visibility control
+     - React Hook Form + Zod validation
+   - **Edit Page** (`app/kingpersib/skills/[id]/edit/page.tsx`)
+     - Pre-filled form with icon preview
+     - Update & Delete functionality
+
+3. **Devicon Icon Picker** (`components/admin/devicon-picker.tsx`)
+   - Fetches all icons from devicon.json API
+   - Search by name/altnames/tags
+   - Grid display (120 icons, scrollable)
+   - Auto-generate icon class & SVG URL on select
+   - Preview, clear, outside-click-to-close
+   - Dark mode support
+
+4. **Homepage Integration**
+   - `app/(public)/components/about.tsx` now fetches skills from database
+   - Skills grouped by category (Frontend, Backend, Tools)
+   - Only visible skills shown (`is_visible = true`)
+   - Ordered by `order_index`
+
+5. **Supporting Files**
+   - `types/skill.ts` - Type definitions
+   - `types/database.types.ts` - Updated with skills table
+   - `lib/validations/skill.ts` - Zod schema
+   - `lib/supabase/helpers.ts` - insertSkill, updateSkill, deleteSkill
+   - `components/admin/sidebar.tsx` - Added Skills nav item
+   - `app/kingpersib/page.tsx` - Dashboard stats + quick actions for Skills
+
+**📁 Files Created:** 7 | **Files Modified:** 5
+
+---
 
 ### February 6, 2026 - Bidirectional Scroll Animations Complete! 🔄
 

@@ -89,6 +89,13 @@ app/
 │       └── [id]/
 │           └── edit/
 │               └── page.tsx    # Edit experience
+│   └── skills/                 # Skills management ✅ NEW
+│       ├── page.tsx            # List all skills (grid/table view)
+│       ├── new/
+│       │   └── page.tsx        # Create new skill (with Devicon Picker)
+│       └── [id]/
+│           └── edit/
+│               └── page.tsx    # Edit skill
 │
 ├── api/                        # API routes
 │   ├── contact/
@@ -184,6 +191,12 @@ components/
 │   ├── Spinner.tsx            # Loading spinner
 │   ├── Badge.tsx              # Badge component
 │   └── animated-shiny-text.tsx # Shimmer text animation (Magic UI) ✅
+│
+├── admin/                      # Admin panel components
+│   ├── sidebar.tsx            # Sidebar navigation
+│   ├── header.tsx             # Page header
+│   ├── devicon-picker.tsx     # Devicon icon picker (search & select) ✅ NEW
+│   └── index.ts               # Exports
 │
 ├── BlurText.tsx               # Blur-to-focus text animation (React Bits) ✅
 ├── SplitText.tsx              # Character/word reveal animation (React Bits) ✅
@@ -343,7 +356,8 @@ lib/
 │
 ├── validations/                # Zod validation schemas ✅
 │   ├── project.ts             # Project validation
-│   └── experience.ts          # Experience validation
+│   ├── experience.ts          # Experience validation
+│   └── skill.ts               # Skill validation ✅ NEW
 │
 ├── email.ts                    # Email service (Nodemailer)
 ├── auth.ts                     # Auth helpers
@@ -413,6 +427,9 @@ CRUD helper functions untuk mengatasi Supabase type inference issues:
 - `updateProject()` - Update existing project
 - `insertWorkExperience()` - Create new work experience
 - `updateWorkExperience()` - Update existing work experience
+- `insertSkill()` - Create new skill ✅ NEW
+- `updateSkill()` - Update existing skill ✅ NEW
+- `deleteSkill()` - Delete existing skill ✅ NEW
 - Type-safe dengan Database types
 - Menggunakan `@ts-expect-error` untuk type workarounds
 
@@ -438,6 +455,17 @@ Zod validation schema untuk work experience:
 - Current job logic (end date optional if current)
 - Order index validation
 
+#### `lib/validations/skill.ts` ✅ NEW
+
+Zod validation schema untuk skills:
+
+- Name validation (min 2, max 50 chars)
+- Category enum validation (frontend, backend, tools, others)
+- Icon string (optional, Devicon class)
+- Icon SVG URL validation (optional, valid URL)
+- Order index validation (int, min 0)
+- Visibility boolean
+
 #### `lib/utils.ts`
 
 General utility functions:
@@ -460,7 +488,8 @@ types/
 ├── database.types.ts           # Supabase generated types
 ├── project.ts                  # Project types
 ├── experience.ts               # Experience types
-└── certificate.ts              # Certificate types ✅
+├── certificate.ts              # Certificate types ✅
+└── skill.ts                    # Skill types ✅ NEW
 ```
 
 **Type Conventions:**
@@ -819,4 +848,4 @@ tests/
 
 ---
 
-**Last Updated:** January 2026
+**Last Updated:** February 7, 2026

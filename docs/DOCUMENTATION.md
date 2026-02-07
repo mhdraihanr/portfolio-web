@@ -2,7 +2,7 @@
 
 ## 📋 Overview
 
-Portfolio website untuk Raffael Jonathan N.H - Fullstack Web Developer dengan fitur admin panel untuk manage projects dan work experience secara dinamis.
+Portfolio website untuk Raffael Jonathan N.H - Fullstack Web Developer dengan fitur admin panel untuk manage projects, work experience, dan skills secara dinamis.
 
 ## 🛠 Tech Stack
 
@@ -53,6 +53,13 @@ portfolio-web/
 │   │       └── [id]/
 │   │           └── edit/
 │   │               └── page.tsx # Edit experience
+│   │   └── skills/
+│   │       ├── page.tsx       # List skills (grid/table view)
+│   │       ├── new/
+│   │       │   └── page.tsx   # Create skill (Devicon Picker)
+│   │       └── [id]/
+│   │           └── edit/
+│   │               └── page.tsx # Edit skill
 │   │
 │   ├── api/
 │   │   ├── contact/
@@ -88,7 +95,8 @@ portfolio-web/
 ├── types/
 │   ├── database.types.ts      # Supabase generated types
 │   ├── project.ts
-│   └── experience.ts
+│   ├── experience.ts
+│   └── skill.ts               # Skill types (NEW)
 │
 ├── hooks/
 │   ├── useProjects.ts
@@ -134,10 +142,26 @@ portfolio-web/
 - company (text)
 - position (text)
 - description (text)
+- logo_url (text, nullable)      -- Company logo URL
+- employment_type (text, nullable) -- Full-time, Part-time, Internship, etc.
 - start_date (date)
 - end_date (date, nullable)
 - is_current (boolean, default: false)
 - order_index (integer)
+- created_at (timestamp)
+- updated_at (timestamp)
+```
+
+#### 3. skills
+
+```sql
+- id (uuid, primary key)
+- name (text)
+- category (text, check: frontend/backend/tools/others)
+- icon (text, nullable)         -- Devicon class
+- icon_svg (text, nullable)      -- SVG URL
+- order_index (integer, default: 0)
+- is_visible (boolean, default: true)
 - created_at (timestamp)
 - updated_at (timestamp)
 ```

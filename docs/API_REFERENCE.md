@@ -472,6 +472,52 @@ GET /api/experience?current=true
 
 ---
 
+### 4. Skills (Direct Supabase Client)
+
+Skills CRUD operations are performed via **direct Supabase client calls** from admin pages (not API routes). Data is accessed through helper functions in `lib/supabase/helpers.ts`.
+
+#### Database Table: `public.skills`
+
+```sql
+CREATE TABLE IF NOT EXISTS public.skills (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    name TEXT NOT NULL,
+    category TEXT NOT NULL CHECK (category IN ('frontend', 'backend', 'tools', 'others')),
+    icon TEXT,           -- Devicon class (e.g., "devicon-react-original colored")
+    icon_svg TEXT,        -- SVG URL for icon preview
+    order_index INTEGER DEFAULT 0,
+    is_visible BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+```
+
+#### Helper Functions
+
+- `insertSkill(supabase, data)` - Create new skill
+- `updateSkill(supabase, id, data)` - Update skill by ID
+- `deleteSkill(supabase, id)` - Delete skill by ID
+
+#### Public Data Access (Homepage)
+
+The About section fetches visible skills directly:
+
+```typescript
+const { data } = await supabase
+  .from("skills")
+  .select("name, icon, icon_svg, category")
+  .eq("is_visible", true)
+  .order("order_index", { ascending: true });
+```
+
+#### Admin Pages
+
+- **List:** `/kingpersib/skills` - Grid/Table view with search & category filter
+- **Create:** `/kingpersib/skills/new` - Form with Devicon Icon Picker
+- **Edit:** `/kingpersib/skills/[id]/edit` - Pre-filled form with update & delete
+
+---
+
 ## Error Codes
 
 | Code | Description                      |
@@ -610,6 +656,12 @@ Planned webhooks for future implementation:
 
 ## Changelog
 
+### v1.1.0 (February 2026)
+
+- Skills management via direct Supabase client (no API routes)
+- Skills database table with categories, Devicon icons, visibility control
+- Devicon Icon Picker component for admin panel
+
 ### v1.0.0 (2024-01-01)
 
 - Initial API release
@@ -619,4 +671,4 @@ Planned webhooks for future implementation:
 
 ---
 
-**Last Updated:** January 2026
+**Last Updated:** February 7, 2026
