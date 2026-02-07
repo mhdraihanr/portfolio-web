@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS public.projects (
     problem TEXT NOT NULL,
     solution TEXT NOT NULL,
     impact TEXT NOT NULL,
-    technologies TEXT[] NOT NULL DEFAULT '{}',
+    technologies JSONB NOT NULL DEFAULT '[]',
     image_url TEXT,
     project_url TEXT,
     github_url TEXT,

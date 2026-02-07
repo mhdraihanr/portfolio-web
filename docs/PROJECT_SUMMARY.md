@@ -134,7 +134,8 @@ portfolio-web/
 #### `projects`
 
 - Project portfolio dengan detail lengkap
-- Technologies array
+- Technologies JSONB array dengan icon support (Devicon)
+  - Format: `[{"name": "React", "icon": "devicon-react-original", "icon_svg": "..."}]`
 - Featured flag
 - Order index untuk sorting
 - Image URL

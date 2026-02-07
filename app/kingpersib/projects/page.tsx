@@ -50,7 +50,7 @@ export default function ProjectsPage() {
           (p) =>
             p.title.toLowerCase().includes(query) ||
             p.description.toLowerCase().includes(query) ||
-            p.technologies.some((t) => t.toLowerCase().includes(query)),
+            p.technologies.some((t) => t.name.toLowerCase().includes(query)),
         ),
       );
     }
@@ -264,8 +264,22 @@ export default function ProjectsPage() {
                 {/* Technologies */}
                 <div className="flex flex-wrap gap-2 mb-4">
                   {project.technologies.slice(0, 6).map((tech, index) => (
-                    <Badge key={index} variant="outline" className="text-xs">
-                      {tech}
+                    <Badge
+                      key={index}
+                      variant="outline"
+                      className="text-xs flex items-center gap-1"
+                    >
+                      {tech.icon_svg ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={tech.icon_svg}
+                          alt={tech.name}
+                          className="w-3.5 h-3.5 object-contain"
+                        />
+                      ) : tech.icon ? (
+                        <i className={`${tech.icon} text-sm`}></i>
+                      ) : null}
+                      {tech.name}
                     </Badge>
                   ))}
                   {project.technologies.length > 6 && (
@@ -380,9 +394,19 @@ export default function ProjectsPage() {
                             <Badge
                               key={idx}
                               variant="outline"
-                              className="text-xs"
+                              className="text-xs flex items-center gap-1"
                             >
-                              {tech}
+                              {tech.icon_svg ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img
+                                  src={tech.icon_svg}
+                                  alt={tech.name}
+                                  className="w-3 h-3 object-contain"
+                                />
+                              ) : tech.icon ? (
+                                <i className={`${tech.icon} text-xs`}></i>
+                              ) : null}
+                              {tech.name}
                             </Badge>
                           ))}
                           {project.technologies.length > 3 && (
@@ -435,12 +459,10 @@ export default function ProjectsPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-end gap-2">
-                          <Link href={`/kingpersib/projects/${project.id}/edit`}>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              title="Edit"
-                            >
+                          <Link
+                            href={`/kingpersib/projects/${project.id}/edit`}
+                          >
+                            <Button variant="outline" size="sm" title="Edit">
                               <Pencil className="w-4 h-4" />
                             </Button>
                           </Link>

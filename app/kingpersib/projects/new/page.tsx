@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Plus, X } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { insertProject } from "@/lib/supabase/helpers";
@@ -15,7 +15,7 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { useToast } from "@/components/ui/toast";
-import { Badge } from "@/components/ui/badge";
+import { TechnologyInput } from "@/components/admin/technology-input";
 import { generateSlug } from "@/lib/utils";
 import { projectSchema, type ProjectFormData } from "@/lib/validations/project";
 
@@ -23,7 +23,6 @@ export default function NewProjectPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [techInput, setTechInput] = useState("");
 
   const {
     register,
@@ -61,30 +60,6 @@ export default function NewProjectPage() {
     }
   };
 
-  // Add technology
-  const handleAddTech = () => {
-    if (techInput.trim() && !technologies.includes(techInput.trim())) {
-      setValue("technologies", [...technologies, techInput.trim()]);
-      setTechInput("");
-    }
-  };
-
-  // Remove technology
-  const handleRemoveTech = (tech: string) => {
-    setValue(
-      "technologies",
-      technologies.filter((t) => t !== tech),
-    );
-  };
-
-  // Handle Enter key in tech input
-  const handleTechKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleAddTech();
-    }
-  };
-
   const onSubmit = async (data: ProjectFormData) => {
     setIsSubmitting(true);
     try {
@@ -111,7 +86,7 @@ export default function NewProjectPage() {
         problem: data.problem,
         solution: data.solution,
         impact: data.impact,
-        technologies: data.technologies,
+        technologies: data.technologies as any,
         image_url: data.image_url || null,
         project_url: data.project_url || null,
         github_url: data.github_url || null,
@@ -254,49 +229,11 @@ export default function NewProjectPage() {
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               Technologies
             </h2>
-            <div className="space-y-2">
-              <Label htmlFor="technologies" required>
-                Technologies Used
-              </Label>
-              <div className="flex gap-2">
-                <Input
-                  id="technologies"
-                  placeholder="e.g., React, TypeScript, Node.js"
-                  value={techInput}
-                  onChange={(e) => setTechInput(e.target.value)}
-                  onKeyDown={handleTechKeyDown}
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleAddTech}
-                  disabled={!techInput.trim()}
-                >
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
-              {errors.technologies && (
-                <p className="text-sm text-red-600 dark:text-red-400">
-                  {errors.technologies.message}
-                </p>
-              )}
-              {technologies.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {technologies.map((tech, index) => (
-                    <Badge key={index} variant="default">
-                      {tech}
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveTech(tech)}
-                        className="ml-2 hover:text-red-600"
-                      >
-                        <X className="w-3 h-3" />
-                      </button>
-                    </Badge>
-                  ))}
-                </div>
-              )}
-            </div>
+            <TechnologyInput
+              value={technologies}
+              onChange={(techs) => setValue("technologies", techs)}
+              error={errors.technologies?.message}
+            />
           </Card>
 
           {/* Links & Media */}

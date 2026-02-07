@@ -150,13 +150,22 @@ export async function Projects() {
                           <div className="flex flex-wrap gap-2">
                             {project.technologies
                               .slice(0, 5)
-                              .map((tech: string) => (
+                              .map((tech, idx: number) => (
                                 <Badge
-                                  key={tech}
+                                  key={idx}
                                   variant="secondary"
-                                  className="text-xs"
+                                  className="text-xs flex items-center gap-1.5"
                                 >
-                                  {tech}
+                                  {tech.icon_svg ? (
+                                    <img
+                                      src={tech.icon_svg}
+                                      alt={tech.name}
+                                      className="w-3.5 h-3.5 object-contain"
+                                    />
+                                  ) : tech.icon ? (
+                                    <i className={`${tech.icon} text-sm`}></i>
+                                  ) : null}
+                                  {tech.name}
                                 </Badge>
                               ))}
                             {project.technologies.length > 5 && (

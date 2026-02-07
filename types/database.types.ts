@@ -18,7 +18,11 @@ export interface Database {
           problem: string;
           solution: string;
           impact: string;
-          technologies: string[];
+          technologies: {
+            name: string;
+            icon?: string | null;
+            icon_svg?: string | null;
+          }[];
           image_url: string | null;
           project_url: string | null;
           github_url: string | null;
@@ -35,7 +39,11 @@ export interface Database {
           problem: string;
           solution: string;
           impact: string;
-          technologies: string[];
+          technologies: {
+            name: string;
+            icon?: string | null;
+            icon_svg?: string | null;
+          }[];
           image_url?: string | null;
           project_url?: string | null;
           github_url?: string | null;
@@ -52,7 +60,11 @@ export interface Database {
           problem?: string;
           solution?: string;
           impact?: string;
-          technologies?: string[];
+          technologies?: {
+            name: string;
+            icon?: string | null;
+            icon_svg?: string | null;
+          }[];
           image_url?: string | null;
           project_url?: string | null;
           github_url?: string | null;

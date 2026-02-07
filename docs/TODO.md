@@ -263,7 +263,7 @@ Task list untuk development portfolio website. Update status seiring progress.
     - [x] Problem (required)
     - [x] Solution (required)
     - [x] Impact (required)
-    - [x] Technologies (tags input with add/remove)
+    - [x] Technologies (Devicon Icon Picker with icon support)
     - [x] Image URL (text input)
     - [x] Project URL (optional)
     - [x] GitHub URL (optional)
@@ -371,6 +371,7 @@ Task list untuk development portfolio website. Update status seiring progress.
 
 - [x] `migration-add-logo-employment-type.sql` - Add logo_url and employment_type to work_experience
 - [x] `migration-add-skills-table.sql` - Create skills table with RLS policies and seed data
+- [x] `migration-projects-technologies-with-icons.sql` - Transform technologies from TEXT[] to JSONB with icon support
 
 ---
 
@@ -849,7 +850,7 @@ Future ideas to consider:
   - Large image display (h-80/320px) with zoom on hover
   - Title with GitHub & live site icon links
   - Description (line-clamp-3)
-  - Technology badges (max 5 visible, "+X more" indicator)
+  - Technology badges with Devicon icons (max 5 visible, "+X more" indicator)
   - "See Details" button as centered overlay on image hover
 - ✅ Card hover effects:
   - Scale up (1.02x)
@@ -866,7 +867,7 @@ Future ideas to consider:
   - Custom layout without Navbar (`app/projects/[slug]/layout.tsx`)
   - Server component with SSR
   - Fetch project by slug from Supabase
-  - Full project information display (title, description, image, technologies, problem, solution, impact)
+  - Full project information display (title, description, image, technologies with icons, problem, solution, impact)
   - Action buttons (GitHub, Live Site)
   - Back to projects navigation
   - Not found handling (404)
@@ -960,12 +961,53 @@ Future ideas to consider:
 
 ---
 
-**Last Updated:** February 5, 2026 (Phase 1, 2, 4 Complete ✅ | Phase 3: Hero, About, Certificates, Projects & Work Experience ✅)
+**Last Updated:** February 7, 2026 (Phase 1, 2, 4 Complete ✅ | Phase 3: Hero, About, Certificates, Projects & Work Experience ✅ | Project Technologies with Icons ✅)
 **Next Review:** February 10, 2026
 
 ---
 
 ## 📝 Recent Updates
+
+### February 7, 2026 - Project Technologies with Icon Support! 🎨
+
+**✅ Technologies field upgraded from plain text to icons with Devicon Picker**
+
+**What was built:**
+
+1. **Database Migration**
+   - `migration-projects-technologies-with-icons.sql`
+   - Changed `technologies` column: `TEXT[]` → `JSONB`
+   - Auto-transforms existing data (preserves all projects)
+   - GIN index for query performance
+   - Structure: `[{"name":"React","icon":"devicon-react-original colored","icon_svg":"..."}]`
+
+2. **Type System Updates**
+   - Added `Technology` interface in `types/project.ts` (name, icon, icon_svg)
+   - Updated `ProjectFormData.technologies`: `string[]` → `Technology[]`
+   - Updated `types/database.types.ts` to match JSONB schema
+   - New Zod schema `technologySchema` in `lib/validations/project.ts`
+
+3. **TechnologyInput Component** (`components/admin/technology-input.tsx`)
+   - Reuses existing `DeviconPicker` component (DRY principle)
+   - Grid layout with icon preview per technology
+   - Add via Devicon Picker modal, edit/remove per item
+   - Auto-extracts name from devicon class
+   - Empty state with helpful message
+   - Dark mode support
+
+4. **Admin Panel Updates**
+   - `app/kingpersib/projects/new/page.tsx` - Uses TechnologyInput
+   - `app/kingpersib/projects/[id]/edit/page.tsx` - Uses TechnologyInput
+   - `app/kingpersib/projects/page.tsx` - Icons in list/grid/table views, search by tech name
+
+5. **Public Display Updates**
+   - `app/(public)/components/projects.tsx` - Technology badges with icons on homepage
+   - `app/projects/[slug]/page.tsx` - Technology badges with icons on detail page
+   - Graceful fallback: shows text-only if no icon set
+
+**📁 Files Created:** 2 | **Files Modified:** 7
+
+---
 
 ### February 6-7, 2026 - Skills Management CRUD Complete! 🛠️
 
@@ -1944,7 +1986,9 @@ EMAIL_TO=recipient@example.com
    - Zod schema for project validation
    - Title, slug, description validation
    - Problem, solution, impact validation
-   - Technologies array validation
+   - Technologies array validation with Devicon icon picker support
+     - Technology schema: `{name, icon?, icon_svg?}`
+     - Min 1, max 20 technologies
    - URL validation for image, project, GitHub
    - Featured and order_index validation
 

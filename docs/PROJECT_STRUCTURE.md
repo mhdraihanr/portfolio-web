@@ -196,6 +196,7 @@ components/
 │   ├── sidebar.tsx            # Sidebar navigation
 │   ├── header.tsx             # Page header
 │   ├── devicon-picker.tsx     # Devicon icon picker (search & select) ✅ NEW
+│   ├── technology-input.tsx   # Technology input with icon picker for projects ✅ NEW
 │   └── index.ts               # Exports
 │
 ├── BlurText.tsx               # Blur-to-focus text animation (React Bits) ✅
@@ -439,7 +440,8 @@ Zod validation schema untuk projects:
 
 - Title, slug, description validation
 - Problem, solution, impact validation
-- Technologies array validation (min 1, max 20)
+- Technologies array validation (min 1, max 20) with Devicon icon support
+  - Each technology: `{name, icon?, icon_svg?}`
 - URL validation untuk image, project, GitHub
 - Featured boolean dan order_index number
 - Auto-generate slug dari title

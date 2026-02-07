@@ -123,9 +123,22 @@ export default async function ProjectDetailPage({
                 Technologies Used
               </h2>
               <div className="flex flex-wrap gap-2">
-                {project.technologies.map((tech) => (
-                  <Badge key={tech} variant="secondary">
-                    {tech}
+                {project.technologies.map((tech, idx) => (
+                  <Badge
+                    key={idx}
+                    variant="secondary"
+                    className="text-sm flex items-center gap-2"
+                  >
+                    {tech.icon_svg ? (
+                      <img
+                        src={tech.icon_svg}
+                        alt={tech.name}
+                        className="w-4 h-4 object-contain"
+                      />
+                    ) : tech.icon ? (
+                      <i className={`${tech.icon} text-base`}></i>
+                    ) : null}
+                    {tech.name}
                   </Badge>
                 ))}
               </div>
