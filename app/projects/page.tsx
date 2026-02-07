@@ -5,12 +5,18 @@ import type { Project } from "@/types/project";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Github, Code2, ArrowRight } from "lucide-react";
+import {
+  ExternalLink,
+  Github,
+  Code2,
+  ArrowLeft,
+  ArrowRight,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
 
-async function getProjects(): Promise<Project[]> {
+async function getAllProjects(): Promise<Project[]> {
   const cookieStore = await cookies();
 
   const supabase = createServerClient<Database>(
@@ -23,7 +29,6 @@ async function getProjects(): Promise<Project[]> {
         },
         setAll(cookiesToSet) {
           // Server component - read-only cookies
-          // Cannot set cookies in server component, only in Server Actions or Route Handlers
         },
       },
     },
@@ -32,7 +37,6 @@ async function getProjects(): Promise<Project[]> {
   const { data, error } = await supabase
     .from("projects")
     .select("*")
-    .eq("featured", true)
     .order("order_index", { ascending: true });
 
   if (error) {
@@ -43,24 +47,40 @@ async function getProjects(): Promise<Project[]> {
   return (data as Project[]) || [];
 }
 
-export async function Projects() {
-  const projects = await getProjects();
+export const metadata = {
+  title: "All Projects | Portfolio",
+  description:
+    "Browse all my projects — applications and solutions built with modern technologies.",
+};
+
+export default async function AllProjectsPage() {
+  const projects = await getAllProjects();
 
   return (
-    <section id="projects" className="pt-12 pb-20 bg-white dark:bg-gray-950">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="max-w-6xl mx-auto">
+          {/* Back Button */}
+          <ScrollReveal direction="down" duration={0.5}>
+            <Link href="/#projects">
+              <Button variant="ghost" className="mb-8 group">
+                <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+                Back to Home
+              </Button>
+            </Link>
+          </ScrollReveal>
+
           {/* Section Header */}
           <ScrollReveal className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4">
               <Code2 className="w-4 h-4" />
               <span className="text-sm font-medium">Portfolio</span>
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              Featured Projects
-            </h2>
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              All Projects
+            </h1>
             <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              A showcase of my recent work, featuring applications and
+              A complete collection of my work, featuring applications and
               innovative solutions built with modern technologies.
             </p>
           </ScrollReveal>
@@ -69,7 +89,7 @@ export async function Projects() {
           {projects.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-500 dark:text-gray-400">
-                No featured projects available at the moment.
+                No projects available at the moment.
               </p>
             </div>
           ) : (
@@ -80,7 +100,7 @@ export async function Projects() {
                   delay={index * 0.1}
                   duration={0.6}
                 >
-                  <Card className="group relative overflow-hidden hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
+                  <Card className="group relative overflow-hidden hover:shadow-xl hover:scale-[1.02] transition-all duration-300 h-full flex flex-col">
                     {/* Project Image with Overlay */}
                     {project.image_url && (
                       <div className="relative h-80 overflow-hidden bg-gray-100 dark:bg-gray-800">
@@ -138,7 +158,7 @@ export async function Projects() {
                       </CardTitle>
                     </CardHeader>
 
-                    <CardContent className="space-y-4">
+                    <CardContent className="space-y-4 flex-1 flex flex-col">
                       {/* Description */}
                       <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3">
                         {project.description}
@@ -147,7 +167,7 @@ export async function Projects() {
                       {/* Technologies */}
                       {project.technologies &&
                         project.technologies.length > 0 && (
-                          <div className="flex flex-wrap gap-2 min-h-[32px]">
+                          <div className="flex flex-wrap gap-2 min-h-[32px] mt-auto">
                             {project.technologies
                               .slice(0, 4)
                               .map((tech, idx: number) => (
@@ -157,6 +177,7 @@ export async function Projects() {
                                   className="text-xs flex items-center gap-1.5"
                                 >
                                   {tech.icon_svg ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
                                     <img
                                       src={tech.icon_svg}
                                       alt={tech.name}
@@ -181,21 +202,8 @@ export async function Projects() {
               ))}
             </div>
           )}
-
-          {/* View All Projects Link (Optional) */}
-          {projects.length > 0 && (
-            <div className="text-center mt-12">
-              <Link
-                href="/projects"
-                className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 dark:text-primary-500 dark:hover:text-primary-400 font-medium transition-colors"
-              >
-                View All Projects
-                <ExternalLink className="w-4 h-4" />
-              </Link>
-            </div>
-          )}
         </div>
       </div>
-    </section>
+    </div>
   );
 }

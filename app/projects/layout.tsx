@@ -9,25 +9,20 @@ import { Atom } from "react-loading-indicators";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
-function ProjectDetailLayoutContent({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function ProjectsLayoutContent({ children }: { children: React.ReactNode }) {
   const { isLoading, setPageReady } = usePageLoading();
   const { theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Track mounting and set page ready after short delay
   useEffect(() => {
-    setMounted(true);
+    // Use requestAnimationFrame to avoid synchronous setState in effect
+    requestAnimationFrame(() => setMounted(true));
     const timer = setTimeout(() => {
       setPageReady();
     }, 100);
     return () => clearTimeout(timer);
   }, [setPageReady]);
 
-  // Get current theme
   const currentTheme = mounted ? theme || resolvedTheme : "dark";
   const isDark = currentTheme === "dark";
   const spinnerColor = isDark ? "#ffffff" : "#1f2937";
@@ -35,7 +30,6 @@ function ProjectDetailLayoutContent({
 
   return (
     <>
-      {/* Global Loading Indicator */}
       {isLoading && (
         <div
           className={`fixed inset-0 z-[9999] flex items-center justify-center ${spinnerBg}`}
@@ -51,14 +45,14 @@ function ProjectDetailLayoutContent({
   );
 }
 
-export default function ProjectDetailLayout({
+export default function ProjectsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
     <PageLoadingProvider>
-      <ProjectDetailLayoutContent>{children}</ProjectDetailLayoutContent>
+      <ProjectsLayoutContent>{children}</ProjectsLayoutContent>
     </PageLoadingProvider>
   );
 }

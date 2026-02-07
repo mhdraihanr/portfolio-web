@@ -176,6 +176,16 @@ Task list untuk development portfolio website. Update status seiring progress.
 
 ### Additional Pages
 
+- [x] All Projects page (`app/projects/page.tsx`) ✅ **COMPLETE**
+  - [x] Fetch ALL projects from Supabase (not just featured)
+  - [x] Reuse same card style as homepage featured projects
+  - [x] Grid layout 2 columns (responsive)
+  - [x] ScrollReveal animations (staggered)
+  - [x] Back to Home button
+  - [x] Technology badges with devicon icons
+  - [x] Hover overlay with "See Details" link
+  - [x] Shared layout with project detail page (Footer, BackToTop, Loading)
+  - [x] SEO metadata (title, description)
 - [ ] 404 page (`app/not-found.tsx`)
 - [ ] 500 error page (`app/error.tsx`)
 - [ ] Loading page (`app/loading.tsx`)

@@ -65,9 +65,10 @@ app/
 │       ├── WorkExperience.tsx  # Work experience section
 │       └── Contact.tsx         # Contact form
 │
-├── projects/                    # Project detail pages (outside public group)
+├── projects/                    # Project pages (outside public group)
+│   ├── layout.tsx              # Projects layout (Footer, BackToTop, Loading) ✅
+│   ├── page.tsx                # All Projects page ✅ NEW
 │   └── [slug]/                 # Dynamic project detail route
-│       ├── layout.tsx          # Detail layout (no Navbar, only Footer) ✅
 │       └── page.tsx            # Project detail page ✅
 │
 ├── [ADMIN_ROUTE]/              # Admin panel (dynamic route)
@@ -132,14 +133,30 @@ Homepage dengan semua sections:
 - Work Experience (fetch dari database)
 - Contact
 
-#### `app/projects/[slug]/layout.tsx` ✅
+#### `app/projects/layout.tsx` ✅
 
-Layout khusus untuk project detail pages:
+Shared layout untuk semua project pages (All Projects & Detail):
 
 - Tidak menggunakan Navbar (clean, focused view)
 - Footer tetap ditampilkan
 - BackToTop button
-- Memungkinkan full-screen immersive experience
+- PageLoadingProvider with Atom spinner
+- Shared across `/projects` and `/projects/[slug]`
+
+#### `app/projects/page.tsx` ✅ NEW
+
+All Projects page — menampilkan seluruh project:
+
+- Server component dengan SSR
+- Fetch ALL projects dari Supabase (tidak hanya featured)
+- Grid layout 2 kolom (responsive)
+- Same card style as homepage featured projects
+- ScrollReveal animations (staggered)
+- Back to Home button
+- Technology badges with icons
+- Hover overlay with "See Details" button
+- Linked from "View All Projects" di homepage
+- Metadata for SEO (title, description)
 
 #### `app/projects/[slug]/page.tsx` ✅
 
@@ -149,7 +166,7 @@ Dynamic project detail page:
 - Fetch project by slug dari Supabase
 - Display full project information (title, description, image, technologies, problem, solution, impact)
 - Action buttons (GitHub, Live Site)
-- Back navigation ke projects section
+- Back navigation ke all projects page
 - Not found handling (404)
 - Light & dark mode support
 

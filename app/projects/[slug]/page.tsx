@@ -58,7 +58,7 @@ export default async function ProjectDetailPage({
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="max-w-4xl mx-auto">
           {/* Back Button */}
-          <Link href="/#projects">
+          <Link href="/projects">
             <Button variant="ghost" className="mb-8 group">
               <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
               Back to Projects
@@ -96,7 +96,7 @@ export default async function ProjectDetailPage({
                 >
                   <Button className="gap-2">
                     <ExternalLink className="w-4 h-4" />
-                    Visit Project
+                    Demo
                   </Button>
                 </Link>
               )}
@@ -189,7 +189,7 @@ export default async function ProjectDetailPage({
 
           {/* Back to Projects Link */}
           <div className="text-center mt-12">
-            <Link href="/#projects">
+            <Link href="/projects">
               <Button variant="outline" className="group">
                 <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
                 Back to All Projects

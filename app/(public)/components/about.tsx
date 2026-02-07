@@ -118,7 +118,7 @@ export function About() {
               {/* Bio Text */}
               <div className="space-y-4 leading-relaxed">
                 <SplitText
-                  text="I'm a passionate Fullstack Developer with a love for creating beautiful, functional, and user-friendly web applications. With expertise in both frontend and backend technologies, I bring ideas to life through clean code and modern design."
+                  text="Passionate Fullstack Developer dedicated to building beautiful, functional, and user-friendly web applications. By bridging the gap between frontend and backend technologies, I transform complex ideas into reality through clean code and modern design principles."
                   className="text-gray-700 dark:text-gray-300"
                   delay={20}
                   duration={0.6}
@@ -131,7 +131,7 @@ export function About() {
                 />
 
                 <SplitText
-                  text="When I'm not coding, you'll find me exploring new frameworks, contributing to open-source projects, or sharing knowledge with the developer community."
+                  text="Focused on optimizing AI coding assistants to streamline workflows and accelerate prototyping. I constantly refine prompt engineering to push the boundaries of AI-driven software development."
                   className="text-gray-700 dark:text-gray-300"
                   delay={20}
                   duration={0.6}
