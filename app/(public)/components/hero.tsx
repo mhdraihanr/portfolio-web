@@ -163,7 +163,7 @@ export function Hero() {
             }`}
           >
             <a
-              href="https://github.com/yourusername"
+              href="https://github.com/mhdraihanr"
               target="_blank"
               rel="noopener noreferrer"
               className={`p-3 rounded-full ${socialBg} backdrop-blur-md border-2 ${socialBorder} ${socialHoverBg} hover:scale-110 transition-all duration-300 ${socialText} ${socialHoverText} shadow-lg`}
@@ -172,7 +172,7 @@ export function Hero() {
               <Github className="h-6 w-6" />
             </a>
             <a
-              href="https://linkedin.com/in/yourusername"
+              href="https://linkedin.com/in/mhdraihanr09"
               target="_blank"
               rel="noopener noreferrer"
               className={`p-3 rounded-full ${socialBg} backdrop-blur-md border-2 ${socialBorder} ${socialHoverBg} hover:scale-110 transition-all duration-300 ${socialText} ${socialHoverText} shadow-lg`}
@@ -181,7 +181,7 @@ export function Hero() {
               <Linkedin className="h-6 w-6" />
             </a>
             <a
-              href="mailto:your.email@example.com"
+              href="mailto:raihanrafliansyah1234@gmail.com"
               className={`p-3 rounded-full ${socialBg} backdrop-blur-md border-2 ${socialBorder} ${socialHoverBg} hover:scale-110 transition-all duration-300 ${socialText} ${socialHoverText} shadow-lg`}
               aria-label="Email"
             >
