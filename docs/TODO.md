@@ -78,8 +78,11 @@ Task list untuk development portfolio website. Update status seiring progress.
 - [x] Add `@variant dark (.dark &)` in globals.css for class-based dark mode
 - [x] Define custom colors in `@theme` (primary: red, secondary: green)
 - [x] Theme toggle component with localStorage persistence
+- [x] Set default theme to `dark` for first-time users
 
 **Note:** Tailwind v4 uses CSS-first configuration. `tailwind.config.ts` is backed up to `.backup` and not used.
+
+**Default Theme:** All users start with **dark mode** by default (`defaultTheme="dark"`).
 
 **Color Theme:** Primary colors changed from purple/indigo to **red theme** (#dc2626).
 
@@ -971,12 +974,55 @@ Future ideas to consider:
 
 ---
 
-**Last Updated:** February 7, 2026 (Phase 1, 2, 4 Complete ✅ | Phase 3: Hero, About, Certificates, Projects & Work Experience ✅ | Project Technologies with Icons ✅)
+**Last Updated:** February 8, 2026 (Phase 1, 2, 3, 4 Complete ✅ | All Projects Page ✅ | Social Links Updated ✅ | 90% Complete 🚀)
 **Next Review:** February 10, 2026
 
 ---
 
 ## 📝 Recent Updates
+
+### February 7-8, 2026 - All Projects Page & Social Links Update! 🚀
+
+**✅ View All Projects page + Updated social media links**
+
+**What was built:**
+
+1. **All Projects Page** (`app/projects/page.tsx`)
+   - Server component fetching ALL projects (not just featured)
+   - Same card style as homepage featured projects
+   - Grid layout 2 columns (responsive)
+   - ScrollReveal animations (staggered fade-up)
+   - Back to Home button
+   - Technology badges with devicon icons
+   - Hover overlay with "See Details" link
+   - SEO metadata (title, description)
+
+2. **Projects Layout** (`app/projects/layout.tsx`)
+   - Shared layout for `/projects` and `/projects/[slug]`
+   - Footer, BackToTop, PageLoadingProvider
+   - Atom spinner with theme-aware colors
+   - Removed duplicate `[slug]/layout.tsx` to prevent double-wrapping
+
+3. **Updated Navigation Links**
+   - Project detail page back links now point to `/projects` instead of `/#projects`
+   - "View All Projects" link on homepage already points to `/projects`
+
+4. **Social Links Updates**
+   - **Hero section** (`app/(public)/components/hero.tsx`): Updated GitHub, LinkedIn, Email links with real URLs
+   - **Footer** (`components/shared/footer.tsx`):
+     - Updated social links (GitHub, LinkedIn, Email, Phone)
+     - Removed brand section text
+     - Centered layout for cleaner, symmetrical design
+
+**Documentation Updated:**
+
+- ✅ `docs/PROJECT_STRUCTURE.md` - Added All Projects page documentation
+- ✅ `docs/TODO.md` - Marked All Projects page as complete
+- ✅ `docs/STATUS.md` - Updated to 90% complete, Phase 3 marked as complete
+
+**📁 Files Created:** 2 | **Files Modified:** 5
+
+---
 
 ### February 7, 2026 - Project Technologies with Icon Support! 🎨
 

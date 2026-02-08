@@ -5,17 +5,17 @@ import { Github, Linkedin, Mail, Phone } from "lucide-react";
 const footerLinks = {
   social: [
     {
-      href: "https://github.com/yourusername",
+      href: "https://github.com/mhdraihanr",
       label: "GitHub",
       icon: Github,
     },
     {
-      href: "https://linkedin.com/in/yourusername",
+      href: "https://linkedin.com/in/mhdraihanr09",
       label: "LinkedIn",
       icon: Linkedin,
     },
     {
-      href: "mailto:your.email@example.com",
+      href: "mailto:raihanrafliansyah1234@gmail.com",
       label: "Email",
       icon: Mail,
     },

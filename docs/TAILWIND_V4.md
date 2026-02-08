@@ -115,7 +115,7 @@ Tailwind v4 does NOT use this file. All configuration is in CSS.
 ```typescript
 <ThemeProvider
   attribute="class"
-  defaultTheme="light"
+  defaultTheme="dark"
   enableSystem={false} // Disable system preference
   storageKey="portfolio-theme"
 >

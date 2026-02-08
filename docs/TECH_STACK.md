@@ -115,6 +115,40 @@ Project ini menggunakan modern web development stack dengan fokus pada:
 - `clsx` - Conditional class names
 - `tailwind-merge` - Merge Tailwind classes intelligently
 
+### next-themes
+
+**Why next-themes?**
+
+- ✅ Theme persistence with localStorage
+- ✅ No flash on page load
+- ✅ System theme detection (optional)
+- ✅ TypeScript support
+- ✅ Works with any framework
+
+**Version:** 0.4.6  
+**Documentation:** https://github.com/pacocoursey/next-themes
+
+**Configuration:**
+
+```typescript
+<ThemeProvider
+  attribute="class"
+  defaultTheme="dark"           // 🌙 Default to dark mode for all users
+  enableSystem={false}          // Manual theme control
+  storageKey="portfolio-theme"  // localStorage key
+>
+  {children}
+</ThemeProvider>
+```
+
+**Features Used:**
+
+- Dark/Light theme toggle
+- Persists user preference in localStorage
+- Default theme: **Dark mode** for first-time visitors
+- Manual control (no automatic system preference)
+- Theme-aware components with `useTheme` hook
+
 ---
 
 ## 🗄️ Database & Backend
@@ -422,6 +456,7 @@ npm install -D prettier
 | zod                      | 4.3.6   | Validation      |
 | @hookform/resolvers      | 5.2.2   | Form resolvers  |
 | nodemailer               | 7.0.13  | Email           |
+| next-themes              | 0.4.6   | Theme system    |
 | clsx                     | 2.1.1   | Class utility   |
 | tailwind-merge           | 3.4.0   | Class merger    |
 
