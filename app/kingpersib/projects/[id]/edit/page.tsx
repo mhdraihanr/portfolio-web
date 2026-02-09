@@ -15,11 +15,15 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { useToast } from "@/components/ui/toast";
+import {
+  ImageUploader,
+  type UploadedImage,
+} from "@/components/ui/image-uploader";
 import { TechnologyInput } from "@/components/admin/technology-input";
 import { Modal } from "@/components/ui/modal";
 import { generateSlug } from "@/lib/utils";
 import { projectSchema, type ProjectFormData } from "@/lib/validations/project";
-import type { Project, ProjectUpdate } from "@/types/project";
+import type { Project, ProjectUpdate, ProjectImage } from "@/types/project";
 
 export default function EditProjectPage() {
   const router = useRouter();
@@ -30,6 +34,7 @@ export default function EditProjectPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [project, setProject] = useState<Project | null>(null);
+  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
 
   const {
     register,
@@ -76,6 +81,12 @@ export default function EditProjectPage() {
 
       const projectData = data as Project;
       setProject(projectData);
+
+      // Set uploaded images from database
+      const existingImages =
+        (projectData.images as unknown as UploadedImage[]) || [];
+      setUploadedImages(existingImages);
+
       reset({
         title: projectData.title,
         slug: projectData.slug,
@@ -83,8 +94,13 @@ export default function EditProjectPage() {
         problem: projectData.problem,
         solution: projectData.solution,
         impact: projectData.impact,
-        technologies: (projectData.technologies || []) as any,
+        technologies: (projectData.technologies || []) as {
+          name: string;
+          icon?: string | null;
+          icon_svg?: string | null;
+        }[],
         image_url: projectData.image_url || "",
+        images: existingImages,
         project_url: projectData.project_url || "",
         github_url: projectData.github_url || "",
         featured: projectData.featured,
@@ -135,8 +151,13 @@ export default function EditProjectPage() {
         problem: data.problem,
         solution: data.solution,
         impact: data.impact,
-        technologies: data.technologies as any,
+        technologies: data.technologies as {
+          name: string;
+          icon?: string | null;
+          icon_svg?: string | null;
+        }[],
         image_url: data.image_url || null,
+        images: uploadedImages,
         project_url: data.project_url || null,
         github_url: data.github_url || null,
         featured: data.featured,
@@ -335,38 +356,66 @@ export default function EditProjectPage() {
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               Links & Media
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="space-y-6">
+              {/* Image Uploader */}
               <div className="space-y-2">
-                <Label htmlFor="image_url">Image URL</Label>
-                <Input
-                  id="image_url"
-                  type="url"
-                  placeholder="https://..."
-                  {...register("image_url")}
-                  error={errors.image_url?.message}
+                <Label>Project Images</Label>
+                <ImageUploader
+                  multiple
+                  maxFiles={10}
+                  currentImages={uploadedImages}
+                  onUploadComplete={(images) => {
+                    const newImages = [...uploadedImages, ...images];
+                    setUploadedImages(newImages);
+                    setValue("images", newImages);
+                  }}
+                  onDelete={(_, index) => {
+                    const newImages = uploadedImages.filter(
+                      (_, i) => i !== index,
+                    );
+                    setUploadedImages(newImages);
+                    setValue("images", newImages);
+                  }}
+                  disabled={isSubmitting}
                 />
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Upload multiple project screenshots or images
+                </p>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="project_url">Live Project URL</Label>
-                <Input
-                  id="project_url"
-                  type="url"
-                  placeholder="https://..."
-                  {...register("project_url")}
-                  error={errors.project_url?.message}
-                />
-              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="image_url">Legacy Image URL (Optional)</Label>
+                  <Input
+                    id="image_url"
+                    type="url"
+                    placeholder="https://..."
+                    {...register("image_url")}
+                    error={errors.image_url?.message}
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="github_url">GitHub URL</Label>
-                <Input
-                  id="github_url"
-                  type="url"
-                  placeholder="https://github.com/..."
-                  {...register("github_url")}
-                  error={errors.github_url?.message}
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="project_url">Live Project URL</Label>
+                  <Input
+                    id="project_url"
+                    type="url"
+                    placeholder="https://..."
+                    {...register("project_url")}
+                    error={errors.project_url?.message}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="github_url">GitHub URL</Label>
+                  <Input
+                    id="github_url"
+                    type="url"
+                    placeholder="https://github.com/..."
+                    {...register("github_url")}
+                    error={errors.github_url?.message}
+                  />
+                </div>
               </div>
             </div>
           </Card>

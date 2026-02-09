@@ -82,10 +82,14 @@ export async function Projects() {
                 >
                   <Card className="group relative overflow-hidden hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
                     {/* Project Image with Overlay */}
-                    {project.image_url && (
+                    {project.images && project.images.length > 0 ? (
                       <div className="relative h-80 overflow-hidden bg-gray-100 dark:bg-gray-800">
                         <Image
-                          src={project.image_url}
+                          src={
+                            typeof project.images[0] === "string"
+                              ? project.images[0]
+                              : project.images[0].url
+                          }
                           alt={project.title}
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -106,6 +110,32 @@ export async function Projects() {
                           </Link>
                         </div>
                       </div>
+                    ) : (
+                      project.image_url && (
+                        <div className="relative h-80 overflow-hidden bg-gray-100 dark:bg-gray-800">
+                          <Image
+                            src={project.image_url}
+                            alt={project.title}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+
+                          {/* Overlay with See Details Button */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <Link href={`/projects/${project.slug}`}>
+                              <Button
+                                size="lg"
+                                className="shadow-lg backdrop-blur-sm bg-white/95 dark:bg-gray-900/95 hover:bg-white dark:hover:bg-gray-900 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700"
+                                rightIcon={
+                                  <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                                }
+                              >
+                                See Details
+                              </Button>
+                            </Link>
+                          </div>
+                        </div>
+                      )
                     )}
 
                     <CardHeader>

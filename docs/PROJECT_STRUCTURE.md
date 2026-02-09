@@ -101,6 +101,10 @@ app/
 ├── api/                        # API routes
 │   ├── contact/
 │   │   └── route.ts           # POST - Send contact email
+│   ├── imagekit-auth/
+│   │   └── route.ts           # GET - ImageKit authentication ✅ NEW
+│   ├── imagekit-delete/
+│   │   └── route.ts           # POST - Delete image from ImageKit ✅ NEW
 │   ├── projects/
 │   │   └── route.ts           # GET, POST - CRUD projects
 │   └── experience/
@@ -200,6 +204,8 @@ components/
 │   ├── Button.tsx             # Button component
 │   ├── Card.tsx               # Card component
 │   ├── certificate-card.tsx   # Certificate card component ✅
+│   ├── image-carousel.tsx     # Multi-image carousel with swipe ✅ NEW
+│   ├── image-uploader.tsx     # ImageKit upload with delete ✅ NEW
 │   ├── Input.tsx              # Input field
 │   ├── Textarea.tsx           # Textarea field
 │   ├── Select.tsx             # Select dropdown
@@ -242,7 +248,9 @@ components/
 
 **Special Components:**
 
-- **BlurText.tsx**: Text animation with blur-to-focus reveal effect from React Bits. Supports word-by-word or character-by-character animation. Used in Hero section for main title.
+- **ImageUploader.tsx**: ImageKit.io integration for file uploads. Supports drag & drop, multiple images (max 10), progress indicator, and delete functionality. Tracks both URL and fileId for each image to enable deletion from ImageKit CDN. Used in admin panel for Projects (multiple images) and Experience (logo).
+
+- **ImageCarousel.tsx**: Responsive image carousel/slider for displaying multiple images. Features touch/swipe support for mobile, keyboard navigation (Arrow keys), thumbnail indicators with active state, image counter badge, and hover-reveal navigation buttons on desktop. Backwards compatible with both `string[]` and `{url, fileId}[]` formats. Single images render without carousel controls. Used in project detail pages.
 
 - **BlurText.tsx**: Framer Motion-based blur-to-focus text animation. Supports word-by-word or letter-by-letter animation from top/bottom. Uses IntersectionObserver for bidirectional viewport detection - animates in when entering and reverses when exiting. Used in Hero section for main title.
 

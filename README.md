@@ -1,4 +1,4 @@
-# Portfolio Website - Raffael Jonathan N.H
+# Portfolio Website - Muhammad Raihan
 
 Modern portfolio website dengan admin panel untuk manage projects dan work experience secara dinamis.
 
@@ -272,11 +272,11 @@ MIT License - feel free to use this as template untuk portfolio Anda sendiri.
 
 ## 📞 Contact
 
-**Raffael Jonathan N.H**
+**Muhammad Raihan**
 
-- Email: jonathanraffael098@gmail.com
-- LinkedIn: [linkedin.com/in/raffaeljonathan](https://linkedin.com/in/raffaeljonathan)
-- Website: [raffaeljonathan.vercel.app](https://raffaeljonathan.vercel.app)
+- Email: raihanrafliansyahdaring12@gmail.com
+- LinkedIn: [linkedin.com/in/muhammadraihan](https://www.linkedin.com/in/mhdraihanr09/)
+- GitHub: [github.com/muhammadraihan](https://github.com/mhdraihanr/)
 
 ## 🙏 Acknowledgments
 
@@ -286,4 +286,4 @@ MIT License - feel free to use this as template untuk portfolio Anda sendiri.
 
 ---
 
-**Built with ❤️ by Raffael Jonathan**
+**Built with ❤️ by Muhammad Raihan**

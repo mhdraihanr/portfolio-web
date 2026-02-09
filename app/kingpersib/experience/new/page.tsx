@@ -16,6 +16,10 @@ import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { useToast } from "@/components/ui/toast";
 import {
+  ImageUploader,
+  type UploadedImage,
+} from "@/components/ui/image-uploader";
+import {
   experienceSchema,
   type ExperienceFormData,
 } from "@/lib/validations/experience";
@@ -25,6 +29,7 @@ export default function NewExperiencePage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadedLogo, setUploadedLogo] = useState<UploadedImage | null>(null);
 
   const {
     register,
@@ -70,7 +75,7 @@ export default function NewExperiencePage() {
         description: data.description,
         start_date: data.start_date,
         end_date: data.is_current ? null : data.end_date || null,
-        logo_url: data.logo_url || null,
+        logo_url: uploadedLogo?.url || data.logo_url || null,
         employment_type: data.employment_type || null,
         is_current: data.is_current,
         order_index: data.order_index,
@@ -227,8 +232,30 @@ export default function NewExperiencePage() {
               Additional Information
             </h2>
             <div className="space-y-6">
+              {/* Logo Uploader */}
               <div className="space-y-2">
-                <Label htmlFor="logo_url">Company Logo URL</Label>
+                <Label>Company Logo</Label>
+                <ImageUploader
+                  multiple={false}
+                  currentImages={uploadedLogo ? [uploadedLogo] : []}
+                  onUploadComplete={(images) => {
+                    const logoImage = images[0];
+                    setUploadedLogo(logoImage);
+                    setValue("logo_url", logoImage.url);
+                  }}
+                  onDelete={() => {
+                    setUploadedLogo(null);
+                    setValue("logo_url", "");
+                  }}
+                  disabled={isSubmitting}
+                />
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Upload company logo (optional)
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="logo_url">Or Provide Logo URL</Label>
                 <Input
                   id="logo_url"
                   type="url"

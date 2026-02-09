@@ -302,11 +302,18 @@ colors: {
 4. Fill form:
    - Title, description
    - Problem, solution, impact
-   - Technologies (multiple select)
-   - Upload image
+   - Technologies (multiple select with Devicon icons)
+   - Upload images via ImageKit (drag & drop, max 10)
    - Set featured status
    - Set order
 5. Save
+
+**Image Management:**
+
+- Images uploaded to ImageKit.io CDN
+- Each image stored with URL and fileId
+- Delete button removes from both form and CDN
+- Public display uses ImageCarousel for multiple images
 
 ### Adding Work Experience
 
@@ -316,6 +323,7 @@ colors: {
 4. Fill form:
    - Company, position
    - Description
+   - Upload company logo via ImageKit
    - Start date, end date
    - Check "Current" if still working
    - Set order

@@ -974,12 +974,65 @@ Future ideas to consider:
 
 ---
 
-**Last Updated:** February 8, 2026 (Phase 1, 2, 3, 4 Complete ✅ | All Projects Page ✅ | Social Links Updated ✅ | Default Dark Theme ✅ | 90% Complete 🚀)
-**Next Review:** February 10, 2026
+**Last Updated:** February 9, 2026 (Phase 1, 2, 3, 4 Complete ✅ | ImageKit Integration ✅ | Image Carousel ✅ | 92% Complete 🚀)
+**Next Review:** February 12, 2026
 
 ---
 
 ## 📝 Recent Updates
+
+### February 9, 2026 - ImageKit Integration & Image Carousel! 🖼️
+
+**✅ Complete image upload system with ImageKit.io CDN and responsive carousel**
+
+**What was built:**
+
+1. **ImageKit.io Integration**
+   - Server-side SDK integration (`@imagekit/nodejs` v7.3.0)
+   - Client-side upload via Next.js API route (`/api/imagekit-auth`)
+   - Delete functionality via API route (`/api/imagekit-delete`)
+   - Automatic folder organization (`/portfolio`)
+   - CDN delivery with URL endpoint
+
+2. **ImageUploader Component** (`components/ui/image-uploader.tsx`)
+   - Drag & drop file upload
+   - Multiple image support (max 10 images)
+   - Progress indicator during upload
+   - Preview grid with delete capability
+   - Delete button with loading state (Trash2 icon)
+   - Tracks both URL and fileId for each image
+   - Type-safe: `UploadedImage = { url: string; fileId: string }`
+
+3. **ImageCarousel Component** (`components/ui/image-carousel.tsx`)
+   - Responsive image slider for multiple images
+   - Touch/swipe support for mobile (left/right swipe navigation)
+   - Keyboard navigation (Arrow keys)
+   - Thumbnail indicators with active state
+   - Image counter badge (X / Total)
+   - Navigation buttons (hover on desktop, always visible on mobile)
+   - Single image: direct render without carousel controls
+   - Backwards compatible: supports both `string[]` and `{url, fileId}[]` formats
+
+4. **Type System Updates**
+   - `ProjectImage` interface: `{ url: string; fileId: string }`
+   - Updated `types/project.ts` - images as `ProjectImage[]`
+   - Updated `types/database.types.ts` - JSONB storage format
+   - Updated `lib/validations/project.ts` - nested object validation
+
+5. **Admin Panel Integration**
+   - Projects (new/edit) - Multiple images with carousel preview
+   - Experience (new/edit) - Single logo upload
+   - Delete images from ImageKit when removed from form
+
+6. **Public Display**
+   - Project detail page uses ImageCarousel for elegant multi-image display
+   - Project listing shows first image with graceful fallback
+   - Full backwards compatibility with existing data
+
+**📁 Files Created:** 3 (imagekit-auth, imagekit-delete, image-carousel)
+**📁 Files Modified:** 12
+
+---
 
 ### February 8, 2026 - Default Dark Theme! 🌙
 
@@ -995,7 +1048,7 @@ Future ideas to consider:
 2. **Documentation Updates**
    - **`docs/TAILWIND_V4.md`**: Updated ThemeProvider example
    - **`docs/TODO.md`**: Added checkbox for default dark theme
-   - **`docs/TECH_STACK.md`**: 
+   - **`docs/TECH_STACK.md`**:
      - Added next-themes section with full configuration
      - Updated dependencies table to include next-themes
      - Added note about default dark theme
@@ -1004,6 +1057,7 @@ Future ideas to consider:
    - **`components/README.md`**: Updated ThemeProvider example
 
 **Why dark mode as default?**
+
 - Modern, professional appearance
 - Reduced eye strain for users
 - Better showcase of light effects and animations

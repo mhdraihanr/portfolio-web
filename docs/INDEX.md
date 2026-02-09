@@ -86,11 +86,14 @@ Dokumentasi untuk development:
    - Known issues
    - Future ideas
 
-8a. **[ADMIN_CRUD_GUIDE.md](./ADMIN_CRUD_GUIDE.md)** 🔐 🆕  
+8a. **[ADMIN_CRUD_GUIDE.md](./ADMIN_CRUD_GUIDE.md)** 🔐  
  Admin CRUD quick reference - Quick access URLs - Projects, Experience & Skills management - Form field requirements - Validation rules - Devicon Icon Picker usage - Tips & tricks - Troubleshooting - Best practices
 
-8b. **[SKILLS_MANAGEMENT_SPEC.md](./SKILLS_MANAGEMENT_SPEC.md)** 🛠️ ⭐ NEW  
+8b. **[SKILLS_MANAGEMENT_SPEC.md](./SKILLS_MANAGEMENT_SPEC.md)** 🛠️  
  Skills management specification - Database schema - Devicon Icon Picker component - Admin CRUD pages - Homepage integration - Implementation checklist
+
+8c. **[IMAGEKIT_DOCS.md](./IMAGEKIT_DOCS.md)** 🖼️ ⭐ NEW  
+ ImageKit.io integration - Upload & delete API - ImageUploader component - ImageCarousel component - Type definitions - Security best practices - Usage examples
 
 ---
 

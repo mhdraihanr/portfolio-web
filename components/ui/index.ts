@@ -9,3 +9,5 @@ export * from "./toast";
 export * from "./badge";
 export * from "./label";
 export * from "./shine-border";
+export * from "./image-uploader";
+export * from "./image-carousel";

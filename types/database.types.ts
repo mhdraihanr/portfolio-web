@@ -24,6 +24,7 @@ export interface Database {
             icon_svg?: string | null;
           }[];
           image_url: string | null;
+          images: { url: string; fileId: string }[];
           project_url: string | null;
           github_url: string | null;
           featured: boolean;
@@ -45,6 +46,7 @@ export interface Database {
             icon_svg?: string | null;
           }[];
           image_url?: string | null;
+          images?: { url: string; fileId: string }[];
           project_url?: string | null;
           github_url?: string | null;
           featured?: boolean;
@@ -66,6 +68,7 @@ export interface Database {
             icon_svg?: string | null;
           }[];
           image_url?: string | null;
+          images?: { url: string; fileId: string }[];
           project_url?: string | null;
           github_url?: string | null;
           featured?: boolean;

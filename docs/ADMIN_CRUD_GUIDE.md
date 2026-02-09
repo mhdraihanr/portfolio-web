@@ -45,22 +45,32 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 - Problem (10-1000 characters)
 - Solution (10-1000 characters)
 - Impact (10-1000 characters)
-- Technologies (at least 1, max 20)
+- Technologies (at least 1, max 20, with Devicon icons)
 
 **Optional Fields:**
 
-- Image URL
+- Images (via ImageKit upload, max 10)
 - Project URL
 - GitHub URL
 - Featured (checkbox)
 - Order Index (default: 0)
 
+**Image Upload (ImageKit):**
+
+- Drag & drop or click to browse
+- Multiple images supported (max 10)
+- Preview with delete button on hover
+- Images uploaded to ImageKit CDN
+- Each image stored with URL and fileId for deletion
+- Delete removes from both form and ImageKit
+
 **Tips:**
 
 - Slug auto-generates from title
-- Press Enter to add technology
-- Click X on tag to remove
+- Use Technology Input for consistent icon styling
+- Click X on tag to remove technology
 - Lower order index = appears first
+- Images display as carousel on public page
 
 ### Edit Project
 
@@ -110,14 +120,25 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 **Optional Fields:**
 
+- Company Logo (via ImageKit upload, single image)
+- Employment Type (Full-time, Part-time, Contract, Freelance)
 - Is Current (checkbox)
 - Order Index (default: 0)
+
+**Logo Upload (ImageKit):**
+
+- Single image upload for company logo
+- Drag & drop or click to browse
+- Preview with delete button on hover
+- Logo uploaded to ImageKit CDN
+- Delete removes from both form and ImageKit
 
 **Tips:**
 
 - Check "Is Current" for current job (auto-disables end date)
 - End date must be after start date
 - Lower order index = appears first
+- Logo displays on work experience timeline
 
 ### Edit Experience
 

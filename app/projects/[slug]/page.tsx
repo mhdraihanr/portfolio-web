@@ -6,6 +6,7 @@ import type { Project } from "@/types/project";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { ImageCarousel } from "@/components/ui/image-carousel";
 import { ExternalLink, Github, ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -103,17 +104,25 @@ export default async function ProjectDetailPage({
             </div>
           </div>
 
-          {/* Project Image */}
-          {project.image_url && (
-            <div className="relative w-full h-[400px] rounded-lg overflow-hidden mb-8 bg-gray-100 dark:bg-gray-800">
-              <Image
-                src={project.image_url}
-                alt={project.title}
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
+          {/* Project Images */}
+          {project.images && project.images.length > 0 ? (
+            <ImageCarousel
+              images={project.images}
+              alt={project.title}
+              className="mb-8"
+            />
+          ) : (
+            project.image_url && (
+              <div className="relative w-full h-[400px] rounded-lg overflow-hidden mb-8 bg-gray-100 dark:bg-gray-800">
+                <Image
+                  src={project.image_url}
+                  alt={project.title}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            )
           )}
 
           {/* Technologies */}

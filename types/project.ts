@@ -10,6 +10,11 @@ export interface Technology {
   icon_svg?: string | null; // SVG URL for icons not available in Devicon font
 }
 
+export interface ProjectImage {
+  url: string;
+  fileId: string;
+}
+
 export interface ProjectFormData {
   title: string;
   slug: string;
@@ -19,6 +24,7 @@ export interface ProjectFormData {
   impact: string;
   technologies: Technology[];
   image_url?: string;
+  images: ProjectImage[]; // Array of image objects with URL and fileId
   project_url?: string;
   github_url?: string;
   featured: boolean;

@@ -18,7 +18,8 @@ function PublicLayoutContent({ children }: { children: React.ReactNode }) {
 
   // Track mounting
   useEffect(() => {
-    setMounted(true);
+    const timer = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(timer);
   }, []);
 
   // Get current theme

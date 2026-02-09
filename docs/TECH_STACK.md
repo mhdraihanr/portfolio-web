@@ -227,6 +227,47 @@ Project ini menggunakan modern web development stack dengan fokus pada:
 
 ---
 
+## 🖼️ Image Management
+
+### ImageKit.io
+
+**Why ImageKit?**
+
+- ✅ CDN delivery (fast global loading)
+- ✅ Automatic image optimization
+- ✅ On-the-fly transformations
+- ✅ Direct upload from browser
+- ✅ Delete API for cleanup
+- ✅ Generous free tier (20GB bandwidth/month)
+
+**Version:** `@imagekit/nodejs` ^7.3.0  
+**Documentation:** https://docs.imagekit.io
+
+**Features Used:**
+
+- Server-side authentication (secure token generation)
+- Client-side upload (direct to CDN)
+- File deletion via API
+- URL endpoint for optimized delivery
+- Folder organization (`/portfolio`)
+
+**API Routes:**
+
+- `GET /api/imagekit-auth` - Generate upload authentication
+- `POST /api/imagekit-delete` - Delete image by fileId
+
+**Components:**
+
+- `ImageUploader` - Drag & drop upload with preview and delete
+- `ImageCarousel` - Responsive slider with swipe and keyboard navigation
+
+**Usage:**
+
+- Project images (multiple, with carousel display)
+- Experience logos (single image)
+
+---
+
 ## 🎭 Animations
 
 ### Framer Motion (motion/react)

@@ -9,6 +9,11 @@ export const technologySchema = z.object({
   icon_svg: z.string().url().optional().or(z.literal("")).nullable(),
 });
 
+export const projectImageSchema = z.object({
+  url: z.string().url("Must be a valid URL"),
+  fileId: z.string().min(1, "File ID is required"),
+});
+
 export const projectSchema = z.object({
   title: z
     .string()
@@ -43,6 +48,7 @@ export const projectSchema = z.object({
     .min(1, "At least one technology is required")
     .max(20, "Maximum 20 technologies allowed"),
   image_url: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+  images: z.array(projectImageSchema).max(10, "Maximum 10 images allowed"),
   project_url: z
     .string()
     .url("Must be a valid URL")

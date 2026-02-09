@@ -110,7 +110,77 @@ Send email dari contact form.
 
 ---
 
-### 2. Projects
+### 2. ImageKit (Image Management)
+
+API endpoints untuk upload dan delete gambar via ImageKit.io CDN.
+
+#### Get Upload Authentication
+
+Generate authentication parameters untuk client-side upload.
+
+**Endpoint:** `GET /api/imagekit-auth`
+
+**Authentication:** None (Public)
+
+**Success Response (200):**
+
+```json
+{
+  "token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "expire": 1707500000,
+  "signature": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+}
+```
+
+**Usage:** Client uses these params to upload directly to ImageKit CDN.
+
+---
+
+#### Delete Image
+
+Delete image from ImageKit CDN by fileId.
+
+**Endpoint:** `POST /api/imagekit-delete`
+
+**Authentication:** None (Public - fileId acts as secret)
+
+**Request Body:**
+
+```json
+{
+  "fileId": "xxxxxxxxxxxxxxxxxxxxxxxx"
+}
+```
+
+**Success Response (200):**
+
+```json
+{
+  "success": true
+}
+```
+
+**Error Response (400):**
+
+```json
+{
+  "error": "File ID is required"
+}
+```
+
+**Error Response (500):**
+
+```json
+{
+  "error": "Failed to delete image"
+}
+```
+
+**Note:** `fileId` is returned by ImageKit during upload and stored with images in database.
+
+---
+
+### 3. Projects
 
 #### Get All Projects
 
@@ -656,6 +726,15 @@ Planned webhooks for future implementation:
 
 ## Changelog
 
+### v1.2.0 (February 9, 2026)
+
+- **ImageKit Integration** - Image upload and delete via CDN
+  - `GET /api/imagekit-auth` - Generate upload authentication
+  - `POST /api/imagekit-delete` - Delete image by fileId
+- **ImageUploader Component** - Drag & drop with preview and delete
+- **ImageCarousel Component** - Responsive slider with swipe/keyboard navigation
+- Project images now stored as `{url, fileId}[]` for deletion support
+
 ### v1.1.0 (February 2026)
 
 - Skills management via direct Supabase client (no API routes)
@@ -671,4 +750,4 @@ Planned webhooks for future implementation:
 
 ---
 
-**Last Updated:** February 7, 2026
+**Last Updated:** February 9, 2026

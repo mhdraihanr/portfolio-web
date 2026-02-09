@@ -102,10 +102,17 @@ export default async function AllProjectsPage() {
                 >
                   <Card className="group relative overflow-hidden hover:shadow-xl hover:scale-[1.02] transition-all duration-300 h-full flex flex-col">
                     {/* Project Image with Overlay */}
-                    {project.image_url && (
+                    {(project.images && project.images.length > 0) ||
+                    project.image_url ? (
                       <div className="relative h-80 overflow-hidden bg-gray-100 dark:bg-gray-800">
                         <Image
-                          src={project.image_url}
+                          src={
+                            project.images && project.images.length > 0
+                              ? typeof project.images[0] === "string"
+                                ? project.images[0]
+                                : project.images[0].url
+                              : project.image_url!
+                          }
                           alt={project.title}
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -126,7 +133,7 @@ export default async function AllProjectsPage() {
                           </Link>
                         </div>
                       </div>
-                    )}
+                    ) : null}
 
                     <CardHeader>
                       <CardTitle className="flex items-start justify-between gap-2">

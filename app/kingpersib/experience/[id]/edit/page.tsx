@@ -15,6 +15,10 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { useToast } from "@/components/ui/toast";
+import {
+  ImageUploader,
+  type UploadedImage,
+} from "@/components/ui/image-uploader";
 import { Modal } from "@/components/ui/modal";
 import {
   experienceSchema,
@@ -32,6 +36,7 @@ export default function EditExperiencePage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [experience, setExperience] = useState<WorkExperience | null>(null);
+  const [uploadedLogo, setUploadedLogo] = useState<UploadedImage | null>(null);
 
   const {
     register,
@@ -77,6 +82,15 @@ export default function EditExperiencePage() {
 
       const experienceData = data as WorkExperience;
       setExperience(experienceData);
+
+      // Set uploaded logo from database (convert to UploadedImage format)
+      if (experienceData.logo_url) {
+        setUploadedLogo({
+          url: experienceData.logo_url,
+          fileId: "", // No fileId for legacy logos
+        });
+      }
+
       reset({
         company: experienceData.company,
         position: experienceData.position,
@@ -120,7 +134,7 @@ export default function EditExperiencePage() {
         end_date: data.is_current ? null : data.end_date || null,
         is_current: data.is_current,
         order_index: data.order_index,
-        logo_url: data.logo_url || null,
+        logo_url: uploadedLogo?.url || data.logo_url || null,
         employment_type: data.employment_type || null,
       };
 
@@ -324,8 +338,30 @@ export default function EditExperiencePage() {
               Additional Information
             </h2>
             <div className="space-y-6">
+              {/* Logo Uploader */}
               <div className="space-y-2">
-                <Label htmlFor="logo_url">Company Logo URL</Label>
+                <Label>Company Logo</Label>
+                <ImageUploader
+                  multiple={false}
+                  currentImages={uploadedLogo ? [uploadedLogo] : []}
+                  onUploadComplete={(images) => {
+                    const logoImage = images[0];
+                    setUploadedLogo(logoImage);
+                    setValue("logo_url", logoImage.url);
+                  }}
+                  onDelete={() => {
+                    setUploadedLogo(null);
+                    setValue("logo_url", "");
+                  }}
+                  disabled={isSubmitting}
+                />
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Upload company logo (optional)
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="logo_url">Or Provide Logo URL</Label>
                 <Input
                   id="logo_url"
                   type="url"

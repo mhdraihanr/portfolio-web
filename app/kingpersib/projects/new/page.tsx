@@ -15,6 +15,10 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { useToast } from "@/components/ui/toast";
+import {
+  ImageUploader,
+  type UploadedImage,
+} from "@/components/ui/image-uploader";
 import { TechnologyInput } from "@/components/admin/technology-input";
 import { generateSlug } from "@/lib/utils";
 import { projectSchema, type ProjectFormData } from "@/lib/validations/project";
@@ -23,6 +27,7 @@ export default function NewProjectPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
 
   const {
     register,
@@ -40,6 +45,7 @@ export default function NewProjectPage() {
       solution: "",
       impact: "",
       technologies: [],
+      images: [],
       image_url: "",
       project_url: "",
       github_url: "",
@@ -86,7 +92,12 @@ export default function NewProjectPage() {
         problem: data.problem,
         solution: data.solution,
         impact: data.impact,
-        technologies: data.technologies as any,
+        technologies: data.technologies as {
+          name: string;
+          icon?: string | null;
+          icon_svg?: string | null;
+        }[],
+        images: uploadedImages,
         image_url: data.image_url || null,
         project_url: data.project_url || null,
         github_url: data.github_url || null,
@@ -241,38 +252,66 @@ export default function NewProjectPage() {
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               Links & Media
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="space-y-6">
+              {/* Image Uploader */}
               <div className="space-y-2">
-                <Label htmlFor="image_url">Image URL</Label>
-                <Input
-                  id="image_url"
-                  type="url"
-                  placeholder="https://..."
-                  {...register("image_url")}
-                  error={errors.image_url?.message}
+                <Label>Project Images</Label>
+                <ImageUploader
+                  multiple
+                  maxFiles={10}
+                  currentImages={uploadedImages}
+                  onUploadComplete={(images) => {
+                    const newImages = [...uploadedImages, ...images];
+                    setUploadedImages(newImages);
+                    setValue("images", newImages);
+                  }}
+                  onDelete={(_, index) => {
+                    const newImages = uploadedImages.filter(
+                      (_, i) => i !== index,
+                    );
+                    setUploadedImages(newImages);
+                    setValue("images", newImages);
+                  }}
+                  disabled={isSubmitting}
                 />
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Upload multiple project screenshots or images
+                </p>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="project_url">Live Project URL</Label>
-                <Input
-                  id="project_url"
-                  type="url"
-                  placeholder="https://..."
-                  {...register("project_url")}
-                  error={errors.project_url?.message}
-                />
-              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="image_url">Legacy Image URL (Optional)</Label>
+                  <Input
+                    id="image_url"
+                    type="url"
+                    placeholder="https://..."
+                    {...register("image_url")}
+                    error={errors.image_url?.message}
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="github_url">GitHub URL</Label>
-                <Input
-                  id="github_url"
-                  type="url"
-                  placeholder="https://github.com/..."
-                  {...register("github_url")}
-                  error={errors.github_url?.message}
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="project_url">Live Project URL</Label>
+                  <Input
+                    id="project_url"
+                    type="url"
+                    placeholder="https://..."
+                    {...register("project_url")}
+                    error={errors.project_url?.message}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="github_url">GitHub URL</Label>
+                  <Input
+                    id="github_url"
+                    type="url"
+                    placeholder="https://github.com/..."
+                    {...register("github_url")}
+                    error={errors.github_url?.message}
+                  />
+                </div>
               </div>
             </div>
           </Card>
