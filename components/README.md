@@ -204,13 +204,15 @@ import { ThemeProvider } from "@/components/providers";
 
 <ThemeProvider
   attribute="class"
-  defaultTheme="system"
-  enableSystem
-  disableTransitionOnChange
+  defaultTheme="dark" // Default to dark mode
+  enableSystem={false} // Manual control
+  storageKey="portfolio-theme"
 >
   {children}
 </ThemeProvider>;
 ```
+
+**Note:** Default theme is set to **dark mode** for all first-time visitors.
 
 ## 🎨 Styling
 

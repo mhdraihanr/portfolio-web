@@ -474,7 +474,7 @@ npm install -D prettier
 | eslint               | 9.x     | Linter           |
 | eslint-config-next   | 16.1.6  | Next.js ESLint   |
 
-**Total:** 25 packages  
+**Total:** 26 packages  
 **Bundle Size:** ~500KB (gzipped, estimated)
 
 ---

@@ -379,17 +379,21 @@ Untuk mengubah font:
 
 Project menggunakan **class-based dark mode** yang dikontrol manual (tidak mengikuti system preference browser).
 
+**Default Theme:** 🌙 **Dark mode** - Semua pengguna baru otomatis menggunakan dark mode di kunjungan pertama.
+
 **Cara kerja:**
 
 - Toggle button di navbar/header untuk switch theme
 - Theme disimpan di localStorage (`portfolio-theme`)
 - Semua komponen support dark mode via `dark:` prefix
 - Konfigurasi ada di `app/globals.css` menggunakan `@variant dark`
+- Default theme diatur di `app/layout.tsx` (`defaultTheme="dark"`)
 
 **Untuk detail lengkap:** Lihat `docs/TAILWIND_V4.md`
 
 **Key features:**
 
+- ✅ Default dark mode untuk first-time visitors
 - ✅ Manual control (tidak auto-follow system)
 - ✅ Persistent (tersimpan di localStorage)
 - ✅ Smooth transitions

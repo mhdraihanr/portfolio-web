@@ -273,7 +273,9 @@ colors: {
 
 - Menggunakan `next-themes` untuk dark mode toggle
 - Class-based dark mode (`dark:`)
-- Persist preference di localStorage
+- **Default theme: Dark mode** untuk semua pengguna baru
+- Persist preference di localStorage (`portfolio-theme` key)
+- Manual control (tidak mengikuti system preference)
 
 ## 🔄 Data Fetching Strategy
 
