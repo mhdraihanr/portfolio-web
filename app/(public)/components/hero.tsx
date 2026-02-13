@@ -130,7 +130,10 @@ export function Hero() {
           >
             {/* CTA Button - Left */}
             <div className="order-2 md:order-1">
-              <Link href="/cv.pdf" target="_blank">
+              <Link
+                href="https://drive.google.com/file/d/1VXDuHuFYlxPYEE_akyG5me4bSjPm9GQS/view?usp=sharing"
+                target="_blank"
+              >
                 <Button
                   size="lg"
                   className="rounded-full px-8"
