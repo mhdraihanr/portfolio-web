@@ -474,7 +474,8 @@ export default function ProjectPage({ project }) {
 ### Project Listing (First Image)
 
 ```tsx
-// app/(public)/components/projects.tsx
+// app/(public)/components/projects.tsx (Homepage)
+// app/projects/page.tsx (All Projects Page)
 const getImageUrl = (project) => {
   if (project.images && project.images.length > 0) {
     const firstImage = project.images[0];

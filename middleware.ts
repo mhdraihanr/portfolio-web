@@ -1,9 +1,9 @@
 /**
  * Next.js Middleware for Route Protection
- * 
+ *
  * Location: Must be at project root (Next.js convention)
  * Purpose: Protect admin routes with authentication
- * 
+ *
  * @see https://nextjs.org/docs/app/building-your-application/routing/middleware
  */
 
@@ -14,6 +14,10 @@ import {
   createAuthRedirect,
   createDashboardRedirect,
   getMiddlewareConfig,
+  checkRateLimit,
+  createRateLimitResponse,
+  checkIPWhitelist,
+  createIPBlockedResponse,
 } from "@/lib/middleware/auth-middleware";
 
 export async function middleware(request: NextRequest) {
@@ -26,6 +30,20 @@ export async function middleware(request: NextRequest) {
   // If not admin route, continue
   if (!isAdminRoute) {
     return;
+  }
+
+  // IP Whitelist check (optional - only if ADMIN_IP_WHITELIST is set)
+  const isWhitelisted = checkIPWhitelist(request);
+  if (!isWhitelisted) {
+    return createIPBlockedResponse();
+  }
+
+  // Rate limiting for login page to prevent brute force and excessive access
+  if (isLoginPage) {
+    const isRateLimited = checkRateLimit(request);
+    if (isRateLimited) {
+      return createRateLimitResponse(request);
+    }
   }
 
   // Create Supabase client and get response

@@ -86,7 +86,7 @@ Project portfolio website Anda sudah berhasil di-setup dengan konfigurasi lengka
 portfolio-web/
 ├── app/                          # Next.js App Router
 │   ├── (public)/                # Public pages (to be built)
-│   ├── [ADMIN_ROUTE]/           # Admin panel (to be built)
+│   ├── admin/                   # Admin panel (configurable via ADMIN_ROUTE_SECRET)
 │   ├── api/                     # API routes (to be built)
 │   ├── layout.tsx               # Root layout
 │   ├── page.tsx                 # Homepage
@@ -323,7 +323,7 @@ git push
 ### Development
 
 - Homepage: http://localhost:3000
-- Admin Panel: http://localhost:3000/[ADMIN_ROUTE_SECRET]
+- Admin Panel: http://localhost:3000/admin (configurable)
 - API: http://localhost:3000/api
 
 ### External Services

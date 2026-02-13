@@ -89,7 +89,7 @@ Edit `.env.local` dengan credentials Anda:
 
 - Supabase URL dan keys
 - Gmail credentials
-- Admin route secret
+- Admin route secret (default: `admin`, must match folder name)
 - Admin password hash
 
 4. **Setup Supabase database**
@@ -145,13 +145,15 @@ Detail schema: lihat `supabase-schema.sql`
 
 ## 🔐 Admin Panel
 
-Admin panel menggunakan route unik (bukan `/admin`) untuk security.
+Admin panel dapat diakses melalui route yang dikonfigurasi di `ADMIN_ROUTE_SECRET`.
 
 **Access:**
 
 ```
-http://localhost:3000/[ADMIN_ROUTE_SECRET]
+http://localhost:3000/admin
 ```
+
+**Security Note:** Nilai `ADMIN_ROUTE_SECRET` di `.env.local` **HARUS** sama dengan nama folder di `app/`. Default adalah `admin`. Untuk keamanan lebih baik, rename folder `app/admin/` ke nama unik Anda dan update `ADMIN_ROUTE_SECRET` sesuai.
 
 **Features:**
 
@@ -159,7 +161,18 @@ http://localhost:3000/[ADMIN_ROUTE_SECRET]
 - Projects management (Create, Read, Update, Delete)
 - Work experience management (CRUD)
 - Image upload
-- Reorder items
+- Security Features:\*\*
+
+- **Rate Limiting:** Max 5 login attempts per 15 minutes per IP (automatic)
+- **IP Whitelist:** Optional - restrict admin access to specific IPs via `ADMIN_IP_WHITELIST` env variable
+- **Session Management:** Automatic session refresh via Supabase
+- **Protected Routes:** Middleware redirects unauthenticated users
+- **Secure by Obscurity:** Use unique admin route name in production
+
+See [docs/IP_WHITELIST_GUIDE.md](./docs/IP_WHITELIST_GUIDE.md) for IP whitelist setup.
+
+\*\*Reorder items
+
 - Preview changes
 
 ## 📧 Contact Form
@@ -252,19 +265,14 @@ Checklist sebelum deploy:
 - [ ] Contact form sends email
 - [ ] Dark mode works
 - [ ] Admin login works
+- [ ] Admin rate limiting works (max 5 failed login attempts per 15 min)
+- [ ] IP whitelist works (if configured in `ADMIN_IP_WHITELIST`)
+- [ ] Admin route protection works (unauthenticated users redirected)
 - [ ] Can create/edit/delete projects
 - [ ] Can create/edit/delete experience
+- [ ] Can create/edit/delete skills
 - [ ] Responsive on mobile
 - [ ] Images load correctly
-
-## 🤝 Contributing
-
-Ini adalah personal portfolio project. Jika Anda ingin menggunakan sebagai template:
-
-1. Fork repository
-2. Update content dengan data Anda
-3. Update environment variables
-4. Deploy
 
 ## 📄 License
 
@@ -275,8 +283,7 @@ MIT License - feel free to use this as template untuk portfolio Anda sendiri.
 **Muhammad Raihan**
 
 - Email: raihanrafliansyahdaring12@gmail.com
-- LinkedIn: [linkedin.com/in/muhammadraihan](https://www.linkedin.com/in/mhdraihanr09/)
-- GitHub: [github.com/muhammadraihan](https://github.com/mhdraihanr/)
+- LinkedIn: [linkedin.com/in/mhdraihanr09/](https://www.linkedin.com/in/mhdraihanr09/)
 
 ## 🙏 Acknowledgments
 

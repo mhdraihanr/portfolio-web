@@ -201,13 +201,13 @@ Task list untuk development portfolio website. Update status seiring progress.
 
 ### Setup Admin Routes Structure
 
-- [x] Create `app/[ADMIN_ROUTE]/` folder (use env variable name)
-- [x] Create `app/[ADMIN_ROUTE]/layout.tsx`
-- [x] Create `app/[ADMIN_ROUTE]/page.tsx` (dashboard)
+- [x] Create `app/admin/` folder (formerly kingpersib)
+- [x] Create `app/admin/layout.tsx`
+- [x] Create `app/admin/page.tsx` (dashboard)
 
 ### Authentication Pages
 
-- [x] Login page (`app/[ADMIN_ROUTE]/login/page.tsx`)
+- [x] Login page (`app/admin/login/page.tsx`)
   - [x] Email/password form
   - [x] Form validation (client-side)
   - [x] Supabase Auth integration
@@ -223,7 +223,7 @@ Task list untuk development portfolio website. Update status seiring progress.
   - [x] Clear session
   - [x] Redirect to login
 
-### Admin Layout (`app/[ADMIN_ROUTE]/layout.tsx`)
+### Admin Layout (`app/admin/layout.tsx`)
 
 - [x] Sidebar navigation
   - [x] Dashboard link
@@ -238,7 +238,7 @@ Task list untuk development portfolio website. Update status seiring progress.
   - [x] Collapsible sidebar
   - [x] Hamburger menu
 
-### Dashboard (`app/[ADMIN_ROUTE]/page.tsx`)
+### Dashboard (`app/admin/page.tsx`)
 
 - [x] Overview stats cards
   - [x] Total projects count
@@ -256,7 +256,7 @@ Task list untuk development portfolio website. Update status seiring progress.
 
 ### Projects Management
 
-- [x] List projects page (`app/[ADMIN_ROUTE]/projects/page.tsx`)
+- [x] List projects page (`app/admin/projects/page.tsx`)
   - [x] Fetch all projects from Supabase
   - [x] Card view with full information
   - [x] Show: title, technologies, featured status, order
@@ -268,7 +268,7 @@ Task list untuk development portfolio website. Update status seiring progress.
   - [x] Featured badge display
   - [x] Technologies tags display
   - [x] Project & GitHub URL links
-- [x] Create project page (`app/[ADMIN_ROUTE]/projects/new/page.tsx`)
+- [x] Create project page (`app/admin/projects/new/page.tsx`)
   - [x] Form with all fields:
     - [x] Title (required)
     - [x] Slug (auto-generated from title, editable)
@@ -288,7 +288,7 @@ Task list untuk development portfolio website. Update status seiring progress.
   - [x] Toast notifications (success/error)
   - [x] Loading states
   - [x] Redirect after success
-- [x] Edit project page (`app/[ADMIN_ROUTE]/projects/[id]/edit/page.tsx`)
+- [x] Edit project page (`app/admin/projects/[id]/edit/page.tsx`)
   - [x] Fetch project data by ID
   - [x] Pre-filled form with current data
   - [x] Update functionality via helper function
@@ -299,7 +299,7 @@ Task list untuk development portfolio website. Update status seiring progress.
 
 ### Experience Management
 
-- [x] List experience page (`app/[ADMIN_ROUTE]/experience/page.tsx`)
+- [x] List experience page (`app/admin/experience/page.tsx`)
   - [x] Fetch all experience from Supabase
   - [x] Card view with full information
   - [x] Show: company, position, dates, current status
@@ -310,7 +310,7 @@ Task list untuk development portfolio website. Update status seiring progress.
   - [x] "Add New" button
   - [x] Empty state with CTA
   - [x] Sort by start_date (most recent first)
-- [x] Create experience page (`app/[ADMIN_ROUTE]/experience/new/page.tsx`)
+- [x] Create experience page (`app/admin/experience/new/page.tsx`)
   - [x] Form with all fields:
     - [x] Company (required)
     - [x] Position (required)
@@ -325,7 +325,7 @@ Task list untuk development portfolio website. Update status seiring progress.
   - [x] Toast notifications (success/error)
   - [x] Loading states
   - [x] Redirect after success
-- [x] Edit experience page (`app/[ADMIN_ROUTE]/experience/[id]/edit/page.tsx`)
+- [x] Edit experience page (`app/admin/experience/[id]/edit/page.tsx`)
   - [x] Fetch experience data by ID
   - [x] Pre-filled form with current data
   - [x] Update functionality via helper function
@@ -336,7 +336,7 @@ Task list untuk development portfolio website. Update status seiring progress.
 
 ### Skills Management
 
-- [x] List skills page (`app/[ADMIN_ROUTE]/skills/page.tsx`)
+- [x] List skills page (`app/admin/skills/page.tsx`)
   - [x] Fetch all skills from Supabase
   - [x] Grid view grouped by category
   - [x] Table view with all columns
@@ -350,7 +350,7 @@ Task list untuk development portfolio website. Update status seiring progress.
   - [x] Delete button (with confirmation modal)
   - [x] "Add New" button
   - [x] Empty state with CTA
-- [x] Create skill page (`app/[ADMIN_ROUTE]/skills/new/page.tsx`)
+- [x] Create skill page (`app/admin/skills/new/page.tsx`)
   - [x] Form with all fields:
     - [x] Name (required)
     - [x] Category (required, select)
@@ -370,7 +370,7 @@ Task list untuk development portfolio website. Update status seiring progress.
   - [x] Toast notifications (success/error)
   - [x] Loading states
   - [x] Redirect after success
-- [x] Edit skill page (`app/[ADMIN_ROUTE]/skills/[id]/edit/page.tsx`)
+- [x] Edit skill page (`app/admin/skills/[id]/edit/page.tsx`)
   - [x] Fetch skill data by ID
   - [x] Pre-filled form with current data
   - [x] Icon preview with current selection
@@ -401,7 +401,7 @@ Task list untuk development portfolio website. Update status seiring progress.
   - [x] Error handling
   - [x] Return success/error response
   - [x] Email configuration check
-  - [ ] Rate limiting (optional - future enhancement)
+  - [x] Rate limiting ✅ **COMPLETE** (Added Feb 13, 2026)
 
 ### Projects API (Optional - can use Supabase client directly)
 
@@ -974,12 +974,131 @@ Future ideas to consider:
 
 ---
 
-**Last Updated:** February 9, 2026 (Phase 1, 2, 3, 4 Complete ✅ | ImageKit Integration ✅ | Image Carousel ✅ | 92% Complete 🚀)
-**Next Review:** February 12, 2026
+**Last Updated:** February 13, 2026 (Phase 1, 2, 3, 4 Complete ✅ | ImageKit Integration ✅ | Security Enhancements ✅ | 93% Complete 🚀)
+**Next Review:** February 16, 2026
 
 ---
 
 ## 📝 Recent Updates
+
+### February 13, 2026 - Admin Security Enhancements! 🔒
+
+**✅ Rate Limiting + IP Whitelist + Admin Route Configuration**
+
+**Security Features Implemented:**
+
+1. **Rate Limiting for Login Page**
+   - Prevents brute force attacks on admin login
+   - Max 5 login attempts per 15 minutes per IP address
+   - In-memory rate limit store with auto cleanup (every 30 minutes)
+   - Returns HTTP 429 with retry-after header when exceeded
+   - Client IP detection from `x-forwarded-for` and `x-real-ip` headers
+
+2. **IP Whitelist (Optional)**
+   - Configurable via `ADMIN_IP_WHITELIST` environment variable
+   - Supports single IP or comma-separated list
+   - Disabled by default (empty = allow all IPs)
+   - Returns HTTP 403 for non-whitelisted IPs
+   - Perfect for production: restrict admin access to office/home IPs
+
+3. **Admin Route Configuration**
+   - Renamed folder from `kingpersib` to `admin` for consistency
+   - Updated all documentation to reflect new structure
+   - Critical requirement: folder name MUST match `ADMIN_ROUTE_SECRET` value
+   - Security by obscurity: use unique route name in production
+
+**Code Changes:**
+
+1. **Middleware Updates** (`lib/middleware/auth-middleware.ts`)
+   - Added `getClientIP()` - Extract IP from headers
+   - Added `checkRateLimit()` - Rate limiting logic
+   - Added `createRateLimitResponse()` - HTTP 429 error response
+   - Added `checkIPWhitelist()` - IP whitelist validation
+   - Added `createIPBlockedResponse()` - HTTP 403 error response
+
+2. **Main Middleware** (`middleware.ts`)
+   - Integrated IP whitelist check (runs first)
+   - Integrated rate limiting for login page
+   - Execution order: IP whitelist → Rate limit → Auth check
+
+3. **Environment Configuration**
+   - Updated `.env.example` with IP whitelist documentation
+   - Updated `.env.local` with IP whitelist field
+   - Format: `ADMIN_IP_WHITELIST=192.168.1.100,203.0.113.45`
+
+**Documentation Created:**
+
+1. **`docs/ADMIN_ROUTE_CONFIG.md`** (NEW - 245 lines)
+   - Critical requirement: folder name = ADMIN_ROUTE_SECRET value
+   - Security best practices for production
+   - Migration guide from old setup (kingpersib → admin)
+   - Common mistakes and solutions
+   - Testing authentication checklist
+   - Step-by-step verification guide
+
+2. **`docs/IP_WHITELIST_GUIDE.md`** (NEW - 340 lines)
+   - How to check your IP address (4 methods)
+   - Configuration examples (single/multiple IPs)
+   - Testing procedures
+   - Dynamic IP handling strategies
+   - VPN/proxy considerations
+   - Production security levels
+   - Troubleshooting guide
+
+3. **Updated Existing Documentation**
+   - `lib/middleware/README.md` - Added security features section
+   - `README.md` - Updated admin panel security features
+   - `docs/INDEX.md` - Added new guides to documentation index
+   - All references updated from `kingpersib` to `admin`
+
+**Testing:**
+
+Rate Limiting:
+
+```bash
+# Test: Try 6 login attempts quickly
+for i in {1..6}; do curl http://localhost:3000/admin/login; done
+# Expected: Request 6 returns HTTP 429
+```
+
+IP Whitelist:
+
+```bash
+# Check your IP
+curl ifconfig.me
+
+# Configure in .env.local
+ADMIN_IP_WHITELIST=your-ip-address
+
+# Test from different IP: Expected HTTP 403
+```
+
+**Security Layers Now Active:**
+
+| Layer                    | Status      | Configuration            |
+| ------------------------ | ----------- | ------------------------ |
+| 1️⃣ Obscure Route         | ✅ Active   | `/admin` (configurable)  |
+| 2️⃣ Rate Limiting         | ✅ Active   | 5 req/15min per IP       |
+| 3️⃣ IP Whitelist          | ⚠️ Optional | Via `ADMIN_IP_WHITELIST` |
+| 4️⃣ Supabase Auth         | ✅ Active   | Email/password           |
+| 5️⃣ Middleware Protection | ✅ Active   | Auto redirect            |
+
+**📁 Files Created:** 2 | **Files Modified:** 15+
+
+**Commit Message:**
+
+```bash
+feat(security): add rate limiting and IP whitelist for admin routes
+
+- Add rate limiting: max 5 login attempts per 15 minutes per IP
+- Add IP whitelist support via ADMIN_IP_WHITELIST env variable
+- Rename admin folder from kingpersib to admin for consistency
+- Update middleware with security checks (429, 403 responses)
+- Add comprehensive documentation (ADMIN_ROUTE_CONFIG, IP_WHITELIST_GUIDE)
+- Update .env.example with IP whitelist configuration
+```
+
+---
 
 ### February 9, 2026 - ImageKit Integration & Image Carousel! 🖼️
 
@@ -1077,6 +1196,7 @@ Future ideas to consider:
    - Grid layout 2 columns (responsive)
    - ScrollReveal animations (staggered fade-up)
    - Back to Home button
+   - Image display with ImageKit support (images array + fallback to image_url)
    - Technology badges with devicon icons
    - Hover overlay with "See Details" link
    - SEO metadata (title, description)
@@ -1136,9 +1256,9 @@ Future ideas to consider:
    - Dark mode support
 
 4. **Admin Panel Updates**
-   - `app/kingpersib/projects/new/page.tsx` - Uses TechnologyInput
-   - `app/kingpersib/projects/[id]/edit/page.tsx` - Uses TechnologyInput
-   - `app/kingpersib/projects/page.tsx` - Icons in list/grid/table views, search by tech name
+   - `app/admin/projects/new/page.tsx` - Uses TechnologyInput
+   - `app/admin/projects/[id]/edit/page.tsx` - Uses TechnologyInput
+   - `app/admin/projects/page.tsx` - Icons in list/grid/table views, search by tech name
 
 5. **Public Display Updates**
    - `app/(public)/components/projects.tsx` - Technology badges with icons on homepage
@@ -1163,17 +1283,17 @@ Future ideas to consider:
    - Migration file: `migration-add-skills-table.sql`
 
 2. **Admin Panel - Skills CRUD**
-   - **List Page** (`app/kingpersib/skills/page.tsx`)
+   - **List Page** (`app/admin/skills/page.tsx`)
      - Grid/Table view toggle
      - Search by name + category filter
      - Stats cards (Total, Frontend, Backend, Tools, Visible)
      - Icon preview, visibility indicator
      - Delete with confirmation modal
-   - **Create Page** (`app/kingpersib/skills/new/page.tsx`)
+   - **Create Page** (`app/admin/skills/new/page.tsx`)
      - Form with Devicon Icon Picker
      - Category selection, visibility control
      - React Hook Form + Zod validation
-   - **Edit Page** (`app/kingpersib/skills/[id]/edit/page.tsx`)
+   - **Edit Page** (`app/admin/skills/[id]/edit/page.tsx`)
      - Pre-filled form with icon preview
      - Update & Delete functionality
 
@@ -1197,7 +1317,7 @@ Future ideas to consider:
    - `lib/validations/skill.ts` - Zod schema
    - `lib/supabase/helpers.ts` - insertSkill, updateSkill, deleteSkill
    - `components/admin/sidebar.tsx` - Added Skills nav item
-   - `app/kingpersib/page.tsx` - Dashboard stats + quick actions for Skills
+   - `app/admin/page.tsx` - Dashboard stats + quick actions for Skills
 
 **📁 Files Created:** 7 | **Files Modified:** 5
 
@@ -1553,15 +1673,15 @@ Future ideas to consider:
      - Added `employment_type` validation (optional)
 
 10. **Admin Panel Updates:**
-    - **List Page (`app/kingpersib/experience/page.tsx`):**
+    - **List Page (`app/admin/experience/page.tsx`):**
       - Display company logo in grid and table views
       - Show employment type badge
       - Image component for logo display
-    - **Create Page (`app/kingpersib/experience/new/page.tsx`):**
+    - **Create Page (`app/admin/experience/new/page.tsx`):**
       - Company Logo URL input field
       - Employment Type dropdown with predefined options
       - Form validation for new fields
-    - **Edit Page (`app/kingpersib/experience/[id]/edit/page.tsx`):**
+    - **Edit Page (`app/admin/experience/[id]/edit/page.tsx`):**
       - Pre-fill logo_url and employment_type
       - Update logic for new fields
 
@@ -2063,7 +2183,7 @@ EMAIL_TO=recipient@example.com
 
 **Projects CRUD Implementation:**
 
-1. **`app/kingpersib/projects/page.tsx`** - List Projects
+1. **`app/admin/projects/page.tsx`** - List Projects
    - Card view with full project information
    - Featured badge and technologies tags
    - Edit and Delete buttons
@@ -2072,7 +2192,7 @@ EMAIL_TO=recipient@example.com
    - Toast notifications
    - Responsive design
 
-2. **`app/kingpersib/projects/new/page.tsx`** - Create Project
+2. **`app/admin/projects/new/page.tsx`** - Create Project
    - Complete form with all fields
    - Auto-generate slug from title
    - Technologies tags input (add/remove)
@@ -2083,7 +2203,7 @@ EMAIL_TO=recipient@example.com
    - Toast notifications for feedback
    - Loading states
 
-3. **`app/kingpersib/projects/[id]/edit/page.tsx`** - Edit Project
+3. **`app/admin/projects/[id]/edit/page.tsx`** - Edit Project
    - Pre-filled form with existing data
    - Update functionality
    - Delete button with confirmation
@@ -2093,7 +2213,7 @@ EMAIL_TO=recipient@example.com
 
 **Experience CRUD Implementation:**
 
-1. **`app/kingpersib/experience/page.tsx`** - List Experience
+1. **`app/admin/experience/page.tsx`** - List Experience
    - Card view with full information
    - Current job badge
    - Date range formatting (MMM YYYY - Present)
@@ -2102,7 +2222,7 @@ EMAIL_TO=recipient@example.com
    - Empty state with CTA
    - Sort by start date (most recent first)
 
-2. **`app/kingpersib/experience/new/page.tsx`** - Create Experience
+2. **`app/admin/experience/new/page.tsx`** - Create Experience
    - Complete form with all fields
    - Date pickers for start/end dates
    - "Is Current" checkbox (auto-disables end date)
@@ -2112,7 +2232,7 @@ EMAIL_TO=recipient@example.com
    - Toast notifications
    - Loading states
 
-3. **`app/kingpersib/experience/[id]/edit/page.tsx`** - Edit Experience
+3. **`app/admin/experience/[id]/edit/page.tsx`** - Edit Experience
    - Pre-filled form with existing data
    - Update functionality
    - Delete button with confirmation
@@ -2165,7 +2285,7 @@ EMAIL_TO=recipient@example.com
 
 **🎯 What's Working Now:**
 
-1. Navigate to `/kingpersib` to see dashboard
+1. Navigate to `/admin` to see dashboard
 2. Create, edit, and delete projects
 3. Create, edit, and delete work experience
 4. All form validations working
@@ -2209,20 +2329,20 @@ EMAIL_TO=recipient@example.com
 
 **Admin Pages Created:**
 
-1. **`app/kingpersib/layout.tsx`** - Main admin layout
+1. **`app/admin/layout.tsx`** - Main admin layout
    - Sidebar integration
    - Protected route handling
    - Conditional rendering for login page
    - Responsive flex layout
 
-2. **`app/kingpersib/page.tsx`** - Dashboard
+2. **`app/admin/page.tsx`** - Dashboard
    - Statistics cards (Total Projects, Featured Projects, Work Experience, Last Updated)
    - Fetch real data from Supabase
    - Quick action buttons
    - Beautiful icon-based UI with Lucide icons
    - Type-safe TypeScript implementation
 
-3. **`app/kingpersib/login/page.tsx`** - Login page
+3. **`app/admin/login/page.tsx`** - Login page
    - Email/password form
    - Client-side validation
    - Loading states
@@ -2230,7 +2350,7 @@ EMAIL_TO=recipient@example.com
    - Redirect after successful login
    - API integration
 
-4. **`app/kingpersib/login/layout.tsx`** - Login layout override
+4. **`app/admin/login/layout.tsx`** - Login layout override
 
 **API Routes Created:**
 

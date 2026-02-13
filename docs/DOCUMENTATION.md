@@ -34,7 +34,7 @@ portfolio-web/
 │   │       ├── About.tsx
 │   │       └── Contact.tsx
 │   │
-│   ├── [ADMIN_ROUTE]/         # Admin panel (unique route)
+│   ├── admin/                # Admin panel (configurable route)
 │   │   ├── layout.tsx
 │   │   ├── page.tsx           # Admin dashboard
 │   │   ├── login/
@@ -200,8 +200,10 @@ cp .env.example .env.local
 - `EMAIL_USER`: Email Gmail Anda
 - `EMAIL_PASSWORD`: App password Gmail (bukan password biasa)
 - `EMAIL_TO`: Email tujuan untuk menerima contact form
-- `ADMIN_ROUTE_SECRET`: Nama route unik untuk admin panel (contoh: `my-secret-dashboard-2024`)
+- `ADMIN_ROUTE_SECRET`: Nama route untuk admin panel (default: `admin`, HARUS sama dengan nama folder di `app/`)
 - `ADMIN_PASSWORD_HASH`: Bcrypt hash dari password admin
+
+**Important:** Nilai `ADMIN_ROUTE_SECRET` HARUS sama dengan nama folder. Default adalah `admin`. Untuk keamanan lebih baik, rename folder `app/admin/` ke nama unik dan update env variable ini.
 
 **Generate password hash:**
 
@@ -224,17 +226,19 @@ npm run dev
 
 Buka [http://localhost:3000](http://localhost:3000)
 
-Admin panel: `http://localhost:3000/[ADMIN_ROUTE_SECRET]`
+Admin panel: `http://localhost:3000/admin` (atau route yang Anda konfigurasi)
 
 ## 🔐 Authentication Flow
 
 ### Admin Panel Access
 
-1. User mengakses route admin yang unik (dari `ADMIN_ROUTE_SECRET`)
-2. Jika belum login, redirect ke `/[ADMIN_ROUTE_SECRET]/login`
+1. User mengakses route admin (default: `/admin`, dikonfigurasi via `ADMIN_ROUTE_SECRET`)
+2. Jika belum login, redirect ke `/admin/login` (atau route yang dikonfigurasi)
 3. Login menggunakan Supabase Auth (email + password)
 4. Setelah login, dapat manage projects dan experience
 5. Session disimpan di Supabase (auto refresh)
+
+**Note:** Folder fisik di `app/admin/` HARUS sama dengan nilai `ADMIN_ROUTE_SECRET`.
 
 ### Middleware Protection
 
@@ -400,7 +404,7 @@ colors: {
 
 **Solution:**
 
-- Check `ADMIN_ROUTE_SECRET` matches in code
+- Check `ADMIN_ROUTE_SECRET` matches folder name in `app/`
 - Clear browser cache
 - Verify middleware configuration
 

@@ -104,12 +104,14 @@ git push -u origin main
    EMAIL_USER=your-email@gmail.com
    EMAIL_PASSWORD=your-app-password
    EMAIL_TO=jonathanraffael098@gmail.com
-   ADMIN_ROUTE_SECRET=your-unique-admin-route
+   ADMIN_ROUTE_SECRET=admin
    NEXT_PUBLIC_SITE_URL=https://your-domain.vercel.app
    ```
 
    **Important:**
    - Add variables to all environments (Production, Preview, Development)
+   - `ADMIN_ROUTE_SECRET` must match your folder name in `app/` (default: `admin`)
+   - For better security, rename folder to unique name and update this value
    - Or select specific environments as needed
 
 5. **Deploy**
@@ -336,7 +338,8 @@ Before going live:
 
 ### Next.js Security
 
-- [ ] ADMIN_ROUTE_SECRET is unique and complex
+- [ ] ADMIN_ROUTE_SECRET matches folder name in `app/` directory
+- [ ] Admin folder renamed to unique name for production (recommended)
 - [ ] Middleware protecting admin routes
 - [ ] API routes validating input
 - [ ] CORS configured properly

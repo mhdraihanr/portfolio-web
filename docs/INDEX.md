@@ -89,10 +89,16 @@ Dokumentasi untuk development:
 8a. **[ADMIN_CRUD_GUIDE.md](./ADMIN_CRUD_GUIDE.md)** 🔐  
  Admin CRUD quick reference - Quick access URLs - Projects, Experience & Skills management - Form field requirements - Validation rules - Devicon Icon Picker usage - Tips & tricks - Troubleshooting - Best practices
 
-8b. **[SKILLS_MANAGEMENT_SPEC.md](./SKILLS_MANAGEMENT_SPEC.md)** 🛠️  
+8b. **[ADMIN_ROUTE_CONFIG.md](./ADMIN_ROUTE_CONFIG.md)** 🔒 ⭐ NEW  
+ Admin route configuration guide - Critical folder name & env variable sync - Security best practices - Migration from old setup - Verification checklist - Common mistakes & solutions - Testing authentication
+
+8c. **[IP_WHITELIST_GUIDE.md](./IP_WHITELIST_GUIDE.md)** 🛡️ ⭐ NEW  
+ IP Whitelist configuration guide - How to check your IP address - Setup single/multiple IPs - Testing & troubleshooting - Dynamic IP handling - Production best practices
+
+8d. **[SKILLS_MANAGEMENT_SPEC.md](./SKILLS_MANAGEMENT_SPEC.md)** 🛠️  
  Skills management specification - Database schema - Devicon Icon Picker component - Admin CRUD pages - Homepage integration - Implementation checklist
 
-8c. **[IMAGEKIT_DOCS.md](./IMAGEKIT_DOCS.md)** 🖼️ ⭐ NEW  
+8e. **[IMAGEKIT_DOCS.md](./IMAGEKIT_DOCS.md)** 🖼️ ⭐ NEW  
  ImageKit.io integration - Upload & delete API - ImageUploader component - ImageCarousel component - Type definitions - Security best practices - Usage examples
 
 ---

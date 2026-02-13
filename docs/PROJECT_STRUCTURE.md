@@ -71,7 +71,7 @@ app/
 │   └── [slug]/                 # Dynamic project detail route
 │       └── page.tsx            # Project detail page ✅
 │
-├── [ADMIN_ROUTE]/              # Admin panel (dynamic route)
+├── admin/                      # Admin panel (configurable via ADMIN_ROUTE_SECRET)
 │   ├── layout.tsx              # Admin layout
 │   ├── page.tsx                # Admin dashboard
 │   ├── login/                  # Login page
@@ -83,13 +83,13 @@ app/
 │   │   └── [id]/
 │   │       └── edit/
 │   │           └── page.tsx    # Edit project
-│   └── experience/             # Experience management
-│       ├── page.tsx            # List all experience
-│       ├── new/
-│       │   └── page.tsx        # Create new experience
-│       └── [id]/
-│           └── edit/
-│               └── page.tsx    # Edit experience
+│   ├── experience/             # Experience management
+│   │   ├── page.tsx            # List all experience
+│   │   ├── new/
+│   │   │   └── page.tsx        # Create new experience
+│   │   └── [id]/
+│   │       └── edit/
+│   │           └── page.tsx    # Edit experience
 │   └── skills/                 # Skills management ✅ NEW
 │       ├── page.tsx            # List all skills (grid/table view)
 │       ├── new/
@@ -157,6 +157,7 @@ All Projects page — menampilkan seluruh project:
 - Same card style as homepage featured projects
 - ScrollReveal animations (staggered)
 - Back to Home button
+- Image display: supports both `images[]` array (ImageKit) and `image_url` (legacy)
 - Technology badges with icons
 - Hover overlay with "See Details" button
 - Linked from "View All Projects" di homepage
@@ -174,9 +175,11 @@ Dynamic project detail page:
 - Not found handling (404)
 - Light & dark mode support
 
-#### `app/[ADMIN_ROUTE]/layout.tsx`
+#### `app/admin/layout.tsx`
 
 Admin layout dengan:
+
+**Note:** Folder name `admin` MUST match the `ADMIN_ROUTE_SECRET` value in `.env.local`. For better security, you can rename this folder to a unique name and update the environment variable accordingly.
 
 - Sidebar navigation
 - User info

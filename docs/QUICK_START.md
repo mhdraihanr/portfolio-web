@@ -77,8 +77,10 @@ NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
-# Admin Route (nama route unik untuk admin panel)
-ADMIN_ROUTE_SECRET=my-secret-dashboard-2024
+# Admin Route (HARUS sama dengan nama folder di app/)
+# Default: admin (folder app/admin/)
+# Untuk keamanan: rename folder app/admin/ ke nama unik, lalu update nilai ini
+ADMIN_ROUTE_SECRET=admin
 
 # Email (skip dulu untuk testing)
 # EMAIL_HOST=smtp.gmail.com
@@ -433,7 +435,8 @@ npm install
 ### Issue: "Admin login not working"
 
 - Check user created in Supabase Auth
-- Verify ADMIN_ROUTE_SECRET correct in `.env.local`
+- Verify ADMIN_ROUTE_SECRET matches folder name in `app/` directory
+- If using custom route, make sure folder `app/[your-route]/` exists
 - Clear browser cookies and try again
 - Check middleware.ts is protecting routes correctly
 - Verify email/password credentials are correct
