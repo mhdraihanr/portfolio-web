@@ -92,6 +92,7 @@ export async function Projects() {
                           }
                           alt={project.title}
                           fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
                           className="object-cover group-hover:scale-105 transition-transform duration-300"
                         />
 
@@ -117,6 +118,7 @@ export async function Projects() {
                             src={project.image_url}
                             alt={project.title}
                             fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
                             className="object-cover group-hover:scale-105 transition-transform duration-300"
                           />
 

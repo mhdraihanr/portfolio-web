@@ -98,6 +98,7 @@ export function ImageCarousel({
           src={getImageUrl(images[0])}
           alt={alt}
           fill
+          sizes="(max-width: 768px) 100vw, 800px"
           className="object-cover"
           priority
         />
@@ -119,6 +120,7 @@ export function ImageCarousel({
           src={getImageUrl(images[currentIndex])}
           alt={`${alt} - Image ${currentIndex + 1}`}
           fill
+          sizes="(max-width: 768px) 100vw, 800px"
           className="object-cover transition-opacity duration-300 select-none"
           priority={currentIndex === 0}
           draggable={false}
@@ -163,6 +165,7 @@ export function ImageCarousel({
               src={getImageUrl(image)}
               alt={`Thumbnail ${index + 1}`}
               fill
+              sizes="(max-width: 768px) 25vw, 16vw"
               className="object-cover"
             />
           </button>
