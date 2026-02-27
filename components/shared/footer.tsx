@@ -1,6 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
-import { Github, Linkedin, Mail, Phone } from "lucide-react";
+import { Github, Linkedin, Mail } from "lucide-react";
 
 const footerLinks = {
   social: [
@@ -61,20 +61,6 @@ export function Footer() {
             <p className="text-sm text-gray-600 dark:text-gray-400">
               © {currentYear} Portfolio. All rights reserved.
             </p>
-            <div className="flex gap-6">
-              <Link
-                href="/privacy"
-                className="text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-              >
-                Privacy Policy
-              </Link>
-              <Link
-                href="/terms"
-                className="text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-              >
-                Terms of Service
-              </Link>
-            </div>
           </div>
         </div>
       </div>
