@@ -6,9 +6,9 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ## 🚀 Quick Access
 
-**Admin Panel URL:** `http://localhost:3000/kingpersib`
+**Admin Panel URL:** `http://localhost:3000/admin`
 
-**Login URL:** `http://localhost:3000/kingpersib/login`
+**Login URL:** `http://localhost:3000/admin/login`
 
 ---
 
@@ -16,7 +16,7 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ### List Projects
 
-**URL:** `/kingpersib/projects`
+**URL:** `/admin/projects`
 
 **Features:**
 
@@ -35,7 +35,7 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ### Create Project
 
-**URL:** `/kingpersib/projects/new`
+**URL:** `/admin/projects/new`
 
 **Required Fields:**
 
@@ -74,7 +74,7 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ### Edit Project
 
-**URL:** `/kingpersib/projects/[id]/edit`
+**URL:** `/admin/projects/[id]/edit`
 
 **Features:**
 
@@ -89,7 +89,7 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ### List Experience
 
-**URL:** `/kingpersib/experience`
+**URL:** `/admin/experience`
 
 **Features:**
 
@@ -108,7 +108,7 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ### Create Experience
 
-**URL:** `/kingpersib/experience/new`
+**URL:** `/admin/experience/new`
 
 **Required Fields:**
 
@@ -142,7 +142,7 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ### Edit Experience
 
-**URL:** `/kingpersib/experience/[id]/edit`
+**URL:** `/admin/experience/[id]/edit`
 
 **Features:**
 
@@ -157,7 +157,7 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ### List Skills
 
-**URL:** `/kingpersib/skills`
+**URL:** `/admin/skills`
 
 **Features:**
 
@@ -179,7 +179,7 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ### Create Skill
 
-**URL:** `/kingpersib/skills/new`
+**URL:** `/admin/skills/new`
 
 **Required Fields:**
 
@@ -210,7 +210,7 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ### Edit Skill
 
-**URL:** `/kingpersib/skills/[id]/edit`
+**URL:** `/admin/skills/[id]/edit`
 
 **Features:**
 

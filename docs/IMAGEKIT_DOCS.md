@@ -400,7 +400,7 @@ export const projectSchema = z.object({
 ### Projects Form (Multiple Images)
 
 ```tsx
-// app/kingpersib/projects/new/page.tsx
+// app/admin/projects/new/page.tsx
 const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
 
 <ImageUploader
@@ -423,7 +423,7 @@ const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
 ### Experience Form (Single Logo)
 
 ```tsx
-// app/kingpersib/experience/new/page.tsx
+// app/admin/experience/new/page.tsx
 const [uploadedLogo, setUploadedLogo] = useState<UploadedImage | null>(null);
 
 <ImageUploader

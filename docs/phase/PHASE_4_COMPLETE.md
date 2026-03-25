@@ -10,7 +10,7 @@ Phase 4 telah selesai dengan implementasi lengkap sistem CRUD (Create, Read, Upd
 
 ### 1. Projects CRUD System
 
-#### **List Projects** (`app/kingpersib/projects/page.tsx`)
+#### **List Projects** (`app/admin/projects/page.tsx`)
 
 **Features:**
 - Card-based layout untuk menampilkan semua projects
@@ -31,7 +31,7 @@ Phase 4 telah selesai dengan implementasi lengkap sistem CRUD (Create, Read, Upd
 - Error handling dengan try-catch
 - Loading states dengan Spinner component
 
-#### **Create Project** (`app/kingpersib/projects/new/page.tsx`)
+#### **Create Project** (`app/admin/projects/new/page.tsx`)
 
 **Features:**
 - Complete form dengan semua fields:
@@ -66,7 +66,7 @@ Phase 4 telah selesai dengan implementasi lengkap sistem CRUD (Create, Read, Upd
 - Type-safe dengan TypeScript
 - Error handling comprehensive
 
-#### **Edit Project** (`app/kingpersib/projects/[id]/edit/page.tsx`)
+#### **Edit Project** (`app/admin/projects/[id]/edit/page.tsx`)
 
 **Features:**
 - Pre-filled form dengan data existing
@@ -87,7 +87,7 @@ Phase 4 telah selesai dengan implementasi lengkap sistem CRUD (Create, Read, Upd
 
 ### 2. Work Experience CRUD System
 
-#### **List Experience** (`app/kingpersib/experience/page.tsx`)
+#### **List Experience** (`app/admin/experience/page.tsx`)
 
 **Features:**
 - Card-based layout untuk menampilkan semua experience
@@ -109,7 +109,7 @@ Phase 4 telah selesai dengan implementasi lengkap sistem CRUD (Create, Read, Upd
 - State management dengan React hooks
 - Error handling
 
-#### **Create Experience** (`app/kingpersib/experience/new/page.tsx`)
+#### **Create Experience** (`app/admin/experience/new/page.tsx`)
 
 **Features:**
 - Complete form dengan semua fields:
@@ -135,7 +135,7 @@ Phase 4 telah selesai dengan implementasi lengkap sistem CRUD (Create, Read, Upd
 - Conditional field disabling
 - Type-safe implementation
 
-#### **Edit Experience** (`app/kingpersib/experience/[id]/edit/page.tsx`)
+#### **Edit Experience** (`app/admin/experience/[id]/edit/page.tsx`)
 
 **Features:**
 - Pre-filled form dengan data existing

@@ -124,7 +124,7 @@ export default function ProjectsPage() {
                 Manage your portfolio projects
               </p>
             </div>
-            <Link href="/kingpersib/projects/new">
+            <Link href="/admin/projects/new">
               <Button className="w-full sm:w-auto">
                 <PlusCircle className="w-4 h-4 mr-2" />
                 Add Project
@@ -224,7 +224,7 @@ export default function ProjectsPage() {
                   <p className="text-sm mt-1">
                     Get started by creating your first project
                   </p>
-                  <Link href="/kingpersib/projects/new">
+                  <Link href="/admin/projects/new">
                     <Button className="mt-4">
                       <PlusCircle className="w-4 h-4 mr-2" />
                       Add Your First Project
@@ -321,7 +321,7 @@ export default function ProjectsPage() {
                     )}
                   </div>
                   <div className="flex items-center gap-2">
-                    <Link href={`/kingpersib/projects/${project.id}/edit`}>
+                    <Link href={`/admin/projects/${project.id}/edit`}>
                       <Button variant="outline" size="sm" title="Edit Project">
                         <Pencil className="w-4 h-4" />
                       </Button>
@@ -460,7 +460,7 @@ export default function ProjectsPage() {
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-end gap-2">
                           <Link
-                            href={`/kingpersib/projects/${project.id}/edit`}
+                            href={`/admin/projects/${project.id}/edit`}
                           >
                             <Button variant="outline" size="sm" title="Edit">
                               <Pencil className="w-4 h-4" />

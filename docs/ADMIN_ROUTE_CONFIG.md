@@ -62,15 +62,15 @@ The admin folder name in your filesystem **MUST exactly match** the value of `AD
 ### ❌ Mistake 1: Mismatch Between Folder and Env Variable
 
 ```
-Folder: app/kingpersib/
+Folder: app/admin/
 Env Variable: ADMIN_ROUTE_SECRET=admin_secret_key
 ```
 
 **Result:**
 
-- Route `/kingpersib` exists (from folder) but is **NOT PROTECTED**
+- Route `/admin` exists (from folder) but is **NOT PROTECTED**
 - Middleware tries to protect `/admin_secret_key` which doesn't exist
-- Anyone can access `/kingpersib` without authentication! 🚨
+- Anyone can access `/admin` without authentication! 🚨
 
 ### ❌ Mistake 2: Forgetting to Update Production Env
 
@@ -131,14 +131,14 @@ Before deploying, verify:
 
 ## 📝 Migration from Old Setup
 
-If you previously used a different folder name (e.g., `kingpersib`):
+If you previously used a different folder name (e.g., `admin`):
 
 ### Steps to Migrate:
 
 1. **Rename folder:**
 
    ```bash
-   mv app/kingpersib app/admin
+   mv app/admin app/admin
    ```
 
 2. **Update environment variables:**
@@ -152,7 +152,7 @@ If you previously used a different folder name (e.g., `kingpersib`):
 
    ```typescript
    // ❌ Before
-   router.push("/kingpersib/projects");
+   router.push("/admin/projects");
 
    // ✅ After
    const adminRoute = process.env.ADMIN_ROUTE_SECRET || "admin";
@@ -208,9 +208,9 @@ Env: ADMIN_ROUTE_SECRET=admin
 Result: /admin is protected ✓
 
 ❌ WRONG:
-Folder: app/kingpersib/
+Folder: app/admin/
 Env: ADMIN_ROUTE_SECRET=admin
-Result: /kingpersib exists but NOT PROTECTED! ✗
+Result: /admin exists but NOT PROTECTED! ✗
 Result: /admin is protected but DOESN'T EXIST! ✗
 ```
 

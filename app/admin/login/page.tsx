@@ -45,7 +45,7 @@ export default function LoginPage() {
         description: "Logged in successfully",
         variant: "success",
       });
-      router.push("/kingpersib");
+      router.push("/admin");
       router.refresh();
     } catch (error) {
       const message = error instanceof Error ? error.message : "Invalid credentials";

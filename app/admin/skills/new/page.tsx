@@ -66,7 +66,7 @@ export default function NewSkillPage() {
       if (error) throw error;
 
       toast.success("Success", "Skill created successfully");
-      router.push("/kingpersib/skills");
+      router.push("/admin/skills");
     } catch (error) {
       console.error("Error creating skill:", error);
       toast.error("Error", "Failed to create skill");
@@ -80,7 +80,7 @@ export default function NewSkillPage() {
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         {/* Header */}
         <div className="mb-6">
-          <Link href="/kingpersib/skills">
+          <Link href="/admin/skills">
             <Button variant="outline" size="sm" className="mb-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Skills
@@ -260,7 +260,7 @@ export default function NewSkillPage() {
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row justify-end gap-3 pb-8">
-            <Link href="/kingpersib/skills" className="w-full sm:w-auto">
+            <Link href="/admin/skills" className="w-full sm:w-auto">
               <Button
                 type="button"
                 variant="outline"

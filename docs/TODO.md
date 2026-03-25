@@ -201,7 +201,7 @@ Task list untuk development portfolio website. Update status seiring progress.
 
 ### Setup Admin Routes Structure
 
-- [x] Create `app/admin/` folder (formerly kingpersib)
+- [x] Create `app/admin/` folder (formerly admin)
 - [x] Create `app/admin/layout.tsx`
 - [x] Create `app/admin/page.tsx` (dashboard)
 
@@ -1002,7 +1002,7 @@ Future ideas to consider:
    - Perfect for production: restrict admin access to office/home IPs
 
 3. **Admin Route Configuration**
-   - Renamed folder from `kingpersib` to `admin` for consistency
+   - Renamed folder from `admin` to `admin` for consistency
    - Updated all documentation to reflect new structure
    - Critical requirement: folder name MUST match `ADMIN_ROUTE_SECRET` value
    - Security by obscurity: use unique route name in production
@@ -1031,7 +1031,7 @@ Future ideas to consider:
 1. **`docs/ADMIN_ROUTE_CONFIG.md`** (NEW - 245 lines)
    - Critical requirement: folder name = ADMIN_ROUTE_SECRET value
    - Security best practices for production
-   - Migration guide from old setup (kingpersib → admin)
+   - Migration guide from old setup (admin → admin)
    - Common mistakes and solutions
    - Testing authentication checklist
    - Step-by-step verification guide
@@ -1049,7 +1049,7 @@ Future ideas to consider:
    - `lib/middleware/README.md` - Added security features section
    - `README.md` - Updated admin panel security features
    - `docs/INDEX.md` - Added new guides to documentation index
-   - All references updated from `kingpersib` to `admin`
+   - All references updated from `admin` to `admin`
 
 **Testing:**
 
@@ -1092,7 +1092,7 @@ feat(security): add rate limiting and IP whitelist for admin routes
 
 - Add rate limiting: max 5 login attempts per 15 minutes per IP
 - Add IP whitelist support via ADMIN_IP_WHITELIST env variable
-- Rename admin folder from kingpersib to admin for consistency
+- Rename admin folder from admin to admin for consistency
 - Update middleware with security checks (429, 403 responses)
 - Add comprehensive documentation (ADMIN_ROUTE_CONFIG, IP_WHITELIST_GUIDE)
 - Update .env.example with IP whitelist configuration
@@ -2380,7 +2380,7 @@ EMAIL_TO=recipient@example.com
 
 **🎯 What's Working Now:**
 
-1. Navigate to `/kingpersib/login` to access login page
+1. Navigate to `/admin/login` to access login page
 2. Login with Supabase credentials
 3. View dashboard with statistics
 4. Navigate between admin sections

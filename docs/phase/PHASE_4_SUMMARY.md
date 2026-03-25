@@ -23,7 +23,7 @@ lib/supabase/
 
 ### Projects CRUD (3 pages)
 ```
-app/kingpersib/projects/
+app/admin/projects/
 ├── page.tsx                    ✅ List all projects
 ├── new/page.tsx                ✅ Create new project
 └── [id]/edit/page.tsx          ✅ Edit/Delete project
@@ -31,7 +31,7 @@ app/kingpersib/projects/
 
 ### Experience CRUD (3 pages)
 ```
-app/kingpersib/experience/
+app/admin/experience/
 ├── page.tsx                    ✅ List all experience
 ├── new/page.tsx                ✅ Create new experience
 └── [id]/edit/page.tsx          ✅ Edit/Delete experience
@@ -52,7 +52,7 @@ docs/
 
 ### Projects Management
 
-#### List Projects (`/kingpersib/projects`)
+#### List Projects (`/admin/projects`)
 - ✅ Card-based layout
 - ✅ Featured badge
 - ✅ Technologies tags display
@@ -64,7 +64,7 @@ docs/
 - ✅ Toast notifications
 - ✅ Responsive design
 
-#### Create Project (`/kingpersib/projects/new`)
+#### Create Project (`/admin/projects/new`)
 - ✅ Complete form (11 fields)
 - ✅ Auto-generate slug from title
 - ✅ Technologies tags input
@@ -78,7 +78,7 @@ docs/
 - ✅ Loading states
 - ✅ Redirect after success
 
-#### Edit Project (`/kingpersib/projects/[id]/edit`)
+#### Edit Project (`/admin/projects/[id]/edit`)
 - ✅ Pre-filled form
 - ✅ Update functionality
 - ✅ Delete button
@@ -88,7 +88,7 @@ docs/
 
 ### Experience Management
 
-#### List Experience (`/kingpersib/experience`)
+#### List Experience (`/admin/experience`)
 - ✅ Card-based layout
 - ✅ Current job badge
 - ✅ Date range formatting
@@ -100,7 +100,7 @@ docs/
 - ✅ Empty state with CTA
 - ✅ Sort by start date (desc)
 
-#### Create Experience (`/kingpersib/experience/new`)
+#### Create Experience (`/admin/experience/new`)
 - ✅ Complete form (7 fields)
 - ✅ Date pickers (start/end)
 - ✅ "Is Current" checkbox
@@ -114,7 +114,7 @@ docs/
 - ✅ Loading states
 - ✅ Redirect after success
 
-#### Edit Experience (`/kingpersib/experience/[id]/edit`)
+#### Edit Experience (`/admin/experience/[id]/edit`)
 - ✅ Pre-filled form
 - ✅ Update functionality
 - ✅ Delete button
@@ -332,13 +332,13 @@ order_index: z.number()
 ✓ No linting errors (5 minor warnings)
 
 Route (app)
-├ ƒ /kingpersib
-├ ƒ /kingpersib/experience
-├ ƒ /kingpersib/experience/[id]/edit
-├ ƒ /kingpersib/experience/new
-├ ƒ /kingpersib/projects
-├ ƒ /kingpersib/projects/[id]/edit
-└ ƒ /kingpersib/projects/new
+├ ƒ /admin
+├ ƒ /admin/experience
+├ ƒ /admin/experience/[id]/edit
+├ ƒ /admin/experience/new
+├ ƒ /admin/projects
+├ ƒ /admin/projects/[id]/edit
+└ ƒ /admin/projects/new
 
 ƒ  (Dynamic)  server-rendered on demand
 ```

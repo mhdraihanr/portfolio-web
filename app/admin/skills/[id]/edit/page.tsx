@@ -61,7 +61,7 @@ export default function EditSkillPage() {
       if (error) {
         if (error.code === "PGRST116") {
           toast.error("Error", "Skill not found");
-          router.push("/kingpersib/skills");
+          router.push("/admin/skills");
           return;
         }
         throw error;
@@ -69,7 +69,7 @@ export default function EditSkillPage() {
 
       if (!data) {
         toast.error("Error", "Skill not found");
-        router.push("/kingpersib/skills");
+        router.push("/admin/skills");
         return;
       }
 
@@ -86,7 +86,7 @@ export default function EditSkillPage() {
     } catch (error) {
       console.error("Error fetching skill:", error);
       toast.error("Error", "Failed to load skill");
-      router.push("/kingpersib/skills");
+      router.push("/admin/skills");
     } finally {
       setIsLoading(false);
     }
@@ -116,7 +116,7 @@ export default function EditSkillPage() {
       if (error) throw error;
 
       toast.success("Success", "Skill updated successfully");
-      router.push("/kingpersib/skills");
+      router.push("/admin/skills");
     } catch (error) {
       console.error("Error updating skill:", error);
       toast.error("Error", "Failed to update skill");
@@ -137,7 +137,7 @@ export default function EditSkillPage() {
       if (error) throw error;
 
       toast.success("Success", "Skill deleted successfully");
-      router.push("/kingpersib/skills");
+      router.push("/admin/skills");
     } catch (error) {
       console.error("Error deleting skill:", error);
       toast.error("Error", "Failed to delete skill");
@@ -160,7 +160,7 @@ export default function EditSkillPage() {
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         {/* Header */}
         <div className="mb-6">
-          <Link href="/kingpersib/skills">
+          <Link href="/admin/skills">
             <Button variant="outline" size="sm" className="mb-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Skills
@@ -351,7 +351,7 @@ export default function EditSkillPage() {
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row justify-end gap-3 pb-8">
-            <Link href="/kingpersib/skills" className="w-full sm:w-auto">
+            <Link href="/admin/skills" className="w-full sm:w-auto">
               <Button
                 type="button"
                 variant="outline"

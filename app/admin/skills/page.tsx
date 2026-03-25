@@ -181,7 +181,7 @@ export default function SkillsPage() {
                 Manage your skills and technologies
               </p>
             </div>
-            <Link href="/kingpersib/skills/new">
+            <Link href="/admin/skills/new">
               <Button className="w-full sm:w-auto">
                 <PlusCircle className="w-4 h-4 mr-2" />
                 Add Skill
@@ -304,7 +304,7 @@ export default function SkillsPage() {
                   <p className="text-sm mt-1">
                     Get started by adding your first skill
                   </p>
-                  <Link href="/kingpersib/skills/new">
+                  <Link href="/admin/skills/new">
                     <Button className="mt-4">
                       <PlusCircle className="w-4 h-4 mr-2" />
                       Add Your First Skill
@@ -384,7 +384,7 @@ export default function SkillsPage() {
                         {/* Actions */}
                         <div className="flex gap-2">
                           <Link
-                            href={`/kingpersib/skills/${skill.id}/edit`}
+                            href={`/admin/skills/${skill.id}/edit`}
                             className="flex-1"
                           >
                             <Button
@@ -492,7 +492,7 @@ export default function SkillsPage() {
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-end gap-2">
-                            <Link href={`/kingpersib/skills/${skill.id}/edit`}>
+                            <Link href={`/admin/skills/${skill.id}/edit`}>
                               <Button variant="outline" size="sm" title="Edit">
                                 <Pencil className="w-4 h-4" />
                               </Button>

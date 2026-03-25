@@ -68,7 +68,7 @@ export default function EditExperiencePage() {
       if (error) {
         if (error.code === "PGRST116") {
           toast.error("Error", "Work experience not found");
-          router.push("/kingpersib/experience");
+          router.push("/admin/experience");
           return;
         }
         throw error;
@@ -76,7 +76,7 @@ export default function EditExperiencePage() {
 
       if (!data) {
         toast.error("Error", "Work experience not found");
-        router.push("/kingpersib/experience");
+        router.push("/admin/experience");
         return;
       }
 
@@ -105,7 +105,7 @@ export default function EditExperiencePage() {
     } catch (error) {
       console.error("Error fetching experience:", error);
       toast.error("Error", "Failed to load work experience");
-      router.push("/kingpersib/experience");
+      router.push("/admin/experience");
     } finally {
       setIsLoading(false);
     }
@@ -148,7 +148,7 @@ export default function EditExperiencePage() {
 
       toast.success("Success", "Work experience updated successfully");
 
-      router.push("/kingpersib/experience");
+      router.push("/admin/experience");
     } catch (error) {
       console.error("Error updating experience:", error);
       toast.error("Error", "Failed to update work experience");
@@ -170,7 +170,7 @@ export default function EditExperiencePage() {
 
       toast.success("Success", "Work experience deleted successfully");
 
-      router.push("/kingpersib/experience");
+      router.push("/admin/experience");
     } catch (error) {
       console.error("Error deleting experience:", error);
       toast.error("Error", "Failed to delete work experience");
@@ -193,7 +193,7 @@ export default function EditExperiencePage() {
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         {/* Header */}
         <div className="mb-6">
-          <Link href="/kingpersib/experience">
+          <Link href="/admin/experience">
             <Button variant="outline" size="sm" className="mb-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Experience
@@ -410,7 +410,7 @@ export default function EditExperiencePage() {
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row justify-end gap-3 pb-8">
-            <Link href="/kingpersib/experience" className="w-full sm:w-auto">
+            <Link href="/admin/experience" className="w-full sm:w-auto">
               <Button
                 type="button"
                 variant="outline"

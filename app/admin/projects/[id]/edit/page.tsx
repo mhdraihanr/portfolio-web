@@ -67,7 +67,7 @@ export default function EditProjectPage() {
       if (error) {
         if (error.code === "PGRST116") {
           toast.error("Error", "Project not found");
-          router.push("/kingpersib/projects");
+          router.push("/admin/projects");
           return;
         }
         throw error;
@@ -75,7 +75,7 @@ export default function EditProjectPage() {
 
       if (!data) {
         toast.error("Error", "Project not found");
-        router.push("/kingpersib/projects");
+        router.push("/admin/projects");
         return;
       }
 
@@ -109,7 +109,7 @@ export default function EditProjectPage() {
     } catch (error) {
       console.error("Error fetching project:", error);
       toast.error("Error", "Failed to load project");
-      router.push("/kingpersib/projects");
+      router.push("/admin/projects");
     } finally {
       setIsLoading(false);
     }
@@ -170,7 +170,7 @@ export default function EditProjectPage() {
 
       toast.success("Success", "Project updated successfully");
 
-      router.push("/kingpersib/projects");
+      router.push("/admin/projects");
     } catch (error) {
       console.error("Error updating project:", error);
       toast.error("Error", "Failed to update project");
@@ -192,7 +192,7 @@ export default function EditProjectPage() {
 
       toast.success("Success", "Project deleted successfully");
 
-      router.push("/kingpersib/projects");
+      router.push("/admin/projects");
     } catch (error) {
       console.error("Error deleting project:", error);
       toast.error("Error", "Failed to delete project");
@@ -215,7 +215,7 @@ export default function EditProjectPage() {
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         {/* Header */}
         <div className="mb-6">
-          <Link href="/kingpersib/projects">
+          <Link href="/admin/projects">
             <Button variant="outline" size="sm" className="mb-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Projects
@@ -460,7 +460,7 @@ export default function EditProjectPage() {
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row justify-end gap-3 pb-8">
-            <Link href="/kingpersib/projects" className="w-full sm:w-auto">
+            <Link href="/admin/projects" className="w-full sm:w-auto">
               <Button
                 type="button"
                 variant="outline"

@@ -57,24 +57,24 @@ export async function middleware(request: NextRequest) {
 - ✅ Runs BEFORE any page loads
 - ✅ Checks authentication status
 - ✅ Redirects non-authenticated users to login
-- ✅ Prevents access to all `/kingpersib/*` routes (except login)
+- ✅ Prevents access to all `/admin/*` routes (except login)
 
 **Routes Protected:**
 
 ```
-✅ /kingpersib (dashboard)
-✅ /kingpersib/projects
-✅ /kingpersib/projects/new
-✅ /kingpersib/projects/[id]/edit
-✅ /kingpersib/experience
-✅ /kingpersib/experience/new
-✅ /kingpersib/experience/[id]/edit
+✅ /admin (dashboard)
+✅ /admin/projects
+✅ /admin/projects/new
+✅ /admin/projects/[id]/edit
+✅ /admin/experience
+✅ /admin/experience/new
+✅ /admin/experience/[id]/edit
 ```
 
 **Routes Public:**
 
 ```
-✓ /kingpersib/login (login page)
+✓ /admin/login (login page)
 ✓ / (homepage - when built)
 ✓ /api/projects (public read)
 ✓ /api/experience (public read)
@@ -219,7 +219,7 @@ const supabase = createClient(); // Includes auth token if logged in
 **Scenario:** User types admin URL directly in browser
 
 ```
-User types: http://localhost:3000/kingpersib/projects/new
+User types: http://localhost:3000/admin/projects/new
 ```
 
 **Result:**
@@ -227,7 +227,7 @@ User types: http://localhost:3000/kingpersib/projects/new
 ```
 1. Middleware checks authentication
 2. User not found in session
-3. REDIRECT to /kingpersib/login
+3. REDIRECT to /admin/login
 4. ✅ PROTECTED
 ```
 
@@ -317,7 +317,7 @@ VALUES ('Hacked', 'hacked', 'Test');
 ```
 Request Flow:
 ┌─────────────────────────────────────┐
-│ User tries to access /kingpersib    │
+│ User tries to access /admin    │
 └──────────────┬──────────────────────┘
                ↓
 ┌──────────────────────────────────────┐
@@ -437,7 +437,7 @@ If token expires       → Both layers block access
 #### Example 1: Create Project
 
 ```typescript
-// File: app/kingpersib/projects/new/page.tsx
+// File: app/admin/projects/new/page.tsx
 
 // 1️⃣ User must pass middleware (already logged in)
 // 2️⃣ Form validates data (Zod schema)
@@ -459,7 +459,7 @@ const onSubmit = async (data: ProjectFormData) => {
 #### Example 2: Delete Project
 
 ```typescript
-// File: app/kingpersib/projects/[id]/edit/page.tsx
+// File: app/admin/projects/[id]/edit/page.tsx
 
 const handleDelete = async () => {
   // 1️⃣ User already passed middleware

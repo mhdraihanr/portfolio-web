@@ -42,7 +42,7 @@ portfolio-web/
 │   │   └── README.md                 ← Documentation
 │   └── auth.ts                        ← Auth helpers
 └── app/
-    └── kingpersib/                    ← Protected admin routes
+    └── admin/                    ← Protected admin routes
 ```
 
 ### ❌ **INCORRECT Locations:**
@@ -266,8 +266,8 @@ export async function middleware(request: NextRequest) {
 import { isProtectedRoute } from "@/lib/middleware/auth-middleware";
 
 const { isAdminRoute, isLoginPage } = isProtectedRoute(
-  "/kingpersib/dashboard",
-  "kingpersib"
+  "/admin/dashboard",
+  "admin"
 );
 
 console.log(isAdminRoute); // true
@@ -301,14 +301,14 @@ import {
 
 // Redirect to login
 if (!user && !isLoginPage) {
-  return createAuthRedirect(request, "kingpersib", pathname);
-  // Redirects to: /kingpersib/login?redirectTo=/kingpersib/projects
+  return createAuthRedirect(request, "admin", pathname);
+  // Redirects to: /admin/login?redirectTo=/admin/projects
 }
 
 // Redirect to dashboard
 if (user && isLoginPage) {
-  return createDashboardRedirect(request, "kingpersib");
-  // Redirects to: /kingpersib
+  return createDashboardRedirect(request, "admin");
+  // Redirects to: /admin
 }
 ```
 
@@ -326,19 +326,19 @@ import { isProtectedRoute } from "@/lib/middleware/auth-middleware";
 
 describe("isProtectedRoute", () => {
   it("should identify admin routes", () => {
-    const result = isProtectedRoute("/kingpersib/dashboard", "kingpersib");
+    const result = isProtectedRoute("/admin/dashboard", "admin");
     expect(result.isAdminRoute).toBe(true);
     expect(result.isLoginPage).toBe(false);
   });
 
   it("should identify login page", () => {
-    const result = isProtectedRoute("/kingpersib/login", "kingpersib");
+    const result = isProtectedRoute("/admin/login", "admin");
     expect(result.isAdminRoute).toBe(true);
     expect(result.isLoginPage).toBe(true);
   });
 
   it("should identify public routes", () => {
-    const result = isProtectedRoute("/", "kingpersib");
+    const result = isProtectedRoute("/", "admin");
     expect(result.isAdminRoute).toBe(false);
   });
 });
@@ -356,12 +356,12 @@ import { NextRequest } from "next/server";
 describe("middleware", () => {
   it("should redirect unauthenticated users to login", async () => {
     const request = new NextRequest(
-      "http://localhost:3000/kingpersib/dashboard"
+      "http://localhost:3000/admin/dashboard"
     );
     const response = await middleware(request);
 
     expect(response.status).toBe(307); // Redirect
-    expect(response.headers.get("location")).toContain("/kingpersib/login");
+    expect(response.headers.get("location")).toContain("/admin/login");
   });
 });
 ```
@@ -507,7 +507,7 @@ export const config = {
 - **`lib/middleware/README.md`** - API documentation
 - **`lib/auth.ts`** - Server-side auth helpers
 - **`lib/supabase/server.ts`** - Supabase server client
-- **`app/kingpersib/layout.tsx`** - Admin layout
+- **`app/admin/layout.tsx`** - Admin layout
 
 ---
 

@@ -582,9 +582,9 @@ const { data } = await supabase
 
 #### Admin Pages
 
-- **List:** `/kingpersib/skills` - Grid/Table view with search & category filter
-- **Create:** `/kingpersib/skills/new` - Form with Devicon Icon Picker
-- **Edit:** `/kingpersib/skills/[id]/edit` - Pre-filled form with update & delete
+- **List:** `/admin/skills` - Grid/Table view with search & category filter
+- **Create:** `/admin/skills/new` - Form with Devicon Icon Picker
+- **Edit:** `/admin/skills/[id]/edit` - Pre-filled form with update & delete
 
 ---
 

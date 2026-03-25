@@ -85,7 +85,7 @@ export default function NewExperiencePage() {
 
       toast.success("Success", "Work experience created successfully");
 
-      router.push("/kingpersib/experience");
+      router.push("/admin/experience");
     } catch (error) {
       console.error("Error creating experience:", error);
       toast.error("Error", "Failed to create work experience");
@@ -99,7 +99,7 @@ export default function NewExperiencePage() {
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         {/* Header */}
         <div className="mb-6">
-          <Link href="/kingpersib/experience">
+          <Link href="/admin/experience">
             <Button variant="outline" size="sm" className="mb-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Experience
@@ -304,7 +304,7 @@ export default function NewExperiencePage() {
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row justify-end gap-3 pb-8">
-            <Link href="/kingpersib/experience" className="w-full sm:w-auto">
+            <Link href="/admin/experience" className="w-full sm:w-auto">
               <Button
                 type="button"
                 variant="outline"

@@ -179,7 +179,7 @@ portfolio-web/
 │   ├── layout.tsx              ✅ Updated with ThemeProvider
 │   ├── page.tsx                ✅ Demo page created
 │   ├── globals.css             ✅ Ready
-│   ├── admin/                  ✅ Admin routes (renamed from kingpersib)
+│   ├── admin/                  ✅ Admin routes (renamed from admin)
 │   │   ├── layout.tsx          ✅ Admin layout with sidebar
 │   │   ├── page.tsx            ✅ Dashboard with statistics
 │   │   └── login/

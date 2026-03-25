@@ -163,7 +163,7 @@ export default function ExperiencePage() {
                 Manage your professional work history
               </p>
             </div>
-            <Link href="/kingpersib/experience/new">
+            <Link href="/admin/experience/new">
               <Button className="w-full sm:w-auto">
                 <PlusCircle className="w-4 h-4 mr-2" />
                 Add Experience
@@ -263,7 +263,7 @@ export default function ExperiencePage() {
                   <p className="text-sm mt-1">
                     Get started by adding your first work experience
                   </p>
-                  <Link href="/kingpersib/experience/new">
+                  <Link href="/admin/experience/new">
                     <Button className="mt-4">
                       <PlusCircle className="w-4 h-4 mr-2" />
                       Add Your First Experience
@@ -368,7 +368,7 @@ export default function ExperiencePage() {
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         <Link
-                          href={`/kingpersib/experience/${experience.id}/edit`}
+                          href={`/admin/experience/${experience.id}/edit`}
                         >
                           <Button variant="outline" size="sm" title="Edit">
                             <Pencil className="w-4 h-4" />
@@ -494,7 +494,7 @@ export default function ExperiencePage() {
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-end gap-2">
                           <Link
-                            href={`/kingpersib/experience/${experience.id}/edit`}
+                            href={`/admin/experience/${experience.id}/edit`}
                           >
                             <Button variant="outline" size="sm" title="Edit">
                               <Pencil className="w-4 h-4" />

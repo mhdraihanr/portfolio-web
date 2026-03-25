@@ -46,8 +46,8 @@ Check apakah route adalah protected admin route.
 
 ```typescript
 const { isAdminRoute, isLoginPage } = isProtectedRoute(
-  "/kingpersib/dashboard",
-  "kingpersib",
+  "/admin/dashboard",
+  "admin",
 );
 // isAdminRoute: true
 // isLoginPage: false

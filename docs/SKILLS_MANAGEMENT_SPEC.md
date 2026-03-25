@@ -155,7 +155,7 @@ Tambah fungsi CRUD skills:
 
 ## 📄 6. Admin Pages
 
-### 6.1. Skills List Page: `app/kingpersib/skills/page.tsx`
+### 6.1. Skills List Page: `app/admin/skills/page.tsx`
 
 - Server component dengan SSR
 - Grouped by category
@@ -163,7 +163,7 @@ Tambah fungsi CRUD skills:
 - Skill cards with icon preview, visibility indicator, edit/delete buttons
 - Empty state
 
-### 6.2. Create Skill Page: `app/kingpersib/skills/new/page.tsx`
+### 6.2. Create Skill Page: `app/admin/skills/new/page.tsx`
 
 - Client component dengan react-hook-form + Zod
 - Form fields: name, category, **Devicon Picker**, order_index, is_visible
@@ -171,7 +171,7 @@ Tambah fungsi CRUD skills:
 - Toast notifications
 - Consistent styling dengan Experience/Project forms
 
-### 6.3. Edit Skill Page: `app/kingpersib/skills/[id]/edit/page.tsx`
+### 6.3. Edit Skill Page: `app/admin/skills/[id]/edit/page.tsx`
 
 - Fetch skill by ID, pre-fill form
 - Update & Delete functionality
@@ -213,11 +213,11 @@ Add Skills link with `Code2` icon dari lucide-react.
 - [x] Create `lib/validations/skill.ts` (Zod schema)
 - [x] Update `lib/supabase/helpers.ts` (CRUD functions)
 - [x] Create `components/admin/devicon-picker.tsx` (Icon Picker)
-- [x] Create `app/kingpersib/skills/page.tsx` (List)
-- [x] Create `app/kingpersib/skills/new/page.tsx` (Create)
-- [x] Create `app/kingpersib/skills/[id]/edit/page.tsx` (Edit)
+- [x] Create `app/admin/skills/page.tsx` (List)
+- [x] Create `app/admin/skills/new/page.tsx` (Create)
+- [x] Create `app/admin/skills/[id]/edit/page.tsx` (Edit)
 - [x] Update `components/admin/sidebar.tsx` (add Skills nav)
-- [x] Update `app/kingpersib/page.tsx` (Dashboard stats + quick actions)
+- [x] Update `app/admin/page.tsx` (Dashboard stats + quick actions)
 - [x] Update `app/(public)/components/about.tsx` (fetch from DB)
 
 ### Files Created/Modified Summary
@@ -228,13 +228,13 @@ Add Skills link with `Code2` icon dari lucide-react.
 | CREATE | `types/skill.ts`                           |
 | CREATE | `lib/validations/skill.ts`                 |
 | CREATE | `components/admin/devicon-picker.tsx`      |
-| CREATE | `app/kingpersib/skills/page.tsx`           |
-| CREATE | `app/kingpersib/skills/new/page.tsx`       |
-| CREATE | `app/kingpersib/skills/[id]/edit/page.tsx` |
+| CREATE | `app/admin/skills/page.tsx`           |
+| CREATE | `app/admin/skills/new/page.tsx`       |
+| CREATE | `app/admin/skills/[id]/edit/page.tsx` |
 | MODIFY | `types/database.types.ts`                  |
 | MODIFY | `lib/supabase/helpers.ts`                  |
 | MODIFY | `components/admin/sidebar.tsx`             |
-| MODIFY | `app/kingpersib/page.tsx`                  |
+| MODIFY | `app/admin/page.tsx`                  |
 | MODIFY | `app/(public)/components/about.tsx`        |
 
 ---
