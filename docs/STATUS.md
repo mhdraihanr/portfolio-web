@@ -1,10 +1,37 @@
 # 📊 Project Status
 
-**Last Updated:** February 9, 2026
+**Last Updated:** May 31, 2026
 
 ---
 
 ## 🎉 Project Progress: 92% Complete
+
+## 🆕 Latest Update: Mobile Homepage Performance Pass
+
+**Status:** ✅ **IMPLEMENTED AND VERIFIED**
+
+Today's homepage optimization pass focused on mobile LCP/TBT/layout cost while preserving the animated hero title:
+
+- ✅ `Hero` mobile path still keeps `BlurText` and delayed `LightRays` behavior.
+- ✅ `ScrollReveal` is now static on phone/mobile widths to reduce repeated style and layout work.
+- ✅ `Certificates` uses a static mobile grid instead of animated `LogoLoop`.
+- ✅ `Experience` skips mounting the decorative `Orb` background on phone/mobile widths.
+- ✅ Public Devicon stylesheet remains localized to admin-only routes; public pages use SVG icon URLs instead of the old global stylesheet path.
+- ✅ Verified with `pnpm lint`, `pnpm type-check`, and `pnpm build`.
+- ✅ Re-tested in Chrome DevTools mobile emulation.
+
+### Latest Measured Result (Chrome DevTools mobile trace)
+
+- ✅ `CLS`: `0.00`
+- ✅ Forced reflow reduced to about `162 ms`
+- ⚠️ Remaining render-blocking requests: two internal Next.js CSS files
+- ⚠️ Remaining third-party transfer hotspot: Devicon SVG requests from JSDelivr
+
+### Next Recommended Performance Targets
+
+- Localize or replace public Devicon SVG/CDN usage
+- Reduce hero-related render-blocking CSS and font cost on mobile
+- Continue trimming mobile critical-path CSS and above-the-fold network dependencies
 
 ### ✅ Phase 1: Core Setup & Environment (100% COMPLETE)
 

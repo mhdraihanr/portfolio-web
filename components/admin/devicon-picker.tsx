@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import Image from "next/image";
 import { Search, X, Loader2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -184,9 +185,12 @@ export function DeviconPicker({
           <>
             <div className="flex items-center gap-3 flex-1 min-w-0">
               {selectedSvg ? (
-                <img
+                <Image
                   src={selectedSvg}
                   alt="Selected icon"
+                  width={24}
+                  height={24}
+                  unoptimized
                   className="w-6 h-6 dark:invert"
                 />
               ) : selectedIcon ? (
@@ -305,11 +309,13 @@ export function DeviconPicker({
                       {iconClass ? (
                         <i className={`${iconClass} text-2xl`}></i>
                       ) : svgUrl ? (
-                        <img
+                        <Image
                           src={svgUrl}
                           alt={icon.name}
+                          width={24}
+                          height={24}
+                          unoptimized
                           className="w-6 h-6 dark:invert"
-                          loading="lazy"
                         />
                       ) : (
                         <div className="w-6 h-6 bg-gray-200 dark:bg-gray-600 rounded" />

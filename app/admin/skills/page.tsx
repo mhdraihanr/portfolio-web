@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   PlusCircle,
   Pencil,
@@ -352,9 +353,12 @@ export default function SkillsPage() {
                           <div className="flex items-center gap-3 flex-1 min-w-0">
                             {/* Icon */}
                             {skill.icon_svg ? (
-                              <img
+                              <Image
                                 src={skill.icon_svg}
                                 alt={skill.name}
+                                width={32}
+                                height={32}
+                                unoptimized
                                 className="w-8 h-8 shrink-0 dark:invert"
                               />
                             ) : skill.icon ? (
@@ -454,9 +458,12 @@ export default function SkillsPage() {
                       >
                         <td className="px-6 py-4">
                           {skill.icon_svg ? (
-                            <img
+                            <Image
                               src={skill.icon_svg}
                               alt={skill.name}
+                              width={24}
+                              height={24}
+                              unoptimized
                               className="w-6 h-6 dark:invert"
                             />
                           ) : skill.icon ? (

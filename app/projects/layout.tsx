@@ -1,11 +1,10 @@
 "use client";
 
-import { Footer, BackToTop } from "@/components/shared";
+import { Footer, BackToTop, GlobalLoader } from "@/components/shared";
 import {
   PageLoadingProvider,
   usePageLoading,
 } from "@/contexts/PageLoadingContext";
-import { Atom } from "react-loading-indicators";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
@@ -25,18 +24,10 @@ function ProjectsLayoutContent({ children }: { children: React.ReactNode }) {
 
   const currentTheme = mounted ? theme || resolvedTheme : "dark";
   const isDark = currentTheme === "dark";
-  const spinnerColor = isDark ? "#ffffff" : "#1f2937";
-  const spinnerBg = isDark ? "bg-gray-950" : "bg-white";
 
   return (
     <>
-      {isLoading && (
-        <div
-          className={`fixed inset-0 z-[9999] flex items-center justify-center ${spinnerBg}`}
-        >
-          <Atom color={spinnerColor} size="medium" text="" textColor="" />
-        </div>
-      )}
+      {isLoading && <GlobalLoader isDark={isDark} />}
 
       <main className="min-h-screen">{children}</main>
       <Footer />

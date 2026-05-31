@@ -5,6 +5,7 @@ import type { Certificate } from "@/types/certificate";
 import LogoLoop from "@/components/LogoLoop";
 import { Award } from "lucide-react";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
+import { useMobileWidth } from "@/lib/use-mobile-width";
 
 // Sample certificate data - replace with real data or fetch from database
 const certificates: Certificate[] = [
@@ -36,6 +37,8 @@ const certificates: Certificate[] = [
 ];
 
 export function Certificates() {
+  const isMobileWidth = useMobileWidth();
+
   // Transform certificates into LogoLoop format
   const certificateNodes = certificates.map((cert) => ({
     node: <CertificateCard certificate={cert} />,
@@ -65,26 +68,35 @@ export function Certificates() {
             </p>
           </ScrollReveal>
 
-          {/* Certificates Infinite Scroll */}
-          <ScrollReveal delay={0.2} duration={0.6}>
-            <div className="relative overflow-hidden [--logoloop-fadeColor:rgb(255_255_255)] dark:[--logoloop-fadeColor:rgb(3_7_18)]">
-              <LogoLoop
-                logos={certificateNodes}
-                speed={50}
-                direction="left"
-                logoHeight={100}
-                gap={32}
-                hoverSpeed={0}
-                scaleOnHover
-                fadeOut
-                ariaLabel="Professional certifications"
-              />
+          {isMobileWidth ? (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {certificates.map((cert) => (
+                <CertificateCard key={cert.id} certificate={cert} />
+              ))}
             </div>
-          </ScrollReveal>
+          ) : (
+            <ScrollReveal delay={0.2} duration={0.6}>
+              <div className="relative overflow-hidden [--logoloop-fadeColor:rgb(255_255_255)] dark:[--logoloop-fadeColor:rgb(3_7_18)]">
+                <LogoLoop
+                  logos={certificateNodes}
+                  speed={50}
+                  direction="left"
+                  logoHeight={100}
+                  gap={32}
+                  hoverSpeed={0}
+                  scaleOnHover
+                  fadeOut
+                  ariaLabel="Professional certifications"
+                />
+              </div>
+            </ScrollReveal>
+          )}
 
           {/* Optional: Add note */}
           <p className="text-center text-sm text-gray-500 dark:text-gray-500 mt-8">
-            Hover over a certificate to pause and view details
+            {isMobileWidth
+              ? "Tap a certificate to view details"
+              : "Hover over a certificate to pause and view details"}
           </p>
         </div>
       </div>

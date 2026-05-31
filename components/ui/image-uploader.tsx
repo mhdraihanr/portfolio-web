@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Image from "next/image";
 import { Upload, Trash2 } from "lucide-react";
 import { Button } from "./button";
 import { Spinner } from "./spinner";
@@ -281,15 +282,13 @@ export function ImageUploader({
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
           {currentImages.map((image, index) => (
             <div key={index} className="relative group">
-              <img
+              <Image
                 src={image.url}
                 alt={`Upload ${index + 1}`}
+                width={160}
+                height={128}
+                unoptimized
                 className="w-full h-32 object-cover rounded-lg border border-gray-300 dark:border-gray-600"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src =
-                    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23ddd' width='100' height='100'/%3E%3Ctext fill='%23999' font-family='sans-serif' font-size='14' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3ENo Image%3C/text%3E%3C/svg%3E";
-                }}
               />
               {/* Delete button */}
               <button

@@ -27,7 +27,7 @@ async function getAllProjects(): Promise<Project[]> {
         getAll() {
           return cookieStore.getAll();
         },
-        setAll(cookiesToSet) {
+        setAll() {
           // Server component - read-only cookies
         },
       },
@@ -185,10 +185,12 @@ export default async function AllProjectsPage() {
                                   className="text-xs flex items-center gap-1.5"
                                 >
                                   {tech.icon_svg ? (
-                                    // eslint-disable-next-line @next/next/no-img-element
-                                    <img
+                                    <Image
                                       src={tech.icon_svg}
                                       alt={tech.name}
+                                      width={14}
+                                      height={14}
+                                      unoptimized
                                       className="w-3.5 h-3.5 object-contain"
                                     />
                                   ) : tech.icon ? (

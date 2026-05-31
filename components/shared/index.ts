@@ -5,3 +5,4 @@ export * from "./theme-toggle";
 export * from "./back-to-top";
 export * from "./container";
 export * from "./scroll-reveal";
+export * from "./global-loader";
