@@ -63,6 +63,23 @@ Project ini menggunakan modern web development stack dengan fokus pada:
 - Server Components (new in React 19)
 - Suspense boundaries
 
+**Performance Strategy:**
+
+- Above-the-fold content is allowed to paint before non-critical WebGL startup work.
+- Heavy visual components such as React Bits `LightRays` are dynamically loaded on the client.
+- `About` is server-first for skills data: cached visible skills are fetched by the Server Component wrapper, and only the animated UI remains in the Client Component.
+- `Certificates` remains IntersectionObserver-gated and client-only because it contains LogoLoop animation work.
+- `Work Experience` keeps cached server data fetching, but the client timeline, theme hook, and React Bits `Orb` WebGL background are loaded only when the section is near the viewport.
+- Next.js `experimental.optimizePackageImports` is enabled for `lucide-react` to reduce package import overhead from the icon library.
+- The homepage avoids broad public-section barrel imports so the hero path does not eagerly pull unrelated section modules.
+- Hero text readiness now controls the global loading signal, while `LightRays` initializes after initial paint and fades in when its first WebGL frame is ready.
+- WebGL animation runtime caps DPR, uses passive listeners, pauses hidden-tab rendering, and respects `prefers-reduced-motion`.
+- Shared `ScrollReveal` animations run only once on phone/mobile widths (`width <= 767px`) to avoid repeated animation work during mobile scrolling, while non-mobile widths keep the existing repeatable behavior.
+- The hero title continues using `BlurText`, while surrounding content avoids being hidden behind WebGL readiness.
+- Public homepage Supabase data (`Projects`, `Work Experience`, visible skills) is fetched through a server-only cached helper with 5-minute revalidation, avoiding request-cookie reads on the homepage document path and reducing TTFB/document latency.
+- Public static assets such as local font files, the current profile image, and root SVGs receive explicit long-lived cache headers from `next.config.ts` to address efficient cache lifetime diagnostics.
+- The About profile image is not marked as `priority`, keeping browser resource priority focused on the hero/LCP path while still using `next/image` responsive sizing.
+
 ### Language
 
 #### TypeScript 5
@@ -309,17 +326,18 @@ Project ini menggunakan modern web development stack dengan fokus pada:
 
 - **ScrollReveal**: IntersectionObserver-based scroll-triggered fade-up animations (all sections)
 - **AnimatedShinyText**: Shimmer text effect (Hero section)
+- **GlobalLoader**: Lightweight fullscreen CSS loader for WebGL preparation states
 
-### react-loading-indicators
+### Global Loader
 
-**Why react-loading-indicators?**
+**Why custom GlobalLoader?**
 
-- ✅ Beautiful, modern spinners
-- ✅ Lightweight & performant
+- ✅ No external loading dependency
+- ✅ Lightweight CSS-only animation
 - ✅ Theme-adaptive colors
+- ✅ Keeps accessible status label without visible text
 
-**Version:** 1.0.1  
-**Usage:** Atom spinner for global page loading overlay
+**Usage:** Fullscreen global page loading overlay while initial visual effects such as WebGL backgrounds are prepared
 
 ---
 
@@ -483,23 +501,22 @@ npm install -D prettier
 
 ### Production Dependencies
 
-| Package                  | Version | Purpose         |
-| ------------------------ | ------- | --------------- |
-| next                     | 16.1.6  | Framework       |
-| react                    | 19.2.3  | UI library      |
-| react-dom                | 19.2.3  | React DOM       |
-| @supabase/supabase-js    | 2.93.3  | Database client |
-| @supabase/ssr            | 0.8.0   | SSR helpers     |
-| framer-motion            | 12.29.2 | Animations      |
-| react-loading-indicators | 1.0.1   | Loading spinner |
-| lucide-react             | 0.563.0 | Icons           |
-| react-hook-form          | 7.71.1  | Form management |
-| zod                      | 4.3.6   | Validation      |
-| @hookform/resolvers      | 5.2.2   | Form resolvers  |
-| nodemailer               | 7.0.13  | Email           |
-| next-themes              | 0.4.6   | Theme system    |
-| clsx                     | 2.1.1   | Class utility   |
-| tailwind-merge           | 3.4.0   | Class merger    |
+| Package               | Version | Purpose         |
+| --------------------- | ------- | --------------- |
+| next                  | 16.1.6  | Framework       |
+| react                 | 19.2.3  | UI library      |
+| react-dom             | 19.2.3  | React DOM       |
+| @supabase/supabase-js | 2.93.3  | Database client |
+| @supabase/ssr         | 0.8.0   | SSR helpers     |
+| framer-motion         | 12.29.2 | Animations      |
+| lucide-react          | 0.563.0 | Icons           |
+| react-hook-form       | 7.71.1  | Form management |
+| zod                   | 4.3.6   | Validation      |
+| @hookform/resolvers   | 5.2.2   | Form resolvers  |
+| nodemailer            | 7.0.13  | Email           |
+| next-themes           | 0.4.6   | Theme system    |
+| clsx                  | 2.1.1   | Class utility   |
+| tailwind-merge        | 3.4.0   | Class merger    |
 
 ### Development Dependencies
 

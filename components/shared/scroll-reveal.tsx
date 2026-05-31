@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useMobileWidth } from "@/lib/use-mobile-width";
 
 interface ScrollRevealProps {
   children: ReactNode;
@@ -28,19 +29,26 @@ export function ScrollReveal({
   const prefersReducedMotion =
     typeof window !== "undefined" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const [isVisible, setIsVisible] = useState(prefersReducedMotion);
+  const isMobileWidth = useMobileWidth();
+  const disableAnimation = prefersReducedMotion || isMobileWidth;
+  const [isVisible, setIsVisible] = useState(disableAnimation);
+  const shouldAnimateOnce = once || isMobileWidth;
+
+  useEffect(() => {
+    setIsVisible(disableAnimation);
+  }, [disableAnimation]);
 
   useEffect(() => {
     const element = ref.current;
-    if (!element || prefersReducedMotion) return;
+    if (!element || disableAnimation) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         // Update visibility state on both entry and exit
         setIsVisible(entry.isIntersecting);
 
-        // If once=true, stop observing after first intersection
-        if (entry.isIntersecting && once) {
+        // Stop observing after first intersection when explicitly once or on mobile widths.
+        if (entry.isIntersecting && shouldAnimateOnce) {
           observer.unobserve(element);
         }
       },
@@ -49,8 +57,7 @@ export function ScrollReveal({
 
     observer.observe(element);
     return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [threshold, once]); // prefersReducedMotion is constant, safe to omit
+  }, [disableAnimation, threshold, shouldAnimateOnce]);
 
   const getTransform = () => {
     switch (direction) {
@@ -69,12 +76,16 @@ export function ScrollReveal({
     <div
       ref={ref}
       className={className}
-      style={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? "translate(0)" : getTransform(),
-        transition: `opacity ${duration}s ease-out ${delay}s, transform ${duration}s ease-out ${delay}s`,
-        willChange: "opacity, transform",
-      }}
+      style={
+        disableAnimation
+          ? undefined
+          : {
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? "translate(0)" : getTransform(),
+              transition: `opacity ${duration}s ease-out ${delay}s, transform ${duration}s ease-out ${delay}s`,
+              willChange: "opacity, transform",
+            }
+      }
     >
       {children}
     </div>

@@ -10,21 +10,27 @@ export default async function AdminLayout({
   const user = await getUser();
   const adminRoute = getAdminRoute();
 
-  // If no user, just render children (for login page)
-  // Middleware will handle redirect for protected routes
-  if (!user) {
-    return <>{children}</>;
-  }
-
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-900">
-      {/* Sidebar */}
-      <Sidebar adminRoute={adminRoute} userEmail={user?.email} />
+    <>
+      <link
+        rel="stylesheet"
+        type="text/css"
+        href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
+      />
 
-      {/* Main Content */}
-      <main className="flex-1 md:ml-64 overflow-y-auto">
-        {children}
-      </main>
-    </div>
+      {/* If no user, just render children (for login page)
+      Middleware will handle redirect for protected routes */}
+      {!user ? (
+        <>{children}</>
+      ) : (
+        <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-900">
+          {/* Sidebar */}
+          <Sidebar adminRoute={adminRoute} userEmail={user?.email} />
+
+          {/* Main Content */}
+          <main className="flex-1 md:ml-64 overflow-y-auto">{children}</main>
+        </div>
+      )}
+    </>
   );
 }

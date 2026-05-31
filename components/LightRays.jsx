@@ -3,6 +3,7 @@ import { Renderer, Program, Triangle, Mesh } from "ogl";
 import "./LightRays.css";
 
 const DEFAULT_COLOR = "#ffffff";
+const MAX_DEVICE_PIXEL_RATIO = 1.5;
 
 const hexToRgb = (hex) => {
   const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -61,6 +62,8 @@ const LightRays = ({
   const animationIdRef = useRef(null);
   const meshRef = useRef(null);
   const cleanupFunctionRef = useRef(null);
+  const pausedRef = useRef(false);
+  const boundsRef = useRef({ left: 0, top: 0, width: 1, height: 1 });
   const [isVisible, setIsVisible] = useState(false);
   const observerRef = useRef(null);
 
@@ -91,6 +94,19 @@ const LightRays = ({
   useEffect(() => {
     if (!isVisible || !containerRef.current) return;
 
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (reduceMotion) {
+      requestAnimationFrame(() => {
+        if (onReady && typeof onReady === "function") {
+          onReady();
+        }
+      });
+      return;
+    }
+
     if (cleanupFunctionRef.current) {
       cleanupFunctionRef.current();
       cleanupFunctionRef.current = null;
@@ -103,7 +119,7 @@ const LightRays = ({
       if (!containerRef.current) return;
 
       const renderer = new Renderer({
-        dpr: Math.min(window.devicePixelRatio, 2),
+        dpr: Math.min(window.devicePixelRatio || 1, MAX_DEVICE_PIXEL_RATIO),
         alpha: true,
       });
       rendererRef.current = renderer;
@@ -252,10 +268,21 @@ void main() {
       const updatePlacement = () => {
         if (!containerRef.current || !renderer) return;
 
-        renderer.dpr = Math.min(window.devicePixelRatio, 2);
+        renderer.dpr = Math.min(
+          window.devicePixelRatio || 1,
+          MAX_DEVICE_PIXEL_RATIO,
+        );
 
         const { clientWidth: wCSS, clientHeight: hCSS } = containerRef.current;
         renderer.setSize(wCSS, hCSS);
+
+        const rect = containerRef.current.getBoundingClientRect();
+        boundsRef.current = {
+          left: rect.left,
+          top: rect.top,
+          width: rect.width || 1,
+          height: rect.height || 1,
+        };
 
         const dpr = renderer.dpr;
         const w = wCSS * dpr;
@@ -270,6 +297,11 @@ void main() {
 
       const loop = (t) => {
         if (!rendererRef.current || !uniformsRef.current || !meshRef.current) {
+          return;
+        }
+
+        if (pausedRef.current || document.hidden) {
+          animationIdRef.current = requestAnimationFrame(loop);
           return;
         }
 
@@ -300,11 +332,15 @@ void main() {
         }
       };
 
-      window.addEventListener("resize", updatePlacement);
+      const handleVisibilityChange = () => {
+        pausedRef.current = document.hidden;
+      };
+
+      window.addEventListener("resize", updatePlacement, { passive: true });
+      document.addEventListener("visibilitychange", handleVisibilityChange);
       updatePlacement();
 
       // Start animation loop and notify when ready after first frame
-      const startTime = performance.now();
       const firstFrame = (t) => {
         if (!rendererRef.current || !uniformsRef.current || !meshRef.current) {
           return;
@@ -340,6 +376,10 @@ void main() {
         }
 
         window.removeEventListener("resize", updatePlacement);
+        document.removeEventListener(
+          "visibilitychange",
+          handleVisibilityChange,
+        );
 
         if (renderer) {
           try {
@@ -386,6 +426,7 @@ void main() {
     mouseInfluence,
     noiseAmount,
     distortion,
+    onReady,
   ]);
 
   useEffect(() => {
@@ -407,6 +448,13 @@ void main() {
     u.distortion.value = distortion;
 
     const { clientWidth: wCSS, clientHeight: hCSS } = containerRef.current;
+    const rect = containerRef.current.getBoundingClientRect();
+    boundsRef.current = {
+      left: rect.left,
+      top: rect.top,
+      width: rect.width || 1,
+      height: rect.height || 1,
+    };
     const dpr = renderer.dpr;
     const { anchor, dir } = getAnchorAndDir(raysOrigin, wCSS * dpr, hCSS * dpr);
     u.rayPos.value = anchor;
@@ -426,17 +474,24 @@ void main() {
   ]);
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
+    const handlePointerMove = (e) => {
       if (!containerRef.current || !rendererRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width;
-      const y = (e.clientY - rect.top) / rect.height;
-      mouseRef.current = { x, y };
+
+      const { left, top, width, height } = boundsRef.current;
+      const x = (e.clientX - left) / width;
+      const y = (e.clientY - top) / height;
+
+      mouseRef.current = {
+        x: Math.min(Math.max(x, 0), 1),
+        y: Math.min(Math.max(y, 0), 1),
+      };
     };
 
     if (followMouse) {
-      window.addEventListener("mousemove", handleMouseMove);
-      return () => window.removeEventListener("mousemove", handleMouseMove);
+      window.addEventListener("pointermove", handlePointerMove, {
+        passive: true,
+      });
+      return () => window.removeEventListener("pointermove", handlePointerMove);
     }
   }, [followMouse]);
 

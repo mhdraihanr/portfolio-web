@@ -23,7 +23,7 @@ import { TechnologyInput } from "@/components/admin/technology-input";
 import { Modal } from "@/components/ui/modal";
 import { generateSlug } from "@/lib/utils";
 import { projectSchema, type ProjectFormData } from "@/lib/validations/project";
-import type { Project, ProjectUpdate, ProjectImage } from "@/types/project";
+import type { Project, ProjectUpdate } from "@/types/project";
 
 export default function EditProjectPage() {
   const router = useRouter();

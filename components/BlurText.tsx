@@ -1,5 +1,6 @@
 import { motion, Transition, Easing } from "motion/react";
 import { useEffect, useRef, useState, useMemo } from "react";
+import { useMobileWidth } from "@/lib/use-mobile-width";
 
 type BlurTextProps = {
   text?: string;
@@ -49,45 +50,77 @@ const BlurText: React.FC<BlurTextProps> = ({
   const elements = animateBy === "words" ? text.split(" ") : text.split("");
   const [inView, setInView] = useState(false);
   const ref = useRef<HTMLParagraphElement>(null);
+  const isMobileWidth = useMobileWidth();
+  const effectiveDelay = isMobileWidth ? Math.min(delay, 60) : delay;
+  const effectiveStepDuration = isMobileWidth
+    ? Math.min(stepDuration, 0.55)
+    : stepDuration;
 
   useEffect(() => {
     if (!ref.current) return;
+    const element = ref.current;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // Bidirectional: Update inView state on both entry and exit
-        setInView(entry.isIntersecting);
+        if (entry.isIntersecting) {
+          setInView(true);
+
+          if (isMobileWidth) {
+            observer.unobserve(element);
+          }
+
+          return;
+        }
+
+        if (!isMobileWidth) {
+          setInView(false);
+        }
       },
       { threshold, rootMargin },
     );
-    observer.observe(ref.current);
+    observer.observe(element);
     return () => observer.disconnect();
-  }, [threshold, rootMargin]);
+  }, [threshold, rootMargin, isMobileWidth]);
 
   const defaultFrom = useMemo(
     () =>
       direction === "top"
-        ? { filter: "blur(10px)", opacity: 0, y: -50 }
-        : { filter: "blur(10px)", opacity: 0, y: 50 },
-    [direction],
+        ? {
+            filter: isMobileWidth ? "blur(5px)" : "blur(10px)",
+            opacity: 0,
+            y: isMobileWidth ? -20 : -50,
+          }
+        : {
+            filter: isMobileWidth ? "blur(5px)" : "blur(10px)",
+            opacity: 0,
+            y: isMobileWidth ? 20 : 50,
+          },
+    [direction, isMobileWidth],
   );
 
   const defaultTo = useMemo(
     () => [
       {
-        filter: "blur(5px)",
+        filter: isMobileWidth ? "blur(2px)" : "blur(5px)",
         opacity: 0.5,
-        y: direction === "top" ? 5 : -5,
+        y:
+          direction === "top"
+            ? isMobileWidth
+              ? 2
+              : 5
+            : isMobileWidth
+              ? -2
+              : -5,
       },
       { filter: "blur(0px)", opacity: 1, y: 0 },
     ],
-    [direction],
+    [direction, isMobileWidth],
   );
 
   const fromSnapshot = animationFrom ?? defaultFrom;
   const toSnapshots = animationTo ?? defaultTo;
 
   const stepCount = toSnapshots.length + 1;
-  const totalDuration = stepDuration * (stepCount - 1);
+  const totalDuration = effectiveStepDuration * (stepCount - 1);
   const times = Array.from({ length: stepCount }, (_, i) =>
     stepCount === 1 ? 0 : i / (stepCount - 1),
   );
@@ -100,7 +133,7 @@ const BlurText: React.FC<BlurTextProps> = ({
         const spanTransition: Transition = {
           duration: totalDuration,
           times,
-          delay: (index * delay) / 1000,
+          delay: (index * effectiveDelay) / 1000,
           ease: easing,
         };
 

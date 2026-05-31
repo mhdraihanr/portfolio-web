@@ -60,6 +60,7 @@ app/
 │   └── components/             # Public page components
 │       ├── hero.tsx            # Hero section ✅
 │       ├── about.tsx           # About section (with integrated skills) ✅
+│       ├── lazy-home-client-sections.tsx # Lazy client wrapper for below-fold sections ✅
 │       ├── certificates.tsx    # Certificates section ✅
 │       ├── projects.tsx        # Projects showcase ✅
 │       ├── WorkExperience.tsx  # Work experience section
@@ -144,7 +145,7 @@ Shared layout untuk semua project pages (All Projects & Detail):
 - Tidak menggunakan Navbar (clean, focused view)
 - Footer tetap ditampilkan
 - BackToTop button
-- PageLoadingProvider with Atom spinner
+- PageLoadingProvider with custom GlobalLoader overlay
 - Shared across `/projects` and `/projects/[slug]`
 
 #### `app/projects/page.tsx` ✅ NEW
@@ -343,7 +344,7 @@ contexts/
 
 - Manages global page loading state across all routes
 - Provides `isLoading` state and `setPageReady()` function
-- Used in layouts to show fullscreen Atom spinner during page initialization
+- Used in layouts to show fullscreen custom loader during page initialization
 - Automatic fallback timeout (3 seconds) if setPageReady() not called
 - Syncs with LightRays background rendering in Hero section
 - Controls navbar visibility (hidden during loading)

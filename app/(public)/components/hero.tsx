@@ -5,11 +5,12 @@ import { Github, Linkedin, Mail, FileText } from "lucide-react";
 import Link from "next/link";
 import LightRays from "@/components/LightRays";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import localFont from "next/font/local";
 import BlurText from "@/components/BlurText";
 import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
 import { usePageLoading } from "@/contexts/PageLoadingContext";
+import { useMobileWidth } from "@/lib/use-mobile-width";
 
 // Import Delargo DT font
 const delargoDT = localFont({
@@ -21,8 +22,12 @@ const delargoDT = localFont({
 export function Hero() {
   const { theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [showLightRays, setShowLightRays] = useState(false);
+  const [lightRaysReady, setLightRaysReady] = useState(false);
   const [animationsReady, setAnimationsReady] = useState(false);
+  const pageReadySignaledRef = useRef(false);
   const { setPageReady } = usePageLoading();
+  const isMobileWidth = useMobileWidth();
 
   // Prevent hydration mismatch
   useEffect(() => {
@@ -30,14 +35,51 @@ export function Hero() {
     setMounted(true);
   }, []);
 
-  // Trigger animations after a delay when page is ready
-  const handleBackgroundReady = () => {
-    setPageReady();
-    // Wait for loading indicator to fade out, then start animations
-    setTimeout(() => {
-      setAnimationsReady(true);
-    }, 400);
-  };
+  // Let the browser paint the static hero first, then load the WebGL layer.
+  // This keeps the global loader flow while reducing initial main-thread pressure.
+  useEffect(() => {
+    if (!mounted) return;
+
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    const frameId = requestAnimationFrame(() => {
+      timeoutId = setTimeout(
+        () => setShowLightRays(true),
+        isMobileWidth ? 450 : 120,
+      );
+    });
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [mounted, isMobileWidth]);
+
+  // Let the hero text drive perceived readiness so LCP does not wait for WebGL.
+  useEffect(() => {
+    if (!mounted || pageReadySignaledRef.current) return;
+
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    const frameId = requestAnimationFrame(() => {
+      timeoutId = setTimeout(
+        () => {
+          pageReadySignaledRef.current = true;
+          setPageReady();
+          setAnimationsReady(true);
+        },
+        isMobileWidth ? 0 : 80,
+      );
+    });
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [mounted, isMobileWidth, setPageReady]);
+
+  // WebGL readiness only controls the decorative background fade-in.
+  const handleBackgroundReady = useCallback(() => {
+    setLightRaysReady(true);
+  }, []);
 
   // Theme-based configurations
   const currentTheme = mounted ? theme || resolvedTheme : "dark";
@@ -62,23 +104,29 @@ export function Hero() {
     >
       {/* LightRays Background */}
       <div className={`absolute inset-0 ${bgClass}`}>
-        <LightRays
-          raysOrigin="right"
-          raysColor={raysColor}
-          raysSpeed={1.2}
-          lightSpread={2.5}
-          rayLength={2.8}
-          pulsating={false}
-          fadeDistance={1}
-          saturation={1}
-          followMouse={true}
-          mouseInfluence={0.15}
-          noiseAmount={0}
-          distortion={0}
-          className="w-full h-full"
-          mounted={mounted}
-          onReady={handleBackgroundReady}
-        />
+        <div
+          className={`absolute inset-0 transition-opacity duration-700 ease-out ${
+            lightRaysReady ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <LightRays
+            raysOrigin="right"
+            raysColor={raysColor}
+            raysSpeed={1.2}
+            lightSpread={2.5}
+            rayLength={2.8}
+            pulsating={false}
+            fadeDistance={1}
+            saturation={1}
+            followMouse={!isMobileWidth}
+            mouseInfluence={isMobileWidth ? 0 : 0.15}
+            noiseAmount={0}
+            distortion={0}
+            className="w-full h-full"
+            mounted={showLightRays}
+            onReady={handleBackgroundReady}
+          />
+        </div>
       </div>
 
       {/* Smooth Gradient Fade to Next Section */}
@@ -91,11 +139,15 @@ export function Hero() {
         <div className="space-y-4">
           {/* Greeting with Shiny Text Animation */}
           <div
-            className={`transition-opacity duration-700 ${
-              animationsReady
-                ? "opacity-100 animate-fade-in-down delay-200"
-                : "opacity-0"
-            }`}
+            className={
+              isMobileWidth
+                ? "opacity-100 animate-mobile-soft-in-down"
+                : `transition-opacity duration-700 ${
+                    animationsReady
+                      ? "opacity-100 animate-fade-in-down delay-200"
+                      : "opacity-0"
+                  }`
+            }
           >
             <AnimatedShinyText
               className={`text-lg md:text-xl ${textGreeting} font-medium inline-block`}
@@ -111,22 +163,29 @@ export function Hero() {
               animationsReady ? "opacity-100" : "opacity-0"
             }`}
           >
-            <BlurText
-              text="Fullstack Developer ━ designing clarity inside powerful systems"
-              delay={120}
-              animateBy="words"
-              direction="top"
-              className={`text-5xl md:text-6xl lg:text-7xl font-bold ${textTitle} leading-tight ${delargoDT.className}`}
-            />
+            {animationsReady && (
+              <BlurText
+                text="Fullstack Developer ━ designing clarity inside powerful systems"
+                delay={isMobileWidth ? 60 : 120}
+                stepDuration={isMobileWidth ? 0.55 : 1}
+                animateBy="words"
+                direction="top"
+                className={`text-5xl md:text-6xl lg:text-7xl font-bold ${textTitle} leading-tight ${delargoDT.className}`}
+              />
+            )}
           </div>
 
           {/* Tagline & CTA Button - Horizontal Layout */}
           <div
-            className={`flex flex-col md:flex-row items-start gap-6 pt-10 transition-opacity duration-700 ${
-              animationsReady
-                ? "opacity-100 animate-fade-in-up delay-600"
-                : "opacity-0"
-            }`}
+            className={
+              isMobileWidth
+                ? "flex flex-col md:flex-row items-start gap-6 pt-10 opacity-100 animate-mobile-soft-in-up"
+                : `flex flex-col md:flex-row items-start gap-6 pt-10 transition-opacity duration-700 ${
+                    animationsReady
+                      ? "opacity-100 animate-fade-in-up delay-600"
+                      : "opacity-0"
+                  }`
+            }
           >
             {/* CTA Button - Left */}
             <div className="order-2 md:order-1">
@@ -159,11 +218,15 @@ export function Hero() {
 
           {/* Social Links */}
           <div
-            className={`flex gap-4 pt-4 transition-opacity duration-700 ${
-              animationsReady
-                ? "opacity-100 animate-fade-in-up delay-800"
-                : "opacity-0"
-            }`}
+            className={
+              isMobileWidth
+                ? `flex gap-4 pt-4 opacity-100 animate-mobile-soft-in-up delay-200 ${socialText}`
+                : `flex gap-4 pt-4 transition-opacity duration-700 ${
+                    animationsReady
+                      ? "opacity-100 animate-fade-in-up delay-800"
+                      : "opacity-0"
+                  }`
+            }
           >
             <a
               href="https://github.com/mhdraihanr"

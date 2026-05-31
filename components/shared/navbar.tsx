@@ -49,7 +49,6 @@ export function Navbar() {
   const handleHashClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
     originalHref: string,
-    actualHref: string,
   ) => {
     // Only handle smooth scroll if we're on the same page and it's a hash link
     if (originalHref.startsWith("#") && pathname !== "/contact") {
@@ -111,7 +110,7 @@ export function Navbar() {
                 <Link
                   key={link.href}
                   href={href}
-                  onClick={(e) => handleHashClick(e, link.href, href)}
+                  onClick={(e) => handleHashClick(e, link.href)}
                   className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-200"
                   style={{ textShadow: "0 1px 2px rgba(0, 0, 0, 0.3)" }}
                 >
@@ -158,7 +157,7 @@ export function Navbar() {
                 <Link
                   key={link.href}
                   href={href}
-                  onClick={(e) => handleHashClick(e, link.href, href)}
+                  onClick={(e) => handleHashClick(e, link.href)}
                   className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 rounded-lg transition-all duration-200 text-center"
                   style={{ textShadow: "0 1px 2px rgba(0, 0, 0, 0.3)" }}
                 >

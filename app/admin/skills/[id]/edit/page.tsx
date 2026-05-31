@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Trash2 } from "lucide-react";
@@ -285,9 +286,12 @@ export default function EditSkillPage() {
                   <Label>Preview</Label>
                   <div className="flex items-center gap-4 mt-2 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
                     {iconSvgValue ? (
-                      <img
+                      <Image
                         src={iconSvgValue}
                         alt="Icon preview"
+                        width={40}
+                        height={40}
+                        unoptimized
                         className="w-10 h-10 dark:invert"
                       />
                     ) : iconValue ? (

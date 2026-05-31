@@ -111,6 +111,12 @@ Task list untuk development portfolio website. Update status seiring progress.
   - [x] Light & dark mode support
   - [x] Fully responsive design
   - [x] No scroll indicator (cleaner look)
+  - [x] Priority 1 performance pass: defer LightRays startup after initial paint, keep BlurText, cap WebGL DPR, pause hidden-tab rendering, passive listeners, reduced-motion readiness fallback
+  - [x] Priority 3 Approach A: decouple hero text/global loader readiness from LightRays first frame, keeping BlurText and fading WebGL in after it is ready
+  - [x] Priority 4B Approach A: cache public Supabase homepage data for Featured Projects and Work Experience with 5-minute revalidation to reduce document latency/TTFB
+  - [x] Phase 1 approved package import optimization: enable `experimental.optimizePackageImports` for `lucide-react`
+  - [x] Cache lifetime/LCP Phase 1: add long-lived immutable cache headers for safe public static assets
+  - [x] Mobile LCP Phase 1: keep delayed `BlurText` rendering and animation, but shorten mobile-only blur/transform/delay, make mobile loader non-blocking, and defer mobile LightRays startup further
 - [x] About section ✅ **COMPLETE**
   - [x] Two-column layout (profile photo left, info right)
   - [x] Real profile photo (public/profile.jpg) with next/image
@@ -128,6 +134,9 @@ Task list untuk development portfolio website. Update status seiring progress.
   - [x] Clean, solid background (no animations)
   - [x] No section header (cleaner look)
   - [x] Smooth gradient transition from Hero section
+  - [x] Priority 2 Approach A: lazy-load About near viewport via `next/dynamic` + IntersectionObserver so GSAP SplitText and browser Supabase skills fetching are deferred from initial hero load
+  - [x] Phase 3 performance pass: fetch visible skills server-side through cached public Supabase data and keep only animated About UI in `about-client`
+  - [x] Cache lifetime/LCP Phase 2: remove non-critical `priority` from About profile image and add responsive `sizes`
 - [x] Certificate section ✅ **COMPLETE**
   - [x] Certificate cards with infinite scroll
   - [x] Card layout (icon/image, title, provider)
@@ -138,6 +147,7 @@ Task list untuk development portfolio website. Update status seiring progress.
   - [x] Professional certificate icon
   - [x] Responsive card designs
   - [x] ScrollReveal animations (fade-up on scroll for header & content) ✅
+  - [x] Priority 2 Approach A: lazy-load Certificates near viewport so React Bits LogoLoop is deferred from the initial route JavaScript
 - [x] Projects section ✅ **COMPLETE**
   - [x] Fetch from Supabase database
   - [x] Project cards with image (h-80, taller display to prevent cropping)
@@ -163,6 +173,7 @@ Task list untuk development portfolio website. Update status seiring progress.
   - [x] Light & dark mode support
   - [x] See More/Show Less button (shows 3 initially, expand to show all)
   - [x] ScrollReveal animations (directional fade for header & timeline cards) ✅
+  - [x] Phase 2 performance pass: defer Work Experience client timeline/theme/Orb WebGL bundle until near viewport while keeping server-side cached data fetching
 - [ ] Contact section
   - [ ] Contact form (name, email, message)
   - [ ] Form validation (React Hook Form + Zod)
@@ -482,7 +493,7 @@ Task list untuk development portfolio website. Update status seiring progress.
 - [x] Text animations (BlurText from React Bits, AnimatedShinyText from Magic UI)
 - [x] Entrance animations (fade-in-down for navbar & greeting, fade-in-up for content)
 - [x] Hover effects (cards, buttons, social links)
-- [x] Loading animations (Atom spinner from react-loading-indicators)
+- [x] Loading animations (custom CSS spinner via GlobalLoader)
 - [x] Global loading state (PageLoadingContext with fullscreen overlay)
 - [x] Scroll-triggered animations (ScrollReveal component for all sections)
 - [x] Bidirectional scroll animations (animate in/out on scroll with performance optimization)
@@ -1204,7 +1215,7 @@ feat(security): add rate limiting and IP whitelist for admin routes
 2. **Projects Layout** (`app/projects/layout.tsx`)
    - Shared layout for `/projects` and `/projects/[slug]`
    - Footer, BackToTop, PageLoadingProvider
-   - Atom spinner with theme-aware colors
+   - Custom GlobalLoader with theme-aware colors
    - Removed duplicate `[slug]/layout.tsx` to prevent double-wrapping
 
 3. **Updated Navigation Links**
@@ -1392,9 +1403,9 @@ feat(security): add rate limiting and IP whitelist for admin routes
    - 3-second fallback timeout for safety
    - Used in all layouts (public, project detail pages)
 
-2. **Loading Overlays** (react-loading-indicators)
-   - Installed `react-loading-indicators` v1.0.1
-   - Atom spinner with theme-adaptive colors
+2. **Loading Overlays** (Custom GlobalLoader)
+   - Uses local `GlobalLoader` component without external loading dependency
+   - CSS spinner with theme-adaptive colors
    - Fullscreen overlay (z-index: 9999) with backdrop blur
    - Shows until LightRays background renders completely
 
@@ -1435,7 +1446,7 @@ feat(security): add rate limiting and IP whitelist for admin routes
 
 **Animation Flow:**
 
-1. **Loading Phase**: Atom spinner shows, navbar hidden
+1. **Loading Phase**: Custom spinner shows, navbar hidden
 2. **LightRays Render**: Background completes, triggers `onReady()`
 3. **400ms Delay**: Pause before starting animations
 4. **Cascade Start**: Hero animations → Navbar fade-in → Scroll reveals

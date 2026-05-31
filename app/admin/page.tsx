@@ -5,7 +5,6 @@ import {
   Briefcase,
   Code2,
   Star,
-  Calendar,
   TrendingUp,
   ArrowRight,
 } from "lucide-react";

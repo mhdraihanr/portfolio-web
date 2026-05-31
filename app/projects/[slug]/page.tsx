@@ -22,7 +22,7 @@ async function getProject(slug: string): Promise<Project | null> {
         getAll() {
           return cookieStore.getAll();
         },
-        setAll(cookiesToSet) {
+        setAll() {
           // Server component - read-only cookies
         },
       },
@@ -140,9 +140,12 @@ export default async function ProjectDetailPage({
                     className="text-sm flex items-center gap-2"
                   >
                     {tech.icon_svg ? (
-                      <img
+                      <Image
                         src={tech.icon_svg}
                         alt={tech.name}
+                        width={16}
+                        height={16}
+                        unoptimized
                         className="w-4 h-4 object-contain"
                       />
                     ) : tech.icon ? (

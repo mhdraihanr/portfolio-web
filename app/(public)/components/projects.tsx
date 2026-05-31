@@ -1,6 +1,4 @@
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
-import type { Database } from "@/types/database.types";
+import { getFeaturedProjects } from "../../../lib/supabase/public-data";
 import type { Project } from "@/types/project";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,41 +8,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
 
-async function getProjects(): Promise<Project[]> {
-  const cookieStore = await cookies();
-
-  const supabase = createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          // Server component - read-only cookies
-          // Cannot set cookies in server component, only in Server Actions or Route Handlers
-        },
-      },
-    },
-  );
-
-  const { data, error } = await supabase
-    .from("projects")
-    .select("*")
-    .eq("featured", true)
-    .order("order_index", { ascending: true });
-
-  if (error) {
-    console.error("Error fetching projects:", error);
-    return [];
-  }
-
-  return (data as Project[]) || [];
-}
-
 export async function Projects() {
-  const projects = await getProjects();
+  const projects = await getFeaturedProjects();
 
   return (
     <section id="projects" className="pt-12 pb-20 bg-white dark:bg-gray-950">
@@ -74,7 +39,7 @@ export async function Projects() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-              {projects.map((project, index) => (
+              {projects.map((project: Project, index: number) => (
                 <ScrollReveal
                   key={project.id}
                   delay={index * 0.1}
@@ -189,9 +154,12 @@ export async function Projects() {
                                   className="text-xs flex items-center gap-1.5"
                                 >
                                   {tech.icon_svg ? (
-                                    <img
+                                    <Image
                                       src={tech.icon_svg}
                                       alt={tech.name}
+                                      width={14}
+                                      height={14}
+                                      unoptimized
                                       className="w-3.5 h-3.5 object-contain"
                                     />
                                   ) : tech.icon ? (

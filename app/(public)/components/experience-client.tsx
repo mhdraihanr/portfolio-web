@@ -8,6 +8,7 @@ import Orb from "@/components/Orb";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
+import { useMobileWidth } from "@/lib/use-mobile-width";
 
 interface ExperienceClientProps {
   experiences: WorkExperience[];
@@ -26,6 +27,7 @@ export function ExperienceClient({ experiences }: ExperienceClientProps) {
   const { theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [showAll, setShowAll] = useState(false);
+  const isMobileWidth = useMobileWidth();
 
   // Prevent hydration mismatch
   useEffect(() => {
@@ -46,7 +48,7 @@ export function ExperienceClient({ experiences }: ExperienceClientProps) {
     <section id="experience" className="relative pt-12 pb-20 overflow-hidden">
       {/* Orb Background */}
       <div className={`absolute inset-0 ${bgClass}`}>
-        {mounted && (
+        {mounted && !isMobileWidth && (
           <Orb
             hue={206}
             hoverIntensity={0.35}

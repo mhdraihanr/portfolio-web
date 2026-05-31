@@ -63,6 +63,28 @@ html {
   }
 }
 
+@keyframes mobile-soft-in-up {
+  from {
+    opacity: 0.72;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mobile-soft-in-down {
+  from {
+    opacity: 0.72;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes scroll {
   0% {
     transform: translateY(0);
@@ -88,6 +110,14 @@ html {
 
 .animate-fade-in-down {
   animation: fade-in-down 0.8s ease-out forwards;
+}
+
+.animate-mobile-soft-in-up {
+  animation: mobile-soft-in-up 0.45s ease-out forwards;
+}
+
+.animate-mobile-soft-in-down {
+  animation: mobile-soft-in-down 0.45s ease-out forwards;
 }
 
 .animate-scroll {

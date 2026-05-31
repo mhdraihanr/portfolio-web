@@ -24,7 +24,7 @@ const toastVariants = cva(
     defaultVariants: {
       variant: "default",
     },
-  }
+  },
 );
 
 const iconMap = {
@@ -44,7 +44,6 @@ export interface ToastProps extends VariantProps<typeof toastVariants> {
 }
 
 export function Toast({
-  id,
   title,
   description,
   variant = "default",
@@ -78,12 +77,12 @@ export function Toast({
 interface ToastContainerProps {
   toasts: ToastProps[];
   position?:
-  | "top-left"
-  | "top-center"
-  | "top-right"
-  | "bottom-left"
-  | "bottom-center"
-  | "bottom-right";
+    | "top-left"
+    | "top-center"
+    | "top-right"
+    | "bottom-left"
+    | "bottom-center"
+    | "bottom-right";
 }
 
 const positionClasses = {
@@ -103,7 +102,7 @@ export function ToastContainer({
     <div
       className={cn(
         "fixed z-[100] flex flex-col gap-2 p-4 pointer-events-none",
-        positionClasses[position]
+        positionClasses[position],
       )}
     >
       {toasts.map((toast) => (
