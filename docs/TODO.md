@@ -122,7 +122,6 @@ Task list untuk development portfolio website. Update status seiring progress.
   - [x] Real profile photo (public/profile.jpg) with next/image
   - [x] Name, position (Fullstack Developer), and location (Indonesia)
   - [x] Bio text (3 paragraphs)
-  - [x] SplitText animations (character reveal for name, word reveal for bio) ✅
   - [x] ScrollReveal animations (fade-up on scroll for all content) ✅
   - [x] Skills/tech stack integration with categories (Frontend, Backend, Tools)
   - [x] Devicon logos for all skills (https://devicon.dev/)
@@ -134,8 +133,8 @@ Task list untuk development portfolio website. Update status seiring progress.
   - [x] Clean, solid background (no animations)
   - [x] No section header (cleaner look)
   - [x] Smooth gradient transition from Hero section
-  - [x] Priority 2 Approach A: lazy-load About near viewport via `next/dynamic` + IntersectionObserver so GSAP SplitText and browser Supabase skills fetching are deferred from initial hero load
-  - [x] Phase 3 performance pass: fetch visible skills server-side through cached public Supabase data and keep only animated About UI in `about-client`
+  - [x] Phase 3 performance pass: fetch visible skills server-side through cached public Supabase data and keep only lightweight client-side reveal animation in `about-client`
+  - [x] Desktop TBT Phase A: remove homepage `GSAP SplitText` text-splitting setup from About and replace it with one-shot reveal wrappers
   - [x] Cache lifetime/LCP Phase 2: remove non-critical `priority` from About profile image and add responsive `sizes`
 - [x] Certificate section ✅ **COMPLETE**
   - [x] Certificate cards with infinite scroll
@@ -156,10 +155,11 @@ Task list untuk development portfolio website. Update status seiring progress.
   - [x] GitHub & live site icon links
   - [x] Responsive grid layout (1 col mobile, 2 col desktop)
   - [x] Hover animations (card scale + image zoom)
-  - [x] Server component with SSR
+  - [x] Server component with SSR data wrapper
   - [x] "See Details" button as centered overlay on image
   - [x] Gradient overlay effect with backdrop blur on hover
   - [x] ScrollReveal animations (staggered fade-up for header & cards) ✅
+  - [x] Desktop TBT Phase B: keep cached server data fetch, but lazy-mount the interactive projects grid near the viewport through a client boundary
 - [x] Work Experience section ✅ **COMPLETE**
   - [x] Fetch from Supabase database
   - [x] React Bits Orb animated background

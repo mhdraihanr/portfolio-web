@@ -1,0 +1,196 @@
+"use client";
+
+import type { Project } from "@/types/project";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ExternalLink, Github, Code2, ArrowRight } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { ScrollReveal } from "@/components/shared/scroll-reveal";
+
+interface ProjectsClientProps {
+  projects: Project[];
+}
+
+export function ProjectsClient({ projects }: ProjectsClientProps) {
+  return (
+    <section id="projects" className="pt-12 pb-20 bg-white dark:bg-gray-950">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          <ScrollReveal className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4">
+              <Code2 className="w-4 h-4" />
+              <span className="text-sm font-medium">Portfolio</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Featured Projects
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              A showcase of my recent work, featuring applications and
+              innovative solutions built with modern technologies.
+            </p>
+          </ScrollReveal>
+
+          {projects.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500 dark:text-gray-400">
+                No featured projects available at the moment.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+              {projects.map((project: Project, index: number) => (
+                <ScrollReveal
+                  key={project.id}
+                  delay={index * 0.1}
+                  duration={0.6}
+                >
+                  <Card className="group relative overflow-hidden hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
+                    {project.images && project.images.length > 0 ? (
+                      <div className="relative h-80 overflow-hidden bg-gray-100 dark:bg-gray-800">
+                        <Image
+                          src={
+                            typeof project.images[0] === "string"
+                              ? project.images[0]
+                              : project.images[0].url
+                          }
+                          alt={project.title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <Link href={`/projects/${project.slug}`}>
+                            <Button
+                              size="lg"
+                              className="shadow-lg backdrop-blur-sm bg-white/95 dark:bg-gray-900/95 hover:bg-white dark:hover:bg-gray-900 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700"
+                              rightIcon={
+                                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                              }
+                            >
+                              See Details
+                            </Button>
+                          </Link>
+                        </div>
+                      </div>
+                    ) : (
+                      project.image_url && (
+                        <div className="relative h-80 overflow-hidden bg-gray-100 dark:bg-gray-800">
+                          <Image
+                            src={project.image_url}
+                            alt={project.title}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <Link href={`/projects/${project.slug}`}>
+                              <Button
+                                size="lg"
+                                className="shadow-lg backdrop-blur-sm bg-white/95 dark:bg-gray-900/95 hover:bg-white dark:hover:bg-gray-900 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700"
+                                rightIcon={
+                                  <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                                }
+                              >
+                                See Details
+                              </Button>
+                            </Link>
+                          </div>
+                        </div>
+                      )
+                    )}
+
+                    <CardHeader>
+                      <CardTitle className="flex items-start justify-between gap-2">
+                        <span>{project.title}</span>
+                        <div className="flex gap-2 flex-shrink-0">
+                          {project.github_url && (
+                            <Link
+                              href={project.github_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-500 transition-colors"
+                              aria-label={`View ${project.title} on GitHub`}
+                            >
+                              <Github className="w-5 h-5" />
+                            </Link>
+                          )}
+                          {project.project_url && (
+                            <Link
+                              href={project.project_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-500 transition-colors"
+                              aria-label={`Visit ${project.title} live site`}
+                            >
+                              <ExternalLink className="w-5 h-5" />
+                            </Link>
+                          )}
+                        </div>
+                      </CardTitle>
+                    </CardHeader>
+
+                    <CardContent className="space-y-4">
+                      <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3">
+                        {project.description}
+                      </p>
+
+                      {project.technologies &&
+                        project.technologies.length > 0 && (
+                          <div className="flex flex-wrap gap-2 min-h-[32px]">
+                            {project.technologies
+                              .slice(0, 4)
+                              .map((tech, idx: number) => (
+                                <Badge
+                                  key={idx}
+                                  variant="secondary"
+                                  className="text-xs flex items-center gap-1.5"
+                                >
+                                  {tech.icon_svg ? (
+                                    <Image
+                                      src={tech.icon_svg}
+                                      alt={tech.name}
+                                      width={14}
+                                      height={14}
+                                      unoptimized
+                                      className="w-3.5 h-3.5 object-contain"
+                                    />
+                                  ) : tech.icon ? (
+                                    <i className={`${tech.icon} text-sm`}></i>
+                                  ) : null}
+                                  {tech.name}
+                                </Badge>
+                              ))}
+                            {project.technologies.length > 4 && (
+                              <Badge variant="secondary" className="text-xs">
+                                +{project.technologies.length - 4} more
+                              </Badge>
+                            )}
+                          </div>
+                        )}
+                    </CardContent>
+                  </Card>
+                </ScrollReveal>
+              ))}
+            </div>
+          )}
+
+          {projects.length > 0 && (
+            <div className="text-center mt-12">
+              <Link
+                href="/projects"
+                className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 dark:text-primary-500 dark:hover:text-primary-400 font-medium transition-colors"
+              >
+                View All Projects
+                <ExternalLink className="w-4 h-4" />
+              </Link>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}

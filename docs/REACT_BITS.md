@@ -41,12 +41,13 @@ The homepage keeps the hero interactive path isolated from lower sections:
 
 - `app/(public)/page.tsx` imports `Hero` directly instead of importing every public section from the barrel file.
 - `app/(public)/components/lazy-home-client-sections.tsx` uses `next/dynamic` inside a Client Component, matching Next.js guidance that Client Component lazy loading and `ssr: false` should live in Client Components.
-- `About` is now server-first for skills data. `app/(public)/components/about.tsx` fetches cached visible skills on the server, while `app/(public)/components/about-client.tsx` keeps the existing `SplitText`, `ScrollReveal`, and icon UI.
+- `About` is now server-first for skills data. `app/(public)/components/about.tsx` fetches cached visible skills on the server, while `app/(public)/components/about-client.tsx` keeps the icon UI and lightweight reveal animation path without the homepage `GSAP SplitText` dependency.
 - `Certificates` is loaded only near the viewport so React Bits `LogoLoop` and certificate card animation work are deferred.
+- `Projects` keeps cached server data fetching, but `app/(public)/components/lazy-projects-client.tsx` now defers the interactive grid, image hover, and scroll reveal runtime until the section is near the viewport.
 - `Work Experience` keeps server-side cached Supabase data fetching, but `app/(public)/components/lazy-experience-client.tsx` defers the client timeline, theme hook, and React Bits `Orb` WebGL code until the section is near the viewport.
 - Lightweight blank placeholders reserve vertical space to limit layout shift while the deferred sections load.
 
-This is Priority 2 Approach A: reduce initial JavaScript, boot-up work, Total Blocking Time, and main-thread pressure without changing the hero `BlurText`, global WebGL loader, or visual content.
+This adds the desktop TBT follow-up phases: remove heavy homepage text-splitting animation setup from About and gate Projects client runtime near the viewport to further reduce initial JavaScript, boot-up work, and main-thread pressure.
 
 ## Package Import Optimization Notes
 
