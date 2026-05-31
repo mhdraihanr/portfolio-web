@@ -100,7 +100,27 @@ Reduce initial route JavaScript and main-thread work on the public homepage by a
 
 - Documentation reflects the implemented architecture.
 
-### 5. Full verification
+### 5. Desktop TBT follow-up phases
+
+**Phase A: Simplify About desktop animation path**
+
+- Remove homepage `GSAP SplitText` usage from `app/(public)/components/about-client.tsx`.
+- Keep the section server-first for skills data, but replace text-splitting animation with lighter one-shot `ScrollReveal` wrappers.
+- Preserve visual hierarchy and copy while reducing client animation setup and observer/trigger cost on desktop.
+
+**Phase B: Lazy-load Projects client boundary near viewport**
+
+- Keep `getFeaturedProjects()` server-side and cached.
+- Split the interactive projects grid into a client component and defer it with `next/dynamic` plus an IntersectionObserver gate.
+- Reserve layout height with a placeholder to avoid large layout shift before the client grid mounts.
+
+**Verification goals:**
+
+- Homepage still renders About copy and skill badges correctly.
+- Homepage still renders the projects grid and project links after near-viewport lazy mount.
+- `pnpm lint`, `pnpm type-check`, and `pnpm run build` pass.
+
+### 6. Full verification
 
 **Commands:**
 

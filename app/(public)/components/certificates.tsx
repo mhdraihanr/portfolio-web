@@ -69,9 +69,11 @@ export function Certificates() {
           </ScrollReveal>
 
           {isMobileWidth ? (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 justify-items-center gap-4 sm:grid-cols-2 sm:justify-items-stretch">
               {certificates.map((cert) => (
-                <CertificateCard key={cert.id} certificate={cert} />
+                <div key={cert.id} className="w-full max-w-[320px]">
+                  <CertificateCard certificate={cert} />
+                </div>
               ))}
             </div>
           ) : (

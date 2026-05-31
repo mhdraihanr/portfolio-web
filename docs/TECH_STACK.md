@@ -67,8 +67,9 @@ Project ini menggunakan modern web development stack dengan fokus pada:
 
 - Above-the-fold content is allowed to paint before non-critical WebGL startup work.
 - Heavy visual components such as React Bits `LightRays` are dynamically loaded on the client.
-- `About` is server-first for skills data: cached visible skills are fetched by the Server Component wrapper, and only the animated UI remains in the Client Component.
+- `About` is server-first for skills data: cached visible skills are fetched by the Server Component wrapper, and the Client Component now uses lightweight one-shot reveal animation instead of homepage `GSAP SplitText` setup.
 - `Certificates` remains IntersectionObserver-gated and client-only because it contains LogoLoop animation work.
+- `Projects` keeps cached server data fetching, but its interactive grid and reveal runtime are now loaded only when the section is near the viewport.
 - `Work Experience` keeps cached server data fetching, but the client timeline, theme hook, and React Bits `Orb` WebGL background are loaded only when the section is near the viewport.
 - Next.js `experimental.optimizePackageImports` is enabled for `lucide-react` to reduce package import overhead from the icon library.
 - The homepage avoids broad public-section barrel imports so the hero path does not eagerly pull unrelated section modules.

@@ -2,7 +2,6 @@
 
 import { Code2, Database, Globe, MapPin } from "lucide-react";
 import Image from "next/image";
-import SplitText from "@/components/SplitText";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
 import { useMobileWidth } from "@/lib/use-mobile-width";
 import type { HomepageSkillsByCategory } from "./about";
@@ -48,7 +47,7 @@ function SkillBadge({
 }
 
 export function AboutClient({ skills }: AboutClientProps) {
-  const isMobileWidth = useMobileWidth();
+  useMobileWidth();
 
   return (
     <section id="about" className="py-20 bg-white dark:bg-gray-950">
@@ -72,25 +71,12 @@ export function AboutClient({ skills }: AboutClientProps) {
 
             <div className="lg:col-span-8 space-y-6">
               <div>
-                {isMobileWidth ? (
+                <ScrollReveal delay={0.05} once>
                   <h3 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
                     Muhammad Raihan Rafliansyah
                   </h3>
-                ) : (
-                  <SplitText
-                    text="Muhammad Raihan Rafliansyah"
-                    className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2"
-                    delay={50}
-                    duration={0.8}
-                    splitType="chars"
-                    tag="h3"
-                    textAlign="left"
-                    from={{ opacity: 0, y: 20 }}
-                    to={{ opacity: 1, y: 0 }}
-                    repeatable={true}
-                  />
-                )}
-                <ScrollReveal delay={0.2}>
+                </ScrollReveal>
+                <ScrollReveal delay={0.2} once>
                   <div className="flex flex-wrap items-center gap-4 text-gray-600 dark:text-gray-400">
                     <div className="flex items-center gap-2">
                       <Code2 className="h-5 w-5 text-primary-600 dark:text-primary-500" />
@@ -107,7 +93,7 @@ export function AboutClient({ skills }: AboutClientProps) {
               </div>
 
               <div className="space-y-4 leading-relaxed">
-                {isMobileWidth ? (
+                <ScrollReveal delay={0.1} once>
                   <p className="text-gray-700 dark:text-gray-300">
                     Passionate Fullstack Developer dedicated to building
                     beautiful, functional, and user-friendly web applications.
@@ -115,45 +101,19 @@ export function AboutClient({ skills }: AboutClientProps) {
                     technologies, I transform complex ideas into reality through
                     clean code and modern design principles.
                   </p>
-                ) : (
-                  <SplitText
-                    text="Passionate Fullstack Developer dedicated to building beautiful, functional, and user-friendly web applications. By bridging the gap between frontend and backend technologies, I transform complex ideas into reality through clean code and modern design principles."
-                    className="text-gray-700 dark:text-gray-300"
-                    delay={20}
-                    duration={0.6}
-                    splitType="words"
-                    tag="p"
-                    textAlign="left"
-                    from={{ opacity: 0, y: 15 }}
-                    to={{ opacity: 1, y: 0 }}
-                    repeatable={true}
-                  />
-                )}
+                </ScrollReveal>
 
-                {isMobileWidth ? (
+                <ScrollReveal delay={0.18} once>
                   <p className="text-gray-700 dark:text-gray-300">
                     Focused on optimizing AI coding assistants to streamline
                     workflows and accelerate prototyping. I constantly refine
                     prompt engineering to push the boundaries of AI-driven
                     software development.
                   </p>
-                ) : (
-                  <SplitText
-                    text="Focused on optimizing AI coding assistants to streamline workflows and accelerate prototyping. I constantly refine prompt engineering to push the boundaries of AI-driven software development."
-                    className="text-gray-700 dark:text-gray-300"
-                    delay={20}
-                    duration={0.6}
-                    splitType="words"
-                    tag="p"
-                    textAlign="left"
-                    from={{ opacity: 0, y: 15 }}
-                    to={{ opacity: 1, y: 0 }}
-                    repeatable={true}
-                  />
-                )}
+                </ScrollReveal>
               </div>
 
-              <ScrollReveal className="pt-4" delay={0.1}>
+              <ScrollReveal className="pt-4" delay={0.1} once>
                 <h4 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                   Skills & Technologies
                 </h4>
