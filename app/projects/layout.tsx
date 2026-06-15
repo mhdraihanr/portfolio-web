@@ -4,7 +4,7 @@ import { Footer, BackToTop, GlobalLoader } from "@/components/shared";
 import {
   PageLoadingProvider,
   usePageLoading,
-} from "@/contexts/PageLoadingContext";
+} from "@/contexts/page-loading-context";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 

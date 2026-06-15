@@ -4,11 +4,11 @@ import type { WorkExperience } from "@/types/experience";
 import { Briefcase, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
-import Orb from "@/components/Orb";
+import Orb from "@/components/effects/orb";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
-import { useMobileWidth } from "@/lib/use-mobile-width";
+import { useMobileWidth } from "@/hooks/use-mobile-width";
 
 interface ExperienceClientProps {
   experiences: WorkExperience[];

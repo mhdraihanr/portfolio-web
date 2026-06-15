@@ -1,6 +1,6 @@
 import { motion, Transition, Easing } from "motion/react";
 import { useEffect, useRef, useState, useMemo } from "react";
-import { useMobileWidth } from "@/lib/use-mobile-width";
+import { useMobileWidth } from "@/hooks/use-mobile-width";
 
 type BlurTextProps = {
   text?: string;

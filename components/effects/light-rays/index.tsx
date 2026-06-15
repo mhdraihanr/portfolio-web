@@ -1,9 +1,5 @@
 import dynamic from "next/dynamic";
-
-// Dynamically import LightRays with no SSR - optimized for no flicker
-const LightRaysClient = dynamic(() => import("./LightRays.jsx"), {
-  ssr: false,
-});
+import type { ComponentType } from "react";
 
 interface LightRaysProps {
   raysOrigin?:
@@ -30,6 +26,12 @@ interface LightRaysProps {
   mounted?: boolean;
   onReady?: () => void;
 }
+
+// Dynamically import LightRays with no SSR - optimized for no flicker
+const LightRaysClient = dynamic(
+  () => import("./light-rays.jsx") as Promise<{ default: ComponentType<LightRaysProps> }>,
+  { ssr: false },
+);
 
 export default function LightRays(props: LightRaysProps) {
   // Only render if mounted to prevent SSR issues

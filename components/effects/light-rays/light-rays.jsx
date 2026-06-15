@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { Renderer, Program, Triangle, Mesh } from "ogl";
-import "./LightRays.css";
+import "./light-rays.css";
 
 const DEFAULT_COLOR = "#ffffff";
 const MAX_DEVICE_PIXEL_RATIO = 1.5;

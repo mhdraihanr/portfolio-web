@@ -7,7 +7,7 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./theme-toggle";
 import { cn } from "@/lib/utils";
-import { usePageLoading } from "@/contexts/PageLoadingContext";
+import { usePageLoading } from "@/contexts/page-loading-context";
 
 const navLinks = [
   { href: "#home", label: "Home" },

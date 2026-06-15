@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { ShineBorder } from "@/components/ui/shine-border";
 import { useTheme } from "next-themes";
-import { usePageLoading } from "@/contexts/PageLoadingContext";
+import { usePageLoading } from "@/contexts/page-loading-context";
 
 interface FormData {
   name: string;
