@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { useMobileWidth } from "@/lib/use-mobile-width";
+import { useMobileWidth } from "@/hooks/use-mobile-width";
 
 interface ScrollRevealProps {
   children: ReactNode;

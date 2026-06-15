@@ -2,10 +2,10 @@
 
 import { CertificateCard } from "@/components/ui/certificate-card";
 import type { Certificate } from "@/types/certificate";
-import LogoLoop from "@/components/LogoLoop";
+import LogoLoop from "@/components/effects/logo-loop";
 import { Award } from "lucide-react";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
-import { useMobileWidth } from "@/lib/use-mobile-width";
+import { useMobileWidth } from "@/hooks/use-mobile-width";
 
 // Sample certificate data - replace with real data or fetch from database
 const certificates: Certificate[] = [

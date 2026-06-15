@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import { ReactNode, CSSProperties } from "react";
 
 // Dynamically import LogoLoop with no SSR to avoid hydration issues
-const LogoLoopClient = dynamic(() => import("./LogoLoop.jsx"), {
+const LogoLoopClient = dynamic(() => import("./logo-loop.jsx"), {
   ssr: false,
   loading: () => <div className="w-full h-32 bg-transparent animate-pulse" />,
 });

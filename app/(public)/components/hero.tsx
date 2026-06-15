@@ -3,14 +3,14 @@
 import { Button } from "@/components/ui";
 import { Github, Linkedin, Mail, FileText } from "lucide-react";
 import Link from "next/link";
-import LightRays from "@/components/LightRays";
+import LightRays from "@/components/effects/light-rays";
 import { useTheme } from "next-themes";
 import { useCallback, useEffect, useRef, useState } from "react";
 import localFont from "next/font/local";
-import BlurText from "@/components/BlurText";
+import BlurText from "@/components/effects/blur-text";
 import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
-import { usePageLoading } from "@/contexts/PageLoadingContext";
-import { useMobileWidth } from "@/lib/use-mobile-width";
+import { usePageLoading } from "@/contexts/page-loading-context";
+import { useMobileWidth } from "@/hooks/use-mobile-width";
 
 // Import Delargo DT font
 const delargoDT = localFont({

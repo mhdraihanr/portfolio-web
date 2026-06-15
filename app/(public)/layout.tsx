@@ -6,9 +6,9 @@ import { usePathname } from "next/navigation";
 import {
   PageLoadingProvider,
   usePageLoading,
-} from "@/contexts/PageLoadingContext";
+} from "@/contexts/page-loading-context";
 import { useTheme } from "next-themes";
-import { useMobileWidth } from "@/lib/use-mobile-width";
+import { useMobileWidth } from "@/hooks/use-mobile-width";
 
 function PublicLayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
