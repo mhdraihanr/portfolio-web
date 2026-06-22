@@ -17,9 +17,9 @@
 
 ---
 
-## Phase 1: High Priority (🔴)
+## Phase 1: High Priority (🔴) ✅ COMPLETE
 
-### Task 1: Create hooks/ folder and move use-mobile-width
+### ✅ Task 1: Create hooks/ folder and move use-mobile-width
 
 **Files:**
 
@@ -76,7 +76,7 @@ git commit -m "refactor: move use-mobile-width to hooks/ folder"
 
 ---
 
-### Task 2: Rename components/shared files to kebab-case
+### ✅ Task 2: Rename components/shared files to kebab-case
 
 **Files:**
 
@@ -113,7 +113,7 @@ git commit -m "refactor: rename shared components to kebab-case"
 
 ---
 
-### Task 3: Group React Bits/OGL effects into components/effects/
+### ✅ Task 3: Group React Bits/OGL effects into components/effects/
 
 **Files:**
 
@@ -254,7 +254,7 @@ git commit -m "refactor: group React Bits/OGL effects into components/effects/"
 
 ---
 
-### Task 4: Rename contexts/PageLoadingContext.tsx to kebab-case
+### ✅ Task 4: Rename contexts/PageLoadingContext.tsx to kebab-case
 
 **Files:**
 
@@ -345,6 +345,17 @@ mv app/\(public\)/components/projects-client.tsx app/\(public\)/_sections/projec
 mv app/\(public\)/components/lazy-projects-client.tsx app/\(public\)/_sections/projects/lazy-projects-client.tsx
 ```
 
+After moving, update the Supabase import in `app/(public)/_sections/projects/index.tsx` from a relative path to absolute (consistent with `experience.tsx` and `about.tsx`):
+
+```typescript
+// FROM:
+import { getFeaturedProjects } from "../../../lib/supabase/public-data";
+// TO:
+import { getFeaturedProjects } from "@/lib/supabase/public-data";
+```
+
+> The relative imports `from "./lazy-projects-client"` stay valid because the wrapper is co-located in the same folder.
+
 **Step 5: Move experience files**
 
 ```bash
@@ -353,17 +364,95 @@ mv app/\(public\)/components/experience-client.tsx app/\(public\)/_sections/expe
 mv app/\(public\)/components/lazy-experience-client.tsx app/\(public\)/_sections/experience/lazy-experience-client.tsx
 ```
 
-**Step 6: Move certificates files**
+**Step 6: Move and restructure certificates files**
+
+The current `lazy-home-client-sections.tsx` is inconsistent with the other lazy wrappers (generic `LazySection`/`SectionPlaceholder`, generic export name, no co-located server entry). Restructure certificates to match the `projects`/`experience` pattern: `index.tsx` (server entry) → `lazy-certificates-client.tsx` (lazy wrapper) → `certificates-client.tsx` (UI).
 
 ```bash
-mv app/\(public\)/components/certificates.tsx app/\(public\)/_sections/certificates/index.tsx
+mv app/\(public\)/components/certificates.tsx app/\(public\)/_sections/certificates/certificates-client.tsx
+mv app/\(public\)/components/lazy-home-client-sections.tsx app/\(public\)/_sections/certificates/lazy-certificates-client.tsx
 ```
 
-**Step 7: Move lazy-home-client-sections**
+In `app/(public)/_sections/certificates/certificates-client.tsx`, rename the export from `Certificates` to `CertificatesClient`:
 
-```bash
-mv app/\(public\)/components/lazy-home-client-sections.tsx app/\(public\)/_sections/lazy-home-client-sections.tsx
+```typescript
+// FROM:
+export function Certificates() {
+// TO:
+export function CertificatesClient() {
 ```
+
+Rewrite `app/(public)/_sections/certificates/lazy-certificates-client.tsx` to follow the same shape as `lazy-projects-client.tsx` / `lazy-experience-client.tsx` (export `LazyCertificatesClient`, dynamic-import `./certificates-client`, inline IntersectionObserver):
+
+```typescript
+"use client";
+
+import dynamic from "next/dynamic";
+import { useEffect, useRef, useState } from "react";
+
+const CertificatesClient = dynamic(
+  () => import("./certificates-client").then((mod) => mod.CertificatesClient),
+  {
+    ssr: false,
+    loading: () => <CertificatesPlaceholder />,
+  },
+);
+
+function CertificatesPlaceholder() {
+  return (
+    <div
+      className="min-h-[420px] bg-white dark:bg-gray-950"
+      aria-hidden="true"
+    />
+  );
+}
+
+export function LazyCertificatesClient() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [shouldRender, setShouldRender] = useState(false);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element || shouldRender) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setShouldRender(true);
+        observer.disconnect();
+      },
+      { rootMargin: "600px 0px" },
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [shouldRender]);
+
+  return (
+    <div ref={ref} style={{ minHeight: "420px" }}>
+      {shouldRender ? (
+        <CertificatesClient />
+      ) : (
+        <CertificatesPlaceholder />
+      )}
+    </div>
+  );
+}
+```
+
+Create `app/(public)/_sections/certificates/index.tsx` as the server entry (uniform with other sections):
+
+```typescript
+import { LazyCertificatesClient } from "./lazy-certificates-client";
+
+export function Certificates() {
+  return <LazyCertificatesClient />;
+}
+```
+
+**Step 7: (merged into Step 6 — no separate lazy-home-client-sections file)**
+
+The old `lazy-home-client-sections.tsx` no longer exists as a standalone file; it has been folded into the certificates section above.
 
 **Step 8: Move README.md and delete old components folder**
 
@@ -375,7 +464,7 @@ rmdir app/\(public\)/components
 
 **Step 9: Update imports in page.tsx**
 
-Update `app/(public)/page.tsx`:
+Update `app/(public)/page.tsx`. Note that `LazyHomeClientSections` is replaced by the uniform `Certificates` entry:
 
 ```typescript
 // FROM:
@@ -387,14 +476,30 @@ import { Experience } from "./components/experience";
 // TO:
 import { Hero } from "./_sections/hero";
 import { About } from "./_sections/about";
-import { LazyHomeClientSections } from "./_sections/lazy-home-client-sections";
+import { Certificates } from "./_sections/certificates";
 import { Projects } from "./_sections/projects";
 import { Experience } from "./_sections/experience";
 ```
 
-**Step 10: Update internal imports within sections**
+Also update the JSX usage in the same file:
 
-Update relative imports in each section file to use correct relative paths.
+```typescript
+// FROM:
+<LazyHomeClientSections />
+// TO:
+<Certificates />
+```
+
+**Step 10: Verify internal imports within sections**
+
+All cross-imports between section files are co-located, so relative `./` paths remain valid. Confirm these specific imports compile:
+
+- `_sections/about/index.tsx` → `import { AboutClient } from "./about-client"`
+- `_sections/about/about-client.tsx` → `import type { HomepageSkillsByCategory } from "./about"` — **update to** `"./index"` (or keep `"./about"`? No — the file moved to `index.tsx`, so change to `"./index"`)
+- `_sections/projects/index.tsx` → `import { LazyProjectsClient } from "./lazy-projects-client"`
+- `_sections/experience/index.tsx` → `import { LazyExperienceClient } from "./lazy-experience-client"`
+
+> **Important:** `about.tsx` becomes `about/index.tsx`, so the type import in `about-client.tsx` (`from "./about"`) must change to `from "./index"` (or `from "."`) since the sibling file is now named `index.tsx`.
 
 **Step 11: Verify with type-check**
 
@@ -417,7 +522,8 @@ git commit -m "refactor: group section components into _sections/ private folder
 
 - Create: `app/not-found.tsx`
 - Create: `app/error.tsx`
-- Create: `app/(public)/loading.tsx`
+
+> **Note:** No `loading.tsx` is added. The app already ships a custom loading experience via `PageLoadingProvider` + `GlobalLoader` in [app/(public)/layout.tsx](<app/(public)/layout.tsx>), and `GlobalLoader` requires an `isDark` prop that a server-component `loading.tsx` cannot supply. Next.js best practice (2025) also favors explicit Suspense boundaries over a blanket `loading.tsx` for fine-grained control. Adding one here would create a double loading state.
 
 **Step 1: Create global not-found.tsx**
 
@@ -426,9 +532,13 @@ Create `app/not-found.tsx`:
 ```typescript
 import { Container } from "@/components/shared";
 
+export function generateMetadata() {
+  return { title: "404 - Page Not Found" };
+}
+
 export default function NotFound() {
   return (
-    <Container className="min-h-[60vh] flex flex-col items-center justify-center text-center">
+    <Container size="md" className="min-h-[60vh] flex flex-col items-center justify-center text-center">
       <h1 className="text-6xl font-bold text-primary mb-4">404</h1>
       <h2 className="text-2xl font-semibold mb-4">Page Not Found</h2>
       <p className="text-muted-foreground mb-8">
@@ -467,7 +577,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <Container className="min-h-[60vh] flex flex-col items-center justify-center text-center">
+    <Container size="md" className="min-h-[60vh] flex flex-col items-center justify-center text-center">
       <h1 className="text-4xl font-bold text-destructive mb-4">
         Something went wrong
       </h1>
@@ -485,28 +595,16 @@ export default function Error({
 }
 ```
 
-**Step 3: Create loading.tsx for public routes**
-
-Create `app/(public)/loading.tsx`:
-
-```typescript
-import { GlobalLoader } from "@/components/shared";
-
-export default function PublicLoading() {
-  return <GlobalLoader />;
-}
-```
-
-**Step 4: Verify with build**
+**Step 3: Verify with build**
 
 Run: `pnpm build`
 Expected: Build succeeds
 
-**Step 5: Commit**
+**Step 4: Commit**
 
 ```bash
-git add app/not-found.tsx app/error.tsx app/\(public\)/loading.tsx
-git commit -m "feat: add not-found, error, and loading special files"
+git add app/not-found.tsx app/error.tsx
+git commit -m "feat: add not-found and error special files"
 ```
 
 ---
@@ -579,7 +677,7 @@ git commit -m "refactor: consolidate Supabase files into supabase/ folder"
 
 ---
 
-### Task 9: Rename components/ui files to kebab-case
+### ✅ Task 9: Rename components/ui files to kebab-case
 
 **Files:**
 
@@ -635,7 +733,7 @@ git commit -m "refactor: rename UI components to kebab-case"
 
 ---
 
-### Task 10: Rename components/admin files to kebab-case
+### ✅ Task 10: Rename components/admin files to kebab-case (SKIP — already kebab-case)
 
 **Files:**
 
@@ -665,47 +763,93 @@ After all tasks complete:
 ```
 portfolio-web/
 ├── app/
-│   ├── layout.tsx
+│   ├── layout.tsx                          # Root layout
 │   ├── globals.css
-│   ├── not-found.tsx           ✨ NEW
-│   ├── error.tsx               ✨ NEW
-│   ├── (public)/
+│   ├── favicon.ico
+│   ├── not-found.tsx                       ✨ NEW — global 404
+│   ├── error.tsx                           ✨ NEW — global error boundary
+│   ├── (public)/                           # Route group (no URL segment)
+│   │   ├── layout.tsx                      # Navbar/Footer + PageLoadingProvider
+│   │   ├── page.tsx                        # Home — composes _sections/*
+│   │   ├── _sections/                      ✨ REORGANIZED (private folder)
+│   │   │   ├── README.md
+│   │   │   ├── hero/
+│   │   │   │   └── index.tsx               # Hero (client)
+│   │   │   ├── about/
+│   │   │   │   ├── index.tsx               # About (server) — fetch skills
+│   │   │   │   └── about-client.tsx        # AboutClient (UI)
+│   │   │   ├── projects/
+│   │   │   │   ├── index.tsx               # Projects (server) — fetch featured
+│   │   │   │   ├── projects-client.tsx     # ProjectsClient (UI)
+│   │   │   │   └── lazy-projects-client.tsx # IntersectionObserver wrapper
+│   │   │   ├── experience/
+│   │   │   │   ├── index.tsx               # Experience (server) — fetch work
+│   │   │   │   ├── experience-client.tsx   # ExperienceClient (UI)
+│   │   │   │   └── lazy-experience-client.tsx
+│   │   │   └── certificates/
+│   │   │       ├── index.tsx               # Certificates (server entry)
+│   │   │       ├── certificates-client.tsx # CertificatesClient (UI)
+│   │   │       └── lazy-certificates-client.tsx
+│   │   └── contact/                        # /contact page
+│   ├── admin/                              # Admin dashboard (auth-gated)
 │   │   ├── layout.tsx
 │   │   ├── page.tsx
-│   │   ├── loading.tsx         ✨ NEW
-│   │   ├── _sections/          ✨ REORGANIZED
-│   │   │   ├── hero/
-│   │   │   ├── about/
-│   │   │   ├── projects/
-│   │   │   ├── experience/
-│   │   │   ├── certificates/
-│   │   │   └── lazy-home-client-sections.tsx
-│   │   └── contact/
-│   ├── admin/
-│   ├── api/
-│   └── projects/
+│   │   ├── login/
+│   │   ├── projects/
+│   │   ├── experience/
+│   │   └── skills/
+│   ├── api/                                # Route handlers
+│   │   ├── auth/
+│   │   ├── contact/
+│   │   ├── imagekit-auth/
+│   │   └── imagekit-delete/
+│   └── projects/                           # Public /projects + /projects/[slug]
+│       ├── layout.tsx
+│       ├── page.tsx
+│       └── [slug]/
 ├── components/
-│   ├── effects/                ✨ NEW
+│   ├── effects/                            ✨ NEW — React Bits/OGL effects
+│   │   ├── index.ts                        # Barrel export
 │   │   ├── blur-text.tsx
 │   │   ├── split-text.tsx
-│   │   ├── light-rays/
+│   │   ├── light-rays/                     # index.tsx + .jsx + .css
 │   │   ├── logo-loop/
 │   │   └── orb/
-│   ├── ui/                     ✨ RENAMED to kebab-case
+│   ├── ui/                                 ✨ kebab-case primitives
+│   │   ├── index.ts
+│   │   ├── button.tsx  card.tsx  input.tsx  label.tsx
+│   │   ├── modal.tsx  badge.tsx  spinner.tsx  textarea.tsx
+│   │   ├── toast.tsx  shine-border.tsx  animated-shiny-text.tsx
+│   │   └── certificate-card.tsx  image-carousel.tsx  image-uploader.tsx
+│   ├── shared/                             ✨ kebab-case
+│   │   ├── index.ts
+│   │   ├── navbar.tsx  footer.tsx  theme-toggle.tsx  back-to-top.tsx
+│   │   └── container.tsx  scroll-reveal.tsx  global-loader.tsx
 │   ├── admin/
-│   ├── shared/                 ✨ RENAMED to kebab-case
+│   │   ├── index.ts
+│   │   └── header.tsx  sidebar.tsx  devicon-picker.tsx  technology-input.tsx
 │   └── providers/
+│       ├── index.ts
+│       └── theme-provider.tsx
 ├── contexts/
-│   └── page-loading-context.tsx ✨ RENAMED
-├── hooks/                      ✨ NEW
-│   ├── use-mobile-width.ts
-│   └── index.ts
+│   └── page-loading-context.tsx            ✨ RENAMED (kebab-case)
+├── hooks/                                  ✨ NEW
+│   ├── index.ts                            # Barrel export
+│   └── use-mobile-width.ts
 ├── lib/
-├── supabase/                   ✨ NEW
-│   ├── schema.sql
-│   └── migrations/
+│   ├── auth.ts  email.ts  utils.ts
+│   ├── middleware/
+│   ├── supabase/
+│   └── validations/
+├── supabase/                               ✨ NEW (consolidated)
+│   ├── schema.sql                          # ← supabase-schema.sql
+│   └── migrations/                         # ← migrations/*.sql
 ├── types/
+│   ├── certificate.ts  database.types.ts
+│   └── experience.ts  project.ts  skill.ts
 ├── docs/
-│   └── COMPONENTS.md           ✨ MOVED
+│   ├── COMPONENTS.md                       ✨ MOVED
+│   └── plans/  phase/  ...
 └── public/
+    └── fonts/
 ```

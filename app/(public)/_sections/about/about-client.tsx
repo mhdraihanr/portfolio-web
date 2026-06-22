@@ -4,7 +4,7 @@ import { Code2, Database, Globe, MapPin } from "lucide-react";
 import Image from "next/image";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
 import { useMobileWidth } from "@/hooks/use-mobile-width";
-import type { HomepageSkillsByCategory } from "./about";
+import type { HomepageSkillsByCategory } from ".";
 
 interface AboutClientProps {
   skills: HomepageSkillsByCategory;

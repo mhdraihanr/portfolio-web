@@ -1,4 +1,4 @@
-import { getFeaturedProjects } from "../../../lib/supabase/public-data";
+import { getFeaturedProjects } from "@/lib/supabase/public-data";
 import { LazyProjectsClient } from "./lazy-projects-client";
 
 export async function Projects() {

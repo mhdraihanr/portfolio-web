@@ -1,15 +1,15 @@
-import { Hero } from "./components/hero";
-import { About } from "./components/about";
-import { LazyHomeClientSections } from "./components/lazy-home-client-sections";
-import { Projects } from "./components/projects";
-import { Experience } from "./components/experience";
+import { Hero } from "./_sections/hero";
+import { About } from "./_sections/about";
+import { Certificates } from "./_sections/certificates";
+import { Projects } from "./_sections/projects";
+import { Experience } from "./_sections/experience";
 
 export default function HomePage() {
   return (
     <>
       <Hero />
       <About />
-      <LazyHomeClientSections />
+      <Certificates />
       <Projects />
       <Experience />
       {/* Other sections will be added here */}

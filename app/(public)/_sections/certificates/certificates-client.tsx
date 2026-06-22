@@ -36,7 +36,7 @@ const certificates: Certificate[] = [
   },
 ];
 
-export function Certificates() {
+export function CertificatesClient() {
   const isMobileWidth = useMobileWidth();
 
   // Transform certificates into LogoLoop format
