@@ -14,7 +14,7 @@ import { useMobileWidth } from "@/hooks/use-mobile-width";
 
 // Import Delargo DT font
 const delargoDT = localFont({
-  src: "../../../public/fonts/fonnts.com-DelargoDTCond-Bold.otf",
+  src: "../../../../public/fonts/fonnts.com-DelargoDTCond-Bold.otf",
   display: "swap",
   variable: "--font-delargo",
 });
