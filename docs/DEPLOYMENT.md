@@ -104,13 +104,15 @@ git push -u origin main
    EMAIL_USER=your-email@gmail.com
    EMAIL_PASSWORD=your-app-password
    EMAIL_TO=jonathanraffael098@gmail.com
-   ADMIN_ROUTE_SECRET=admin
+   ADMIN_ROUTE_SECRET=studio
+   ADMIN_IP_WHITELIST=
    NEXT_PUBLIC_SITE_URL=https://your-domain.vercel.app
    ```
 
    **Important:**
    - Add variables to all environments (Production, Preview, Development)
-   - `ADMIN_ROUTE_SECRET` must match your folder name in `app/` (default: `admin`)
+   - `ADMIN_ROUTE_SECRET` must match your folder name in `app/` (default: `studio`)
+   - Leave `ADMIN_IP_WHITELIST=` empty to avoid redeploying on ISP IP change
    - For better security, rename folder to unique name and update this value
    - Or select specific environments as needed
 

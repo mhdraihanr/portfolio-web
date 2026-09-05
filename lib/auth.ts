@@ -15,7 +15,7 @@ export async function requireAuth() {
   const user = await getUser();
 
   if (!user) {
-    const adminRoute = process.env.ADMIN_ROUTE_SECRET || "admin";
+    const adminRoute = process.env.ADMIN_ROUTE_SECRET || "studio";
     redirect(`/${adminRoute}/login`);
   }
 
@@ -48,5 +48,5 @@ export async function signOut() {
 }
 
 export function getAdminRoute() {
-  return process.env.ADMIN_ROUTE_SECRET || "admin";
+  return process.env.ADMIN_ROUTE_SECRET || "studio";
 }

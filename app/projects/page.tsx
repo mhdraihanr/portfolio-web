@@ -59,7 +59,7 @@ export default async function AllProjectsPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           {/* Back Button */}
           <ScrollReveal direction="down" duration={0.5}>
             <Link href="/#projects">
@@ -104,7 +104,7 @@ export default async function AllProjectsPage() {
                     {/* Project Image with Overlay */}
                     {(project.images && project.images.length > 0) ||
                     project.image_url ? (
-                      <div className="relative h-80 overflow-hidden bg-gray-100 dark:bg-gray-800">
+                      <div className="relative aspect-video w-full overflow-hidden bg-gray-100 dark:bg-gray-800">
                         <Image
                           src={
                             project.images && project.images.length > 0
@@ -116,7 +116,7 @@ export default async function AllProjectsPage() {
                           alt={project.title}
                           fill
                           sizes="(max-width: 768px) 100vw, 50vw"
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="object-cover object-top group-hover:scale-105 transition-transform duration-300"
                         />
 
                         {/* Overlay with See Details Button */}

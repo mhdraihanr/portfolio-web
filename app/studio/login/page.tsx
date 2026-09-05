@@ -45,10 +45,11 @@ export default function LoginPage() {
         description: "Logged in successfully",
         variant: "success",
       });
-      router.push("/admin");
+      router.push("/studio");
       router.refresh();
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Invalid credentials";
+      const message =
+        error instanceof Error ? error.message : "Invalid credentials";
       setError(message);
       toast.show({
         title: "Login Failed",

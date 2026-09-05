@@ -17,7 +17,7 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
   return (
     <section id="projects" className="pt-12 pb-20 bg-white dark:bg-gray-950">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <ScrollReveal className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4">
               <Code2 className="w-4 h-4" />
@@ -48,7 +48,7 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
                 >
                   <Card className="group relative overflow-hidden hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
                     {project.images && project.images.length > 0 ? (
-                      <div className="relative h-80 overflow-hidden bg-gray-100 dark:bg-gray-800">
+                      <div className="relative aspect-video w-full overflow-hidden bg-gray-100 dark:bg-gray-800">
                         <Image
                           src={
                             typeof project.images[0] === "string"
@@ -58,7 +58,7 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
                           alt={project.title}
                           fill
                           sizes="(max-width: 768px) 100vw, 50vw"
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="object-cover object-top group-hover:scale-105 transition-transform duration-300"
                         />
 
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -77,13 +77,13 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
                       </div>
                     ) : (
                       project.image_url && (
-                        <div className="relative h-80 overflow-hidden bg-gray-100 dark:bg-gray-800">
+                        <div className="relative aspect-video w-full overflow-hidden bg-gray-100 dark:bg-gray-800">
                           <Image
                             src={project.image_url}
                             alt={project.title}
                             fill
                             sizes="(max-width: 768px) 100vw, 50vw"
-                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                            className="object-cover object-top group-hover:scale-105 transition-transform duration-300"
                           />
 
                           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">

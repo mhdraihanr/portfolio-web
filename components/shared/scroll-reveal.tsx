@@ -25,18 +25,21 @@ export function ScrollReveal({
   once = false, // Changed to false for repeatable animations
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  // Check if user prefers reduced motion (computed once during initialization)
-  const prefersReducedMotion =
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const isMobileWidth = useMobileWidth();
-  const disableAnimation = prefersReducedMotion || isMobileWidth;
-  const [isVisible, setIsVisible] = useState(disableAnimation);
+  const [disableAnimation, setDisableAnimation] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const shouldAnimateOnce = once || isMobileWidth;
 
   useEffect(() => {
-    setIsVisible(disableAnimation);
-  }, [disableAnimation]);
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const shouldDisable = prefersReducedMotion || isMobileWidth;
+    setDisableAnimation(shouldDisable);
+    if (shouldDisable) {
+      setIsVisible(true);
+    }
+  }, [isMobileWidth]);
 
   useEffect(() => {
     const element = ref.current;

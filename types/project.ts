@@ -19,9 +19,6 @@ export interface ProjectFormData {
   title: string;
   slug: string;
   description: string;
-  problem: string;
-  solution: string;
-  impact: string;
   technologies: Technology[];
   image_url?: string;
   images: ProjectImage[]; // Array of image objects with URL and fileId

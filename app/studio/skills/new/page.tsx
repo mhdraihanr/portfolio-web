@@ -9,6 +9,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { insertSkill } from "@/lib/supabase/helpers";
+import { triggerRevalidate } from "@/lib/revalidate";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -66,8 +67,9 @@ export default function NewSkillPage() {
 
       if (error) throw error;
 
+      await triggerRevalidate("homepage-skills", "/");
       toast.success("Success", "Skill created successfully");
-      router.push("/admin/skills");
+      router.push("/studio/skills");
     } catch (error) {
       console.error("Error creating skill:", error);
       toast.error("Error", "Failed to create skill");
@@ -81,7 +83,7 @@ export default function NewSkillPage() {
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         {/* Header */}
         <div className="mb-6">
-          <Link href="/admin/skills">
+          <Link href="/studio/skills">
             <Button variant="outline" size="sm" className="mb-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Skills
@@ -201,7 +203,13 @@ export default function NewSkillPage() {
                         width={40}
                         height={40}
                         unoptimized
-                        className="w-10 h-10 dark:invert"
+                        className={`w-10 h-10 ${
+                          ["nextjs", "github", "express", "socketio"].some(
+                            (m) => iconSvgValue.toLowerCase().includes(m),
+                          )
+                            ? "dark:invert"
+                            : ""
+                        }`}
                       />
                     ) : iconValue ? (
                       <i className={`${iconValue} text-4xl`}></i>
@@ -264,7 +272,7 @@ export default function NewSkillPage() {
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row justify-end gap-3 pb-8">
-            <Link href="/admin/skills" className="w-full sm:w-auto">
+            <Link href="/studio/skills" className="w-full sm:w-auto">
               <Button
                 type="button"
                 variant="outline"

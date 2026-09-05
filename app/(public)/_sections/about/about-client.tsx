@@ -20,12 +20,25 @@ function getDeviconSvgUrl(icon?: string | null) {
   return `https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${name}/${name}-${variant}.svg`;
 }
 
+// Known monochrome black icons that need inverting in dark mode
+const MONOCHROME_ICONS = ["nextjs", "github", "express", "socketio"];
+
+function shouldInvertInDarkMode(
+  iconSrc?: string | null,
+  skillName?: string,
+): boolean {
+  if (!iconSrc && !skillName) return false;
+  const target = `${iconSrc || ""} ${skillName || ""}`.toLowerCase();
+  return MONOCHROME_ICONS.some((name) => target.includes(name));
+}
+
 function SkillBadge({
   skill,
 }: {
   skill: HomepageSkillsByCategory["frontend"][number];
 }) {
   const iconSrc = skill.icon_svg || getDeviconSvgUrl(skill.icon);
+  const invert = shouldInvertInDarkMode(iconSrc, skill.name);
 
   return (
     <span className="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200 flex items-center gap-2">
@@ -36,7 +49,7 @@ function SkillBadge({
           width={16}
           height={16}
           unoptimized
-          className="w-4 h-4 dark:invert"
+          className={`w-4 h-4 ${invert ? "dark:invert" : ""}`}
         />
       ) : skill.icon ? (
         <i className={`${skill.icon} text-lg`}></i>

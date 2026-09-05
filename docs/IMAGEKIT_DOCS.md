@@ -392,6 +392,7 @@ export const projectSchema = z.object({
 - ✅ Delete endpoint validates fileId before deletion
 - ✅ Upload folder organized (`/portfolio`)
 - ✅ File size limits handled by ImageKit dashboard
+- ✅ CSP (`Content-Security-Policy`) in `next.config.ts` allows `https://upload.imagekit.io` in `connect-src` and `https://ik.imagekit.io` in `img-src`/`connect-src`
 
 ---
 

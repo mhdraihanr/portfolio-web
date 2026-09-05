@@ -17,6 +17,7 @@ import {
   Database,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { triggerRevalidate } from "@/lib/revalidate";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -128,6 +129,7 @@ export default function SkillsPage() {
 
       if (error) throw error;
 
+      await triggerRevalidate("homepage-skills", "/");
       toast.success("Success", "Skill deleted successfully");
       await fetchSkills();
       setDeleteId(null);
@@ -182,12 +184,24 @@ export default function SkillsPage() {
                 Manage your skills and technologies
               </p>
             </div>
-            <Link href="/admin/skills/new">
-              <Button className="w-full sm:w-auto">
-                <PlusCircle className="w-4 h-4 mr-2" />
-                Add Skill
+            <div className="flex gap-2 w-full sm:w-auto">
+              <Button
+                variant="outline"
+                className="w-full sm:w-auto"
+                onClick={async () => {
+                  await triggerRevalidate("homepage-skills", "/");
+                  toast.success("Cache Cleared", "Homepage cache revalidated");
+                }}
+              >
+                Refresh Cache
               </Button>
-            </Link>
+              <Link href="/studio/skills/new">
+                <Button className="w-full sm:w-auto">
+                  <PlusCircle className="w-4 h-4 mr-2" />
+                  Add Skill
+                </Button>
+              </Link>
+            </div>
           </div>
 
           {/* Stats Cards */}
@@ -305,7 +319,7 @@ export default function SkillsPage() {
                   <p className="text-sm mt-1">
                     Get started by adding your first skill
                   </p>
-                  <Link href="/admin/skills/new">
+                  <Link href="/studio/skills/new">
                     <Button className="mt-4">
                       <PlusCircle className="w-4 h-4 mr-2" />
                       Add Your First Skill
@@ -359,7 +373,22 @@ export default function SkillsPage() {
                                 width={32}
                                 height={32}
                                 unoptimized
-                                className="w-8 h-8 shrink-0 dark:invert"
+                                className={`w-8 h-8 shrink-0 ${
+                                  [
+                                    "nextjs",
+                                    "github",
+                                    "express",
+                                    "socketio",
+                                  ].some(
+                                    (m) =>
+                                      (skill.icon_svg || "")
+                                        .toLowerCase()
+                                        .includes(m) ||
+                                      skill.name.toLowerCase().includes(m),
+                                  )
+                                    ? "dark:invert"
+                                    : ""
+                                }`}
                               />
                             ) : skill.icon ? (
                               <i
@@ -388,7 +417,7 @@ export default function SkillsPage() {
                         {/* Actions */}
                         <div className="flex gap-2">
                           <Link
-                            href={`/admin/skills/${skill.id}/edit`}
+                            href={`/studio/skills/${skill.id}/edit`}
                             className="flex-1"
                           >
                             <Button
@@ -464,7 +493,22 @@ export default function SkillsPage() {
                               width={24}
                               height={24}
                               unoptimized
-                              className="w-6 h-6 dark:invert"
+                              className={`w-6 h-6 ${
+                                [
+                                  "nextjs",
+                                  "github",
+                                  "express",
+                                  "socketio",
+                                ].some(
+                                  (m) =>
+                                    (skill.icon_svg || "")
+                                      .toLowerCase()
+                                      .includes(m) ||
+                                    skill.name.toLowerCase().includes(m),
+                                )
+                                  ? "dark:invert"
+                                  : ""
+                              }`}
                             />
                           ) : skill.icon ? (
                             <i className={`${skill.icon} text-2xl`}></i>
@@ -499,7 +543,7 @@ export default function SkillsPage() {
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-end gap-2">
-                            <Link href={`/admin/skills/${skill.id}/edit`}>
+                            <Link href={`/studio/skills/${skill.id}/edit`}>
                               <Button variant="outline" size="sm" title="Edit">
                                 <Pencil className="w-4 h-4" />
                               </Button>

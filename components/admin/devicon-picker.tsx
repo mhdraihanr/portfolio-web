@@ -24,6 +24,8 @@ interface DeviconPickerProps {
 }
 
 const DEVICON_JSON_URL =
+  "https://cdn.jsdelivr.net/gh/devicons/devicon@master/devicon.json";
+const DEVICON_FALLBACK_URL =
   "https://raw.githubusercontent.com/devicons/devicon/master/devicon.json";
 
 const CDN_BASE = "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons";
@@ -48,13 +50,19 @@ export function DeviconPicker({
   const containerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Fetch devicon.json on mount
+  // Fetch devicon.json on mount with fallback
   useEffect(() => {
     let cancelled = false;
     async function fetchIcons() {
       try {
         setLoading(true);
-        const res = await fetch(DEVICON_JSON_URL);
+        let res: Response;
+        try {
+          res = await fetch(DEVICON_JSON_URL);
+          if (!res.ok) throw new Error("Primary fetch failed");
+        } catch {
+          res = await fetch(DEVICON_FALLBACK_URL);
+        }
         if (!res.ok) throw new Error("Failed to fetch devicon data");
         const data: DeviconEntry[] = await res.json();
         if (!cancelled) {
@@ -191,7 +199,13 @@ export function DeviconPicker({
                   width={24}
                   height={24}
                   unoptimized
-                  className="w-6 h-6 dark:invert"
+                  className={`w-6 h-6 ${
+                    ["nextjs", "github", "express", "socketio"].some((m) =>
+                      selectedSvg.toLowerCase().includes(m),
+                    )
+                      ? "dark:invert"
+                      : ""
+                  }`}
                 />
               ) : selectedIcon ? (
                 <i className={`${selectedIcon} text-2xl`}></i>
@@ -315,7 +329,15 @@ export function DeviconPicker({
                           width={24}
                           height={24}
                           unoptimized
-                          className="w-6 h-6 dark:invert"
+                          className={`w-6 h-6 ${
+                            ["nextjs", "github", "express", "socketio"].some(
+                              (m) =>
+                                svgUrl.toLowerCase().includes(m) ||
+                                icon.name.toLowerCase().includes(m),
+                            )
+                              ? "dark:invert"
+                              : ""
+                          }`}
                         />
                       ) : (
                         <div className="w-6 h-6 bg-gray-200 dark:bg-gray-600 rounded" />

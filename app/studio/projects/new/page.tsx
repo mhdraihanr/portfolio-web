@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Trash2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { updateProject } from "@/lib/supabase/helpers";
+import { insertProject } from "@/lib/supabase/helpers";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -20,20 +20,13 @@ import {
   type UploadedImage,
 } from "@/components/ui/image-uploader";
 import { TechnologyInput } from "@/components/admin/technology-input";
-import { Modal } from "@/components/ui/modal";
 import { generateSlug } from "@/lib/utils";
 import { projectSchema, type ProjectFormData } from "@/lib/validations/project";
-import type { Project, ProjectUpdate } from "@/types/project";
 
-export default function EditProjectPage() {
+export default function NewProjectPage() {
   const router = useRouter();
-  const params = useParams<{ id: string }>();
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [project, setProject] = useState<Project | null>(null);
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
 
   const {
@@ -42,78 +35,24 @@ export default function EditProjectPage() {
     formState: { errors },
     setValue,
     watch,
-    reset,
   } = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
+    defaultValues: {
+      title: "",
+      slug: "",
+      description: "",
+      technologies: [],
+      images: [],
+      image_url: "",
+      project_url: "",
+      github_url: "",
+      featured: false,
+      order_index: 0,
+    },
   });
 
-  const technologies = watch("technologies") || [];
+  const technologies = watch("technologies");
   const featured = watch("featured");
-
-  useEffect(() => {
-    fetchProject();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.id]);
-
-  async function fetchProject() {
-    try {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from("projects")
-        .select("*")
-        .eq("id", params.id)
-        .single();
-
-      if (error) {
-        if (error.code === "PGRST116") {
-          toast.error("Error", "Project not found");
-          router.push("/admin/projects");
-          return;
-        }
-        throw error;
-      }
-
-      if (!data) {
-        toast.error("Error", "Project not found");
-        router.push("/admin/projects");
-        return;
-      }
-
-      const projectData = data as Project;
-      setProject(projectData);
-
-      // Set uploaded images from database
-      const existingImages =
-        (projectData.images as unknown as UploadedImage[]) || [];
-      setUploadedImages(existingImages);
-
-      reset({
-        title: projectData.title,
-        slug: projectData.slug,
-        description: projectData.description,
-        problem: projectData.problem,
-        solution: projectData.solution,
-        impact: projectData.impact,
-        technologies: (projectData.technologies || []) as {
-          name: string;
-          icon?: string | null;
-          icon_svg?: string | null;
-        }[],
-        image_url: projectData.image_url || "",
-        images: existingImages,
-        project_url: projectData.project_url || "",
-        github_url: projectData.github_url || "",
-        featured: projectData.featured,
-        order_index: projectData.order_index,
-      });
-    } catch (error) {
-      console.error("Error fetching project:", error);
-      toast.error("Error", "Failed to load project");
-      router.push("/admin/projects");
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   // Auto-generate slug from title
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,12 +68,11 @@ export default function EditProjectPage() {
     try {
       const supabase = createClient();
 
-      // Check if slug already exists (excluding current project)
+      // Check if slug already exists
       const { data: existing } = await supabase
         .from("projects")
         .select("id")
         .eq("slug", data.slug)
-        .neq("id", params.id)
         .single();
 
       if (existing) {
@@ -143,102 +81,54 @@ export default function EditProjectPage() {
         return;
       }
 
-      // Update project
-      const updateData: ProjectUpdate = {
+      // Insert project
+      const { error } = await insertProject(supabase, {
         title: data.title,
         slug: data.slug,
         description: data.description,
-        problem: data.problem,
-        solution: data.solution,
-        impact: data.impact,
         technologies: data.technologies as {
           name: string;
           icon?: string | null;
           icon_svg?: string | null;
         }[],
-        image_url: data.image_url || null,
         images: uploadedImages,
+        image_url: data.image_url || null,
         project_url: data.project_url || null,
         github_url: data.github_url || null,
         featured: data.featured,
         order_index: data.order_index,
-      };
-
-      const { error } = await updateProject(supabase, params.id, updateData);
+      });
 
       if (error) throw error;
 
-      toast.success("Success", "Project updated successfully");
+      toast.success("Success", "Project created successfully");
 
-      router.push("/admin/projects");
+      router.push("/studio/projects");
     } catch (error) {
-      console.error("Error updating project:", error);
-      toast.error("Error", "Failed to update project");
+      console.error("Error creating project:", error);
+      toast.error("Error", "Failed to create project");
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  const handleDelete = async () => {
-    setIsDeleting(true);
-    try {
-      const supabase = createClient();
-      const { error } = await supabase
-        .from("projects")
-        .delete()
-        .eq("id", params.id);
-
-      if (error) throw error;
-
-      toast.success("Success", "Project deleted successfully");
-
-      router.push("/admin/projects");
-    } catch (error) {
-      console.error("Error deleting project:", error);
-      toast.error("Error", "Failed to delete project");
-    } finally {
-      setIsDeleting(false);
-      setShowDeleteModal(false);
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <Spinner size="lg" />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         {/* Header */}
         <div className="mb-6">
-          <Link href="/admin/projects">
+          <Link href="/studio/projects">
             <Button variant="outline" size="sm" className="mb-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Projects
             </Button>
           </Link>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-                Edit Project
-              </h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                Update project details
-              </p>
-            </div>
-            <Button
-              variant="danger"
-              onClick={() => setShowDeleteModal(true)}
-              disabled={isSubmitting || isDeleting}
-            >
-              <Trash2 className="w-4 h-4 mr-2" />
-              Delete Project
-            </Button>
-          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+            Create New Project
+          </h1>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            Add a new project to your portfolio
+          </p>
         </div>
 
         {/* Form */}
@@ -287,53 +177,6 @@ export default function EditProjectPage() {
                   rows={3}
                   {...register("description")}
                   error={errors.description?.message}
-                />
-              </div>
-            </div>
-          </Card>
-
-          {/* Project Details */}
-          <Card className="p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Project Details
-            </h2>
-            <div className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="problem" required>
-                  Problem Statement
-                </Label>
-                <Textarea
-                  id="problem"
-                  placeholder="What problem does this project solve?"
-                  rows={4}
-                  {...register("problem")}
-                  error={errors.problem?.message}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="solution" required>
-                  Solution
-                </Label>
-                <Textarea
-                  id="solution"
-                  placeholder="How did you solve the problem?"
-                  rows={4}
-                  {...register("solution")}
-                  error={errors.solution?.message}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="impact" required>
-                  Impact & Results
-                </Label>
-                <Textarea
-                  id="impact"
-                  placeholder="What was the outcome or impact?"
-                  rows={4}
-                  {...register("impact")}
-                  error={errors.impact?.message}
                 />
               </div>
             </div>
@@ -460,7 +303,7 @@ export default function EditProjectPage() {
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row justify-end gap-3 pb-8">
-            <Link href="/admin/projects" className="w-full sm:w-auto">
+            <Link href="/studio/projects" className="w-full sm:w-auto">
               <Button
                 type="button"
                 variant="outline"
@@ -478,52 +321,15 @@ export default function EditProjectPage() {
               {isSubmitting ? (
                 <>
                   <Spinner size="sm" className="mr-2" />
-                  Updating...
+                  Creating...
                 </>
               ) : (
-                "Update Project"
+                "Create Project"
               )}
             </Button>
           </div>
         </form>
       </div>
-
-      {/* Delete Confirmation Modal */}
-      <Modal
-        isOpen={showDeleteModal}
-        onClose={() => !isDeleting && setShowDeleteModal(false)}
-        title="Delete Project"
-      >
-        <div className="space-y-4">
-          <p className="text-gray-600 dark:text-gray-400">
-            Are you sure you want to delete <strong>{project?.title}</strong>?
-            This action cannot be undone.
-          </p>
-          <div className="flex justify-end gap-3">
-            <Button
-              variant="outline"
-              onClick={() => setShowDeleteModal(false)}
-              disabled={isDeleting}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="danger"
-              onClick={handleDelete}
-              disabled={isDeleting}
-            >
-              {isDeleting ? (
-                <>
-                  <Spinner size="sm" className="mr-2" />
-                  Deleting...
-                </>
-              ) : (
-                "Delete"
-              )}
-            </Button>
-          </div>
-        </div>
-      </Modal>
     </div>
   );
 }

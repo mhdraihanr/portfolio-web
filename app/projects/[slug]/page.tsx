@@ -158,48 +158,6 @@ export default async function ProjectDetailPage({
             </CardContent>
           </Card>
 
-          {/* Problem Section */}
-          {project.problem && (
-            <Card className="mb-8">
-              <CardContent className="pt-6">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                  Problem
-                </h2>
-                <p className="text-gray-600 dark:text-gray-400 whitespace-pre-line">
-                  {project.problem}
-                </p>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Solution Section */}
-          {project.solution && (
-            <Card className="mb-8">
-              <CardContent className="pt-6">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                  Solution
-                </h2>
-                <p className="text-gray-600 dark:text-gray-400 whitespace-pre-line">
-                  {project.solution}
-                </p>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Impact Section */}
-          {project.impact && (
-            <Card className="mb-8">
-              <CardContent className="pt-6">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                  Impact
-                </h2>
-                <p className="text-gray-600 dark:text-gray-400 whitespace-pre-line">
-                  {project.impact}
-                </p>
-              </CardContent>
-            </Card>
-          )}
-
           {/* Back to Projects Link */}
           <div className="text-center mt-12">
             <Link href="/projects">

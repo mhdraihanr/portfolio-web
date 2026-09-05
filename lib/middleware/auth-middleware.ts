@@ -108,7 +108,7 @@ export function createDashboardRedirect(
  */
 export function getMiddlewareConfig(): MiddlewareConfig {
   return {
-    adminRoute: process.env.ADMIN_ROUTE_SECRET || "admin",
+    adminRoute: process.env.ADMIN_ROUTE_SECRET || "studio",
     publicRoutes: ["/", "/about", "/projects", "/contact"],
   };
 }
