@@ -62,22 +62,26 @@ export async function middleware(request: NextRequest) {
 **Routes Protected:**
 
 ```
-✅ /admin (dashboard)
-✅ /admin/projects
-✅ /admin/projects/new
-✅ /admin/projects/[id]/edit
-✅ /admin/experience
-✅ /admin/experience/new
-✅ /admin/experience/[id]/edit
+✅ /studio (dashboard)
+✅ /studio/projects
+✅ /studio/projects/new
+✅ /studio/projects/[id]/edit
+✅ /studio/experience
+✅ /studio/experience/new
+✅ /studio/experience/[id]/edit
+✅ /studio/skills
+✅ /studio/skills/new
+✅ /studio/skills/[id]/edit
 ```
 
 **Routes Public:**
 
 ```
-✓ /admin/login (login page)
-✓ / (homepage - when built)
-✓ /api/projects (public read)
-✓ /api/experience (public read)
+✓ /studio/login (login page)
+✓ / (homepage)
+✓ /projects (all projects)
+✓ /projects/[slug] (project details)
+✓ /contact (contact page)
 ```
 
 ---

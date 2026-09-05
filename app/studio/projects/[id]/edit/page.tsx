@@ -91,9 +91,6 @@ export default function EditProjectPage() {
         title: projectData.title,
         slug: projectData.slug,
         description: projectData.description,
-        problem: projectData.problem,
-        solution: projectData.solution,
-        impact: projectData.impact,
         technologies: (projectData.technologies || []) as {
           name: string;
           icon?: string | null;
@@ -148,9 +145,6 @@ export default function EditProjectPage() {
         title: data.title,
         slug: data.slug,
         description: data.description,
-        problem: data.problem,
-        solution: data.solution,
-        impact: data.impact,
         technologies: data.technologies as {
           name: string;
           icon?: string | null;
@@ -287,53 +281,6 @@ export default function EditProjectPage() {
                   rows={3}
                   {...register("description")}
                   error={errors.description?.message}
-                />
-              </div>
-            </div>
-          </Card>
-
-          {/* Project Details */}
-          <Card className="p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Project Details
-            </h2>
-            <div className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="problem" required>
-                  Problem Statement
-                </Label>
-                <Textarea
-                  id="problem"
-                  placeholder="What problem does this project solve?"
-                  rows={4}
-                  {...register("problem")}
-                  error={errors.problem?.message}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="solution" required>
-                  Solution
-                </Label>
-                <Textarea
-                  id="solution"
-                  placeholder="How did you solve the problem?"
-                  rows={4}
-                  {...register("solution")}
-                  error={errors.solution?.message}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="impact" required>
-                  Impact & Results
-                </Label>
-                <Textarea
-                  id="impact"
-                  placeholder="What was the outcome or impact?"
-                  rows={4}
-                  {...register("impact")}
-                  error={errors.impact?.message}
                 />
               </div>
             </div>

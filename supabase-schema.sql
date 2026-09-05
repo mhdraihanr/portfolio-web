@@ -12,11 +12,9 @@ CREATE TABLE IF NOT EXISTS public.projects (
     title TEXT NOT NULL,
     slug TEXT UNIQUE NOT NULL,
     description TEXT NOT NULL,
-    problem TEXT NOT NULL,
-    solution TEXT NOT NULL,
-    impact TEXT NOT NULL,
     technologies JSONB NOT NULL DEFAULT '[]',
     image_url TEXT,
+    images JSONB DEFAULT '[]'::jsonb,
     project_url TEXT,
     github_url TEXT,
     featured BOOLEAN DEFAULT false,
@@ -29,6 +27,7 @@ CREATE TABLE IF NOT EXISTS public.projects (
 CREATE INDEX IF NOT EXISTS idx_projects_slug ON public.projects(slug);
 CREATE INDEX IF NOT EXISTS idx_projects_featured ON public.projects(featured);
 CREATE INDEX IF NOT EXISTS idx_projects_order ON public.projects(order_index);
+CREATE INDEX IF NOT EXISTS idx_projects_images ON public.projects USING GIN (images);
 
 -- ============================================
 -- WORK EXPERIENCE TABLE
@@ -42,6 +41,11 @@ CREATE TABLE IF NOT EXISTS public.work_experience (
     end_date DATE,
     is_current BOOLEAN DEFAULT false,
     order_index INTEGER DEFAULT 0,
+    logo_url TEXT,
+    employment_type TEXT CHECK (
+        employment_type IS NULL OR 
+        employment_type IN ('Full-time', 'Part-time', 'Internship', 'Freelance', 'Contract', 'Organization')
+    ),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
@@ -49,6 +53,26 @@ CREATE TABLE IF NOT EXISTS public.work_experience (
 -- Add index for better query performance
 CREATE INDEX IF NOT EXISTS idx_experience_order ON public.work_experience(order_index);
 CREATE INDEX IF NOT EXISTS idx_experience_current ON public.work_experience(is_current);
+
+-- ============================================
+-- SKILLS TABLE
+-- ============================================
+CREATE TABLE IF NOT EXISTS public.skills (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    name TEXT NOT NULL,
+    category TEXT NOT NULL CHECK (category IN ('frontend', 'backend', 'tools', 'others')),
+    icon TEXT,            -- Devicon font class (e.g., "devicon-react-original colored")
+    icon_svg TEXT,        -- SVG URL for icons not available in Devicon font
+    order_index INTEGER DEFAULT 0,
+    is_visible BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+-- Add index for better query performance
+CREATE INDEX IF NOT EXISTS idx_skills_category ON public.skills(category);
+CREATE INDEX IF NOT EXISTS idx_skills_order ON public.skills(order_index);
+CREATE INDEX IF NOT EXISTS idx_skills_visible ON public.skills(is_visible);
 
 -- ============================================
 -- FUNCTIONS
@@ -77,6 +101,13 @@ CREATE TRIGGER update_experience_updated_at
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
+-- Trigger for skills table
+DROP TRIGGER IF EXISTS update_skills_updated_at ON public.skills;
+CREATE TRIGGER update_skills_updated_at
+    BEFORE UPDATE ON public.skills
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
 -- ============================================
 -- ROW LEVEL SECURITY (RLS)
 -- ============================================
@@ -84,6 +115,7 @@ CREATE TRIGGER update_experience_updated_at
 -- Enable RLS
 ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.work_experience ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.skills ENABLE ROW LEVEL SECURITY;
 
 -- Projects policies
 -- Allow public read access
@@ -143,6 +175,35 @@ CREATE POLICY "Allow authenticated delete on work_experience"
     TO authenticated
     USING (true);
 
+-- Skills policies
+-- Allow public read access
+CREATE POLICY "Allow public read access on skills"
+    ON public.skills
+    FOR SELECT
+    USING (true);
+
+-- Allow authenticated users (admin) to insert
+CREATE POLICY "Allow authenticated insert on skills"
+    ON public.skills
+    FOR INSERT
+    TO authenticated
+    WITH CHECK (true);
+
+-- Allow authenticated users (admin) to update
+CREATE POLICY "Allow authenticated update on skills"
+    ON public.skills
+    FOR UPDATE
+    TO authenticated
+    USING (true)
+    WITH CHECK (true);
+
+-- Allow authenticated users (admin) to delete
+CREATE POLICY "Allow authenticated delete on skills"
+    ON public.skills
+    FOR DELETE
+    TO authenticated
+    USING (true);
+
 -- ============================================
 -- SEED DATA (Optional - for testing)
 -- ============================================
@@ -152,9 +213,6 @@ INSERT INTO public.projects (
     title,
     slug,
     description,
-    problem,
-    solution,
-    impact,
     technologies,
     featured,
     order_index
@@ -162,10 +220,7 @@ INSERT INTO public.projects (
     'Employee Management System',
     'employee-management-system',
     'Platform terpusat untuk mengelola data karyawan, pengajuan cuti, lembur, dan approval.',
-    'Proses cuti, lembur, dan data karyawan masih tersebar di form kertas dan file terpisah. HR dan leader sering harus bolak-balik chat hanya untuk konfirmasi satu pengajuan.',
-    'Membangun platform terpusat berisi data karyawan, pengajuan cuti, lembur, dan riwayat approval yang bisa diakses HR dan leader dari satu dashboard.',
-    'Proses approval jadi lebih terstruktur, mudah ditelusuri, dan mengurangi ketergantungan pada form fisik dan chat yang tercecer.',
-    ARRAY['Next.js', 'TypeScript', 'PostgreSQL', 'Tailwind CSS'],
+    '[{"name": "Next.js", "icon": "devicon-nextjs-plain colored"}, {"name": "TypeScript", "icon": "devicon-typescript-plain colored"}, {"name": "PostgreSQL", "icon": "devicon-postgresql-plain colored"}, {"name": "Tailwind CSS", "icon": "devicon-tailwindcss-original colored"}]'::jsonb,
     true,
     1
 ) ON CONFLICT (slug) DO NOTHING;
