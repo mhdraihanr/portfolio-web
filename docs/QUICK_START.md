@@ -78,9 +78,9 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 # Admin Route (HARUS sama dengan nama folder di app/)
-# Default: admin (folder app/admin/)
-# Untuk keamanan: rename folder app/admin/ ke nama unik, lalu update nilai ini
-ADMIN_ROUTE_SECRET=admin
+# Default: studio (folder app/studio/)
+# Untuk keamanan: rename folder app/studio/ ke nama unik, lalu update nilai ini
+ADMIN_ROUTE_SECRET=studio
 
 # Email (skip dulu untuk testing)
 # EMAIL_HOST=smtp.gmail.com

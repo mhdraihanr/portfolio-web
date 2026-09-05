@@ -199,7 +199,13 @@ export function DeviconPicker({
                   width={24}
                   height={24}
                   unoptimized
-                  className="w-6 h-6 dark:invert"
+                  className={`w-6 h-6 ${
+                    ["nextjs", "github", "express", "socketio"].some((m) =>
+                      selectedSvg.toLowerCase().includes(m),
+                    )
+                      ? "dark:invert"
+                      : ""
+                  }`}
                 />
               ) : selectedIcon ? (
                 <i className={`${selectedIcon} text-2xl`}></i>
@@ -323,7 +329,15 @@ export function DeviconPicker({
                           width={24}
                           height={24}
                           unoptimized
-                          className="w-6 h-6 dark:invert"
+                          className={`w-6 h-6 ${
+                            ["nextjs", "github", "express", "socketio"].some(
+                              (m) =>
+                                svgUrl.toLowerCase().includes(m) ||
+                                icon.name.toLowerCase().includes(m),
+                            )
+                              ? "dark:invert"
+                              : ""
+                          }`}
                         />
                       ) : (
                         <div className="w-6 h-6 bg-gray-200 dark:bg-gray-600 rounded" />

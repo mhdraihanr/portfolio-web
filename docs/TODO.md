@@ -839,7 +839,7 @@ Future ideas to consider:
   - CDN link added to root layout (`app/layout.tsx`)
   - Font icons for most technologies (colored versions)
   - SVG images for Next.js, Express, Vercel, GitHub (hybrid approach)
-  - Icons auto-invert in dark mode (`dark:invert` class)
+  - Icons auto-invert in dark mode for monochrome brands only (`dark:invert` for Next.js, GitHub, etc., while preserving colored brand logos)
   - Consistent `w-5 h-5` sizing
 - ✅ Skill tags with hover effects (background + text color transition to primary)
 - ✅ TypeScript interface for Skill type (icon + iconSvg support)

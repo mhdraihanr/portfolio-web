@@ -203,7 +203,13 @@ export default function NewSkillPage() {
                         width={40}
                         height={40}
                         unoptimized
-                        className="w-10 h-10 dark:invert"
+                        className={`w-10 h-10 ${
+                          ["nextjs", "github", "express", "socketio"].some(
+                            (m) => iconSvgValue.toLowerCase().includes(m),
+                          )
+                            ? "dark:invert"
+                            : ""
+                        }`}
                       />
                     ) : iconValue ? (
                       <i className={`${iconValue} text-4xl`}></i>

@@ -373,7 +373,22 @@ export default function SkillsPage() {
                                 width={32}
                                 height={32}
                                 unoptimized
-                                className="w-8 h-8 shrink-0 dark:invert"
+                                className={`w-8 h-8 shrink-0 ${
+                                  [
+                                    "nextjs",
+                                    "github",
+                                    "express",
+                                    "socketio",
+                                  ].some(
+                                    (m) =>
+                                      (skill.icon_svg || "")
+                                        .toLowerCase()
+                                        .includes(m) ||
+                                      skill.name.toLowerCase().includes(m),
+                                  )
+                                    ? "dark:invert"
+                                    : ""
+                                }`}
                               />
                             ) : skill.icon ? (
                               <i
@@ -478,7 +493,22 @@ export default function SkillsPage() {
                               width={24}
                               height={24}
                               unoptimized
-                              className="w-6 h-6 dark:invert"
+                              className={`w-6 h-6 ${
+                                [
+                                  "nextjs",
+                                  "github",
+                                  "express",
+                                  "socketio",
+                                ].some(
+                                  (m) =>
+                                    (skill.icon_svg || "")
+                                      .toLowerCase()
+                                      .includes(m) ||
+                                    skill.name.toLowerCase().includes(m),
+                                )
+                                  ? "dark:invert"
+                                  : ""
+                              }`}
                             />
                           ) : skill.icon ? (
                             <i className={`${skill.icon} text-2xl`}></i>

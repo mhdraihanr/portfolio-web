@@ -72,7 +72,7 @@ app/
 │   └── [slug]/                 # Dynamic project detail route
 │       └── page.tsx            # Project detail page ✅
 │
-├── admin/                      # Admin panel (configurable via ADMIN_ROUTE_SECRET)
+├── studio/                     # Admin panel (configurable via ADMIN_ROUTE_SECRET, default: studio)
 │   ├── layout.tsx              # Admin layout
 │   ├── page.tsx                # Admin dashboard
 │   ├── login/                  # Login page
@@ -180,7 +180,7 @@ Dynamic project detail page:
 
 Admin layout dengan:
 
-**Note:** Folder name `admin` MUST match the `ADMIN_ROUTE_SECRET` value in `.env.local`. For better security, you can rename this folder to a unique name and update the environment variable accordingly.
+**Note:** Folder name `studio` MUST match the `ADMIN_ROUTE_SECRET` value in `.env.local`. For better security, you can rename this folder to a unique name and update the environment variable accordingly.
 
 - Sidebar navigation
 - User info
