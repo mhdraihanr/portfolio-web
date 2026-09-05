@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { insertWorkExperience } from "@/lib/supabase/helpers";
+import { updateWorkExperience } from "@/lib/supabase/helpers";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,16 +19,23 @@ import {
   ImageUploader,
   type UploadedImage,
 } from "@/components/ui/image-uploader";
+import { Modal } from "@/components/ui/modal";
 import {
   experienceSchema,
   type ExperienceFormData,
 } from "@/lib/validations/experience";
+import type { WorkExperience, WorkExperienceUpdate } from "@/types/experience";
 import { EMPLOYMENT_TYPES } from "@/types/experience";
 
-export default function NewExperiencePage() {
+export default function EditExperiencePage() {
   const router = useRouter();
+  const params = useParams<{ id: string }>();
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [experience, setExperience] = useState<WorkExperience | null>(null);
   const [uploadedLogo, setUploadedLogo] = useState<UploadedImage | null>(null);
 
   const {
@@ -37,22 +44,72 @@ export default function NewExperiencePage() {
     formState: { errors },
     setValue,
     watch,
+    reset,
   } = useForm<ExperienceFormData>({
     resolver: zodResolver(experienceSchema),
-    defaultValues: {
-      company: "",
-      position: "",
-      description: "",
-      start_date: "",
-      end_date: "",
-      is_current: false,
-      order_index: 0,
-      logo_url: "",
-      employment_type: "",
-    },
   });
 
   const isCurrent = watch("is_current");
+
+  useEffect(() => {
+    fetchExperience();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.id]);
+
+  async function fetchExperience() {
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("work_experience")
+        .select("*")
+        .eq("id", params.id)
+        .single();
+
+      if (error) {
+        if (error.code === "PGRST116") {
+          toast.error("Error", "Work experience not found");
+          router.push("/studio/experience");
+          return;
+        }
+        throw error;
+      }
+
+      if (!data) {
+        toast.error("Error", "Work experience not found");
+        router.push("/studio/experience");
+        return;
+      }
+
+      const experienceData = data as WorkExperience;
+      setExperience(experienceData);
+
+      // Set uploaded logo from database (convert to UploadedImage format)
+      if (experienceData.logo_url) {
+        setUploadedLogo({
+          url: experienceData.logo_url,
+          fileId: "", // No fileId for legacy logos
+        });
+      }
+
+      reset({
+        company: experienceData.company,
+        position: experienceData.position,
+        description: experienceData.description,
+        start_date: experienceData.start_date,
+        end_date: experienceData.end_date || "",
+        is_current: experienceData.is_current,
+        order_index: experienceData.order_index,
+        logo_url: experienceData.logo_url || "",
+        employment_type: experienceData.employment_type || "",
+      });
+    } catch (error) {
+      console.error("Error fetching experience:", error);
+      toast.error("Error", "Failed to load work experience");
+      router.push("/studio/experience");
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   // Clear end_date when is_current is checked
   const handleCurrentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,49 +125,98 @@ export default function NewExperiencePage() {
     try {
       const supabase = createClient();
 
-      // Insert experience
-      const { error } = await insertWorkExperience(supabase, {
+      // Update experience
+      const updateData: WorkExperienceUpdate = {
         company: data.company,
         position: data.position,
         description: data.description,
         start_date: data.start_date,
         end_date: data.is_current ? null : data.end_date || null,
-        logo_url: uploadedLogo?.url || data.logo_url || null,
-        employment_type: data.employment_type || null,
         is_current: data.is_current,
         order_index: data.order_index,
-      });
+        logo_url: uploadedLogo?.url || data.logo_url || null,
+        employment_type: data.employment_type || null,
+      };
+
+      const { error } = await updateWorkExperience(
+        supabase,
+        params.id,
+        updateData,
+      );
 
       if (error) throw error;
 
-      toast.success("Success", "Work experience created successfully");
+      toast.success("Success", "Work experience updated successfully");
 
-      router.push("/admin/experience");
+      router.push("/studio/experience");
     } catch (error) {
-      console.error("Error creating experience:", error);
-      toast.error("Error", "Failed to create work experience");
+      console.error("Error updating experience:", error);
+      toast.error("Error", "Failed to update work experience");
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from("work_experience")
+        .delete()
+        .eq("id", params.id);
+
+      if (error) throw error;
+
+      toast.success("Success", "Work experience deleted successfully");
+
+      router.push("/studio/experience");
+    } catch (error) {
+      console.error("Error deleting experience:", error);
+      toast.error("Error", "Failed to delete work experience");
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteModal(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         {/* Header */}
         <div className="mb-6">
-          <Link href="/admin/experience">
+          <Link href="/studio/experience">
             <Button variant="outline" size="sm" className="mb-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Experience
             </Button>
           </Link>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-            Add Work Experience
-          </h1>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-            Add a new work experience to your portfolio
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                Edit Work Experience
+              </h1>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                Update work experience details
+              </p>
+            </div>
+            <Button
+              variant="danger"
+              onClick={() => setShowDeleteModal(true)}
+              disabled={isSubmitting || isDeleting}
+            >
+              <Trash2 className="w-4 h-4 mr-2" />
+              Delete Experience
+            </Button>
+          </div>
         </div>
 
         {/* Form */}
@@ -304,7 +410,7 @@ export default function NewExperiencePage() {
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row justify-end gap-3 pb-8">
-            <Link href="/admin/experience" className="w-full sm:w-auto">
+            <Link href="/studio/experience" className="w-full sm:w-auto">
               <Button
                 type="button"
                 variant="outline"
@@ -322,15 +428,55 @@ export default function NewExperiencePage() {
               {isSubmitting ? (
                 <>
                   <Spinner size="sm" className="mr-2" />
-                  Creating...
+                  Updating...
                 </>
               ) : (
-                "Create Experience"
+                "Update Experience"
               )}
             </Button>
           </div>
         </form>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={() => !isDeleting && setShowDeleteModal(false)}
+        title="Delete Work Experience"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600 dark:text-gray-400">
+            Are you sure you want to delete{" "}
+            <strong>
+              {experience?.position} at {experience?.company}
+            </strong>
+            ? This action cannot be undone.
+          </p>
+          <div className="flex justify-end gap-3">
+            <Button
+              variant="outline"
+              onClick={() => setShowDeleteModal(false)}
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              onClick={handleDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <>
+                  <Spinner size="sm" className="mr-2" />
+                  Deleting...
+                </>
+              ) : (
+                "Delete"
+              )}
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

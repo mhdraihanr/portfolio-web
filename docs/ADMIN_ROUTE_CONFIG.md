@@ -18,9 +18,9 @@ The admin folder name in your filesystem **MUST exactly match** the value of `AD
 
 **Default Setup:**
 
-- **Folder:** `app/admin/`
-- **Environment Variable:** `ADMIN_ROUTE_SECRET=admin`
-- **Access URL:** `http://localhost:3000/admin`
+- **Folder:** `app/studio/`
+- **Environment Variable:** `ADMIN_ROUTE_SECRET=studio`
+- **Access URL:** `http://localhost:3000/studio`
 
 ---
 
@@ -35,7 +35,7 @@ The admin folder name in your filesystem **MUST exactly match** the value of `AD
 1. **Rename the folder:**
 
    ```bash
-   mv app/admin app/my-unique-secret-admin-2024
+   mv app/studio app/my-unique-secret-admin-2024
    ```
 
 2. **Update `.env.local`:**
@@ -62,21 +62,21 @@ The admin folder name in your filesystem **MUST exactly match** the value of `AD
 ### ❌ Mistake 1: Mismatch Between Folder and Env Variable
 
 ```
-Folder: app/admin/
+Folder: app/studio/
 Env Variable: ADMIN_ROUTE_SECRET=admin_secret_key
 ```
 
 **Result:**
 
-- Route `/admin` exists (from folder) but is **NOT PROTECTED**
+- Route `/studio` exists (from folder) but is **NOT PROTECTED**
 - Middleware tries to protect `/admin_secret_key` which doesn't exist
-- Anyone can access `/admin` without authentication! 🚨
+- Anyone can access `/studio` without authentication! 🚨
 
 ### ❌ Mistake 2: Forgetting to Update Production Env
 
 ```
-Local: ADMIN_ROUTE_SECRET=admin
-Production: ADMIN_ROUTE_SECRET=my-secret-route (but folder is still named 'admin')
+Local: ADMIN_ROUTE_SECRET=studio
+Production: ADMIN_ROUTE_SECRET=my-secret-route (but folder is still named 'studio')
 ```
 
 **Result:**

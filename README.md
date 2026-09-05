@@ -107,7 +107,7 @@ npm run dev
 
 Buka [http://localhost:3000](http://localhost:3000)
 
-Admin panel: `http://localhost:3000/[ADMIN_ROUTE_SECRET]`
+- Admin panel: `http://localhost:3000/[ADMIN_ROUTE_SECRET]` (default: `/studio`)
 
 ## 📖 Documentation
 
@@ -153,7 +153,7 @@ Admin panel dapat diakses melalui route yang dikonfigurasi di `ADMIN_ROUTE_SECRE
 http://localhost:3000/admin
 ```
 
-**Security Note:** Nilai `ADMIN_ROUTE_SECRET` di `.env.local` **HARUS** sama dengan nama folder di `app/`. Default adalah `admin`. Untuk keamanan lebih baik, rename folder `app/admin/` ke nama unik Anda dan update `ADMIN_ROUTE_SECRET` sesuai.
+**Security Note:** Nilai `ADMIN_ROUTE_SECRET` di `.env.local` **HARUS** sama dengan nama folder di `app/`. Default sekarang adalah `studio`. Untuk keamanan lebih baik, rename folder `app/studio/` ke nama unik Anda dan update `ADMIN_ROUTE_SECRET` sesuai.
 
 **Features:**
 

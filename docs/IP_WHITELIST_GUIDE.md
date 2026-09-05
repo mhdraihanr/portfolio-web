@@ -92,10 +92,10 @@ Gunakan salah satu method di atas untuk mendapatkan IP address Anda.
 
 Edit file `.env.local` di root project:
 
-#### **Option A: Disable Whitelist (Allow All IPs) - Default**
+#### **Option A: Disable Whitelist (Allow All IPs) - Default & Recommended**
 
 ```env
-# Allow all IPs - no restriction
+# Allow all IPs - no restriction (prevents needing redeploy when IP changes)
 ADMIN_IP_WHITELIST=
 ```
 

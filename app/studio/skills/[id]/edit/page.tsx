@@ -1,28 +1,35 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { insertSkill } from "@/lib/supabase/helpers";
+import { updateSkill } from "@/lib/supabase/helpers";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { useToast } from "@/components/ui/toast";
+import { Modal } from "@/components/ui/modal";
 import { DeviconPicker } from "@/components/admin/devicon-picker";
 import { skillSchema, type SkillFormData } from "@/lib/validations/skill";
 import { SKILL_CATEGORIES } from "@/types/skill";
+import type { Skill, SkillUpdate as SkillUpdateType } from "@/types/skill";
 
-export default function NewSkillPage() {
+export default function EditSkillPage() {
   const router = useRouter();
+  const params = useParams<{ id: string }>();
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [skill, setSkill] = useState<Skill | null>(null);
 
   const {
     register,
@@ -30,20 +37,61 @@ export default function NewSkillPage() {
     formState: { errors },
     setValue,
     watch,
+    reset,
   } = useForm<SkillFormData>({
     resolver: zodResolver(skillSchema),
-    defaultValues: {
-      name: "",
-      category: "frontend",
-      icon: "",
-      icon_svg: "",
-      order_index: 0,
-      is_visible: true,
-    },
   });
 
   const iconValue = watch("icon");
   const iconSvgValue = watch("icon_svg");
+
+  useEffect(() => {
+    fetchSkill();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.id]);
+
+  async function fetchSkill() {
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("skills")
+        .select("*")
+        .eq("id", params.id)
+        .single();
+
+      if (error) {
+        if (error.code === "PGRST116") {
+          toast.error("Error", "Skill not found");
+          router.push("/studio/skills");
+          return;
+        }
+        throw error;
+      }
+
+      if (!data) {
+        toast.error("Error", "Skill not found");
+        router.push("/studio/skills");
+        return;
+      }
+
+      const skillData = data as Skill;
+      setSkill(skillData);
+      reset({
+        name: skillData.name,
+        category: skillData.category,
+        icon: skillData.icon || "",
+        icon_svg: skillData.icon_svg || "",
+        order_index: skillData.order_index,
+        is_visible: skillData.is_visible,
+      });
+    } catch (error) {
+      console.error("Error fetching skill:", error);
+      toast.error("Error", "Failed to load skill");
+      router.push("/studio/skills");
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const handleIconSelect = (data: { icon: string; icon_svg: string }) => {
     setValue("icon", data.icon);
@@ -55,44 +103,88 @@ export default function NewSkillPage() {
     try {
       const supabase = createClient();
 
-      const { error } = await insertSkill(supabase, {
+      const updateData: SkillUpdateType = {
         name: data.name.trim(),
         category: data.category,
         icon: data.icon?.trim() || null,
         icon_svg: data.icon_svg?.trim() || null,
         order_index: data.order_index,
         is_visible: data.is_visible,
-      });
+      };
+
+      const { error } = await updateSkill(supabase, params.id, updateData);
 
       if (error) throw error;
 
-      toast.success("Success", "Skill created successfully");
-      router.push("/admin/skills");
+      toast.success("Success", "Skill updated successfully");
+      router.push("/studio/skills");
     } catch (error) {
-      console.error("Error creating skill:", error);
-      toast.error("Error", "Failed to create skill");
+      console.error("Error updating skill:", error);
+      toast.error("Error", "Failed to update skill");
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from("skills")
+        .delete()
+        .eq("id", params.id);
+
+      if (error) throw error;
+
+      toast.success("Success", "Skill deleted successfully");
+      router.push("/studio/skills");
+    } catch (error) {
+      console.error("Error deleting skill:", error);
+      toast.error("Error", "Failed to delete skill");
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteModal(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         {/* Header */}
         <div className="mb-6">
-          <Link href="/admin/skills">
+          <Link href="/studio/skills">
             <Button variant="outline" size="sm" className="mb-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Skills
             </Button>
           </Link>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-            Add New Skill
-          </h1>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-            Add a new skill or technology to your portfolio
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                Edit Skill
+              </h1>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                Update skill details
+              </p>
+            </div>
+            <Button
+              variant="danger"
+              onClick={() => setShowDeleteModal(true)}
+              disabled={isSubmitting || isDeleting}
+            >
+              <Trash2 className="w-4 h-4 mr-2" />
+              Delete Skill
+            </Button>
+          </div>
         </div>
 
         {/* Form */}
@@ -149,7 +241,6 @@ export default function NewSkillPage() {
               details below
             </p>
 
-            {/* Devicon Picker */}
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label>Devicon Icon Picker</Label>
@@ -264,7 +355,7 @@ export default function NewSkillPage() {
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row justify-end gap-3 pb-8">
-            <Link href="/admin/skills" className="w-full sm:w-auto">
+            <Link href="/studio/skills" className="w-full sm:w-auto">
               <Button
                 type="button"
                 variant="outline"
@@ -282,15 +373,52 @@ export default function NewSkillPage() {
               {isSubmitting ? (
                 <>
                   <Spinner size="sm" className="mr-2" />
-                  Creating...
+                  Updating...
                 </>
               ) : (
-                "Create Skill"
+                "Update Skill"
               )}
             </Button>
           </div>
         </form>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={() => !isDeleting && setShowDeleteModal(false)}
+        title="Delete Skill"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600 dark:text-gray-400">
+            Are you sure you want to delete <strong>{skill?.name}</strong>? This
+            action cannot be undone.
+          </p>
+          <div className="flex justify-end gap-3">
+            <Button
+              variant="outline"
+              onClick={() => setShowDeleteModal(false)}
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              onClick={handleDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <>
+                  <Spinner size="sm" className="mr-2" />
+                  Deleting...
+                </>
+              ) : (
+                "Delete"
+              )}
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
