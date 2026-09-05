@@ -9,6 +9,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { insertSkill } from "@/lib/supabase/helpers";
+import { triggerRevalidate } from "@/lib/revalidate";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -66,6 +67,7 @@ export default function NewSkillPage() {
 
       if (error) throw error;
 
+      await triggerRevalidate("homepage-skills", "/");
       toast.success("Success", "Skill created successfully");
       router.push("/studio/skills");
     } catch (error) {

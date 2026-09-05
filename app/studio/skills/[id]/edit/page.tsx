@@ -9,6 +9,7 @@ import { ArrowLeft, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { updateSkill } from "@/lib/supabase/helpers";
+import { triggerRevalidate } from "@/lib/revalidate";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -116,6 +117,7 @@ export default function EditSkillPage() {
 
       if (error) throw error;
 
+      await triggerRevalidate("homepage-skills", "/");
       toast.success("Success", "Skill updated successfully");
       router.push("/studio/skills");
     } catch (error) {
@@ -137,6 +139,7 @@ export default function EditSkillPage() {
 
       if (error) throw error;
 
+      await triggerRevalidate("homepage-skills", "/");
       toast.success("Success", "Skill deleted successfully");
       router.push("/studio/skills");
     } catch (error) {

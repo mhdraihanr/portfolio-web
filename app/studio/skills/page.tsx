@@ -17,6 +17,7 @@ import {
   Database,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { triggerRevalidate } from "@/lib/revalidate";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -128,6 +129,7 @@ export default function SkillsPage() {
 
       if (error) throw error;
 
+      await triggerRevalidate("homepage-skills", "/");
       toast.success("Success", "Skill deleted successfully");
       await fetchSkills();
       setDeleteId(null);
@@ -182,12 +184,24 @@ export default function SkillsPage() {
                 Manage your skills and technologies
               </p>
             </div>
-            <Link href="/studio/skills/new">
-              <Button className="w-full sm:w-auto">
-                <PlusCircle className="w-4 h-4 mr-2" />
-                Add Skill
+            <div className="flex gap-2 w-full sm:w-auto">
+              <Button
+                variant="outline"
+                className="w-full sm:w-auto"
+                onClick={async () => {
+                  await triggerRevalidate("homepage-skills", "/");
+                  toast.success("Cache Cleared", "Homepage cache revalidated");
+                }}
+              >
+                Refresh Cache
               </Button>
-            </Link>
+              <Link href="/studio/skills/new">
+                <Button className="w-full sm:w-auto">
+                  <PlusCircle className="w-4 h-4 mr-2" />
+                  Add Skill
+                </Button>
+              </Link>
+            </div>
           </div>
 
           {/* Stats Cards */}
