@@ -4,6 +4,7 @@ import type { Database } from "@/types/database.types";
 import type { Project } from "@/types/project";
 import type { WorkExperience } from "@/types/experience";
 import type { Skill } from "@/types/skill";
+import type { Certificate } from "@/types/certificate";
 
 export const HOMEPAGE_PUBLIC_DATA_REVALIDATE_SECONDS = 300;
 
@@ -94,5 +95,34 @@ export const getVisibleSkills = unstable_cache(
   {
     revalidate: HOMEPAGE_PUBLIC_DATA_REVALIDATE_SECONDS,
     tags: ["homepage-skills"],
+  },
+);
+
+// ============================================
+// CERTIFICATES
+// ============================================
+
+async function fetchCertificates(): Promise<Certificate[]> {
+  const supabase = createPublicSupabaseClient();
+
+  const { data, error } = await supabase
+    .from("certificates")
+    .select("*")
+    .order("sort_order", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching certificates:", error);
+    return [];
+  }
+
+  return (data as Certificate[]) || [];
+}
+
+export const getCertificates = unstable_cache(
+  fetchCertificates,
+  ["homepage-certificates"],
+  {
+    revalidate: HOMEPAGE_PUBLIC_DATA_REVALIDATE_SECONDS,
+    tags: ["homepage-certificates"],
   },
 );

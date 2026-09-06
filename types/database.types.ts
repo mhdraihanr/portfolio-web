@@ -9,6 +9,47 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      certificates: {
+        Row: {
+          id: string;
+          title: string;
+          provider: string;
+          issue_date: string | null;
+          credential_id: string | null;
+          credential_url: string | null;
+          description: string | null;
+          image: string | null;
+          sort_order: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          provider: string;
+          issue_date?: string | null;
+          credential_id?: string | null;
+          credential_url?: string | null;
+          description?: string | null;
+          image?: string | null;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string;
+          provider?: string;
+          issue_date?: string | null;
+          credential_id?: string | null;
+          credential_url?: string | null;
+          description?: string | null;
+          image?: string | null;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
       projects: {
         Row: {
           id: string;

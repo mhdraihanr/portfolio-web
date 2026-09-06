@@ -4,6 +4,7 @@ import {
   FolderKanban,
   Briefcase,
   Code2,
+  Award,
   Star,
   TrendingUp,
   ArrowRight,
@@ -14,12 +15,13 @@ export default async function AdminDashboard() {
   const supabase = await createClient();
 
   // Fetch statistics
-  const [projectsResult, experienceResult, skillsResult] = await Promise.all([
+  const [projectsResult, experienceResult, skillsResult, certificatesResult] = await Promise.all([
     supabase.from("projects").select("id, featured", { count: "exact" }),
     supabase.from("work_experience").select("id, is_current", {
       count: "exact",
     }),
     supabase.from("skills").select("id, is_visible", { count: "exact" }),
+    supabase.from("certificates").select("id", { count: "exact" }),
   ]);
 
   const totalProjects = projectsResult.count || 0;
@@ -51,6 +53,8 @@ export default async function AdminDashboard() {
       (s) => (s as { id: string; is_visible: boolean }).is_visible,
     ).length;
   }
+
+  const totalCertificates = certificatesResult.count || 0;
 
   const stats = [
     {
@@ -88,6 +92,15 @@ export default async function AdminDashboard() {
       bgColor: "bg-purple-50 dark:bg-purple-900/20",
       change: `${visibleSkills} visible`,
       changeColor: "text-purple-600",
+    },
+    {
+      label: "Certificates",
+      value: totalCertificates,
+      icon: Award,
+      color: "text-orange-600 dark:text-orange-400",
+      bgColor: "bg-orange-50 dark:bg-orange-900/20",
+      change: `${totalCertificates} total`,
+      changeColor: "text-orange-600",
     },
   ];
 
@@ -137,6 +150,15 @@ export default async function AdminDashboard() {
       bgColor: "bg-cyan-50 dark:bg-cyan-900/20",
       hoverColor: "hover:border-cyan-500",
     },
+    {
+      title: "Add Certificate",
+      description: "Add a new professional certificate",
+      icon: Award,
+      href: "/studio/certificates/new",
+      color: "text-orange-600 dark:text-orange-400",
+      bgColor: "bg-orange-50 dark:bg-orange-900/20",
+      hoverColor: "hover:border-orange-500",
+    },
   ];
 
   return (
@@ -153,7 +175,7 @@ export default async function AdminDashboard() {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 mb-8">
           {stats.map((stat) => {
             const Icon = stat.icon;
             return (

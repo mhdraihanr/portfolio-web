@@ -98,6 +98,13 @@ app/
 │       └── [id]/
 │           └── edit/
 │               └── page.tsx    # Edit skill
+│   └── certificates/           # Certificates management ✅ NEW
+│       ├── page.tsx            # List all certificates
+│       ├── new/
+│       │   └── page.tsx        # Create new certificate
+│       └── [id]/
+│           └── edit/
+│               └── page.tsx    # Edit certificate
 │
 ├── api/                        # API routes
 │   ├── contact/

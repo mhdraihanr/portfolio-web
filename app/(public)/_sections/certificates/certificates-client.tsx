@@ -7,36 +7,11 @@ import { Award } from "lucide-react";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
 import { useMobileWidth } from "@/hooks/use-mobile-width";
 
-// Sample certificate data - replace with real data or fetch from database
-const certificates: Certificate[] = [
-  {
-    id: 1,
-    title: "Belajar Dasar Structured Query Language (SQL)",
-    provider: "Dicoding Academy",
-    issueDate: "2024",
-    credentialUrl: "https://www.dicoding.com/certificates/QLZ9VY6OMX5D",
-    description:
-      "Pembelajaran terkait dasar-dasar SQL untuk manajemen basis data",
-  },
-  {
-    id: 2,
-    title: "Belajar Dasar Pemrograman JavaScript",
-    provider: "Dicoding Academy",
-    issueDate: "2024",
-    credentialUrl: "https://www.dicoding.com/certificates/53XEYO66RPRN",
-    description: "Pembelajaran terkait dasar-dasar menggunakan JavaScript",
-  },
-  {
-    id: 3,
-    title: "Cloud Practitioner Essentials",
-    provider: "Dicoding Academy",
-    issueDate: "2023",
-    credentialUrl: "https://www.dicoding.com/certificates/QLZ9QW792Z5D",
-    description: "Pembelajaran terkait  dasar komputasi awan dan layanan AWS",
-  },
-];
+interface CertificatesClientProps {
+  certificates: Certificate[];
+}
 
-export function CertificatesClient() {
+export function CertificatesClient({ certificates }: CertificatesClientProps) {
   const isMobileWidth = useMobileWidth();
 
   // Transform certificates into LogoLoop format

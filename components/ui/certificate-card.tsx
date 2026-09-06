@@ -53,9 +53,9 @@ export function CertificateCard({ certificate }: CertificateCardProps) {
         </p>
 
         {/* Issue Date (if available) */}
-        {certificate.issueDate && (
+        {certificate.issue_date && (
           <Badge variant="outline" className="text-xs w-fit">
-            {certificate.issueDate}
+            {certificate.issue_date}
           </Badge>
         )}
 
@@ -67,9 +67,9 @@ export function CertificateCard({ certificate }: CertificateCardProps) {
         )}
 
         {/* View Details Button */}
-        {certificate.credentialUrl && (
+        {certificate.credential_url && (
           <a
-            href={certificate.credentialUrl}
+            href={certificate.credential_url}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-auto flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors group"

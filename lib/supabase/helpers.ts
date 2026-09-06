@@ -62,3 +62,31 @@ export async function deleteSkill(
 ) {
   return await client.from("skills").delete().eq("id", id);
 }
+
+// ============================================
+// CERTIFICATES
+// ============================================
+
+export async function insertCertificate(
+  client: SupabaseClient<Database>,
+  data: Database["public"]["Tables"]["certificates"]["Insert"],
+) {
+  // @ts-expect-error - Supabase type inference issue
+  return await client.from("certificates").insert([data]);
+}
+
+export async function updateCertificate(
+  client: SupabaseClient<Database>,
+  id: string,
+  data: Database["public"]["Tables"]["certificates"]["Update"],
+) {
+  // @ts-expect-error - Supabase type inference issue
+  return await client.from("certificates").update(data).eq("id", id);
+}
+
+export async function deleteCertificate(
+  client: SupabaseClient<Database>,
+  id: string,
+) {
+  return await client.from("certificates").delete().eq("id", id);
+}

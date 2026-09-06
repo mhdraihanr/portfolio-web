@@ -221,7 +221,59 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ---
 
-## 🎨 Form Validation Rules
+## � Certificates Management
+
+### List Certificates
+
+**URL:** `/admin/certificates`
+
+**Features:**
+
+- Card grid layout with search
+- Stats cards (Total, Providers)
+- Credential URL link preview
+- Sort order display
+- Edit and Delete buttons
+- Empty state if no certificates
+
+**Actions:**
+
+- Click "Add Certificate" to create new
+- Click pencil icon to edit
+- Click trash icon to delete (with confirmation)
+- Click "Refresh Cache" to revalidate homepage
+
+### Create Certificate
+
+**URL:** `/admin/certificates/new`
+
+**Required Fields:**
+
+- Title (2-200 characters)
+- Provider / Issuer (2-100 characters)
+
+**Optional Fields:**
+
+- Issue Date (free text, e.g., "2024", "Jan 2024")
+- Credential ID
+- Credential URL (valid URL)
+- Description (max 500 characters)
+- Image URL (valid URL)
+- Sort Order (default: 0)
+
+### Edit Certificate
+
+**URL:** `/admin/certificates/[id]/edit`
+
+**Features:**
+
+- Form pre-filled with existing data
+- All create features available
+- Delete button (with confirmation)
+
+---
+
+## �🎨 Form Validation Rules
 
 ### Projects
 
@@ -262,6 +314,19 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 | Icon SVG    | -   | -   | Valid URL or empty                     |
 | Order Index | 0   | ∞   | Whole number                           |
 | Visible     | -   | -   | Boolean (checkbox)                     |
+
+### Certificates
+
+| Field          | Min | Max | Format                        |
+| -------------- | --- | --- | ----------------------------- |
+| Title          | 2   | 200 | Any text                      |
+| Provider       | 2   | 100 | Any text                      |
+| Issue Date     | -   | -   | Free text (year, month, etc.) |
+| Credential ID  | -   | -   | Any text                      |
+| Credential URL | -   | -   | Valid URL or empty             |
+| Description    | -   | 500 | Any text                      |
+| Image          | -   | -   | Valid URL or empty             |
+| Sort Order     | 0   | ∞   | Whole number                  |
 
 ---
 

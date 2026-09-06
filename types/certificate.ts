@@ -1,27 +1,25 @@
 /**
  * Certificate Type Definitions
  *
- * Types for certificate/certification data used in the portfolio.
- * Can be extended to fetch from database later if needed.
+ * Types for certificate/certification data backed by Supabase.
  */
 
-export interface Certificate {
-  id: string | number;
-  title: string;
-  provider: string;
-  issueDate?: string;
-  credentialId?: string;
-  credentialUrl?: string;
-  image?: string;
-  description?: string;
-}
+import type { Database } from "./database.types";
+
+export type Certificate =
+  Database["public"]["Tables"]["certificates"]["Row"];
+export type CertificateInsert =
+  Database["public"]["Tables"]["certificates"]["Insert"];
+export type CertificateUpdate =
+  Database["public"]["Tables"]["certificates"]["Update"];
 
 export interface CertificateFormData {
   title: string;
   provider: string;
-  issueDate?: string;
-  credentialId?: string;
-  credentialUrl?: string;
+  issue_date?: string;
+  credential_id?: string;
+  credential_url?: string;
   image?: string;
   description?: string;
+  sort_order: number;
 }

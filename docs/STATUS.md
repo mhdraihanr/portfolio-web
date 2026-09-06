@@ -163,6 +163,18 @@ Today's homepage optimization pass focused on mobile LCP/TBT/layout cost while p
    - ✅ Devicon Icon Picker component (`components/admin/devicon-picker.tsx`)
    - ✅ Search & category filter
    - ✅ Visibility control (show/hide on homepage)
+
+8. **✅ Certificates CRUD** ⭐ NEW
+   - ✅ Database table with migration (`migrations/migration-add-certificates-table.sql`)
+   - ✅ List page with search & stats (`app/studio/certificates/page.tsx`)
+   - ✅ Create page with form validation (`app/studio/certificates/new/page.tsx`)
+   - ✅ Edit page with pre-filled data (`app/studio/certificates/[id]/edit/page.tsx`)
+   - ✅ Delete with confirmation modal
+   - ✅ Zod validation schema (`lib/validations/certificate.ts`)
+   - ✅ Cached public data fetcher (`lib/supabase/public-data.ts`)
+   - ✅ Homepage integration (data-driven, no longer hardcoded)
+   - ✅ Dashboard stats & quick actions
+   - ✅ Sidebar navigation
    - ✅ Toast notifications
    - ✅ Loading states
    - ✅ Homepage About section fetches from database
