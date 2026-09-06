@@ -4,20 +4,11 @@ import { Code2, Database, Globe, MapPin } from "lucide-react";
 import Image from "next/image";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
 import { useMobileWidth } from "@/hooks/use-mobile-width";
+import { getDeviconSvgUrl, localizeIconSvgUrl } from "@/lib/devicon";
 import type { HomepageSkillsByCategory } from ".";
 
 interface AboutClientProps {
   skills: HomepageSkillsByCategory;
-}
-
-function getDeviconSvgUrl(icon?: string | null) {
-  if (!icon) return null;
-
-  const match = icon.match(/^devicon-([a-z0-9-]+?)-([a-z0-9-]+)(?:\s|$)/i);
-  if (!match) return null;
-
-  const [, name, variant] = match;
-  return `https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${name}/${name}-${variant}.svg`;
 }
 
 // Known monochrome black icons that need inverting in dark mode
@@ -37,7 +28,8 @@ function SkillBadge({
 }: {
   skill: HomepageSkillsByCategory["frontend"][number];
 }) {
-  const iconSrc = skill.icon_svg || getDeviconSvgUrl(skill.icon);
+  const iconSrc =
+    localizeIconSvgUrl(skill.icon_svg) || getDeviconSvgUrl(skill.icon);
   const invert = shouldInvertInDarkMode(iconSrc, skill.name);
 
   return (
