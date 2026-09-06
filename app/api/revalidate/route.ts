@@ -24,6 +24,7 @@ export async function POST(request: Request) {
     revalidateTag("homepage-skills", "max");
     revalidateTag("homepage-projects", "max");
     revalidateTag("homepage-experience", "max");
+    revalidateTag("homepage-certificates", "max");
 
     return NextResponse.json({ revalidated: true, now: Date.now() });
   } catch (error) {
