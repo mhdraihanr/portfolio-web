@@ -170,6 +170,7 @@ export function Hero() {
                 stepDuration={isMobileWidth ? 0.55 : 1}
                 animateBy="words"
                 direction="top"
+                once
                 className={`text-5xl md:text-6xl lg:text-7xl font-bold ${textTitle} leading-tight ${delargoDT.className}`}
               />
             )}

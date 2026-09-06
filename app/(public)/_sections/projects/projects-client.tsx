@@ -18,7 +18,7 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
     <section id="projects" className="pt-12 pb-20 bg-white dark:bg-gray-950">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <ScrollReveal className="text-center mb-12">
+          <ScrollReveal className="text-center mb-12" once>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4">
               <Code2 className="w-4 h-4" />
               <span className="text-sm font-medium">Portfolio</span>

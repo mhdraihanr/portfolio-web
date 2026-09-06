@@ -54,7 +54,7 @@ export function CertificatesClient() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
-          <ScrollReveal className="text-center mb-6">
+          <ScrollReveal className="text-center mb-6" once>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4">
               <Award className="w-4 h-4" />
               <span className="text-sm font-medium">Certifications</span>

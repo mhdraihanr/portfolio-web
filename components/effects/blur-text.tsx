@@ -15,6 +15,7 @@ type BlurTextProps = {
   easing?: Easing | Easing[];
   onAnimationComplete?: () => void;
   stepDuration?: number;
+  once?: boolean;
 };
 
 const buildKeyframes = (
@@ -46,6 +47,7 @@ const BlurText: React.FC<BlurTextProps> = ({
   easing = (t: number) => t,
   onAnimationComplete,
   stepDuration = 1.0,
+  once = false,
 }) => {
   const elements = animateBy === "words" ? text.split(" ") : text.split("");
   const [inView, setInView] = useState(false);
@@ -64,14 +66,14 @@ const BlurText: React.FC<BlurTextProps> = ({
         if (entry.isIntersecting) {
           setInView(true);
 
-          if (isMobileWidth) {
+          if (once || isMobileWidth) {
             observer.unobserve(element);
           }
 
           return;
         }
 
-        if (!isMobileWidth) {
+        if (!once && !isMobileWidth) {
           setInView(false);
         }
       },
