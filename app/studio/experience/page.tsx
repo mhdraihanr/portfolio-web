@@ -12,9 +12,13 @@ import {
   LayoutGrid,
   Table as TableIcon,
   MapPin,
+  GripVertical,
+  ArrowUpDown,
+  Check,
 } from "lucide-react";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
+import { triggerRevalidate } from "@/lib/revalidate";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -22,7 +26,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useToast } from "@/components/ui/toast";
 import { Modal } from "@/components/ui/modal";
 import { Input } from "@/components/ui/input";
-import { formatDateShort } from "@/lib/utils";
+import { formatDateShort, cn } from "@/lib/utils";
 import type { WorkExperience } from "@/types/experience";
 
 type ViewMode = "grid" | "table";
@@ -37,6 +41,9 @@ export default function ExperiencePage() {
   const [deleting, setDeleting] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [isReordering, setIsReordering] = useState(false);
+  const [draggedExpId, setDraggedExpId] = useState<string | null>(null);
+  const [dragOverExpId, setDragOverExpId] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -66,6 +73,7 @@ export default function ExperiencePage() {
       const { data, error } = await supabase
         .from("work_experience")
         .select("*")
+        .order("order_index", { ascending: true })
         .order("start_date", { ascending: false });
 
       if (error) throw error;
@@ -103,6 +111,79 @@ export default function ExperiencePage() {
       setDeleting(false);
     }
   }
+
+  // Drag and drop reordering
+  const handleDragStart = (e: React.DragEvent, id: string) => {
+    setDraggedExpId(id);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", id);
+  };
+
+  const handleDragOver = (e: React.DragEvent, id: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    if (dragOverExpId !== id) {
+      setDragOverExpId(id);
+    }
+  };
+
+  const handleDragEnd = () => {
+    setDraggedExpId(null);
+    setDragOverExpId(null);
+  };
+
+  const handleDrop = async (e: React.DragEvent, targetExp: WorkExperience) => {
+    e.preventDefault();
+    if (!draggedExpId || draggedExpId === targetExp.id) {
+      setDraggedExpId(null);
+      setDragOverExpId(null);
+      return;
+    }
+
+    const currentIdx = experiences.findIndex((e) => e.id === draggedExpId);
+    const targetIdx = experiences.findIndex((e) => e.id === targetExp.id);
+    if (currentIdx === -1 || targetIdx === -1) {
+      setDraggedExpId(null);
+      setDragOverExpId(null);
+      return;
+    }
+
+    // Reorder array
+    const updated = Array.from(experiences);
+    const [moved] = updated.splice(currentIdx, 1);
+    updated.splice(targetIdx, 0, moved);
+
+    // Re-index to ensure strictly unique, consecutive order_index (0..N)
+    const reindexed = updated.map((item, idx) => ({
+      ...item,
+      order_index: idx,
+    }));
+
+    // Real-time optimistic update
+    setExperiences(reindexed);
+    setFilteredExperiences(reindexed);
+    setDraggedExpId(null);
+    setDragOverExpId(null);
+
+    // Persist to Supabase
+    try {
+      const supabase = createClient();
+      await Promise.all(
+        reindexed.map((exp) =>
+          supabase
+            .from("work_experience")
+            .update({ order_index: exp.order_index })
+            .eq("id", exp.id),
+        ),
+      );
+      await triggerRevalidate("homepage-experience", "/");
+      toast.success("Order Updated", "Experiences reordered successfully");
+    } catch (err) {
+      console.error("Failed to reorder experiences:", err);
+      toast.error("Error", "Failed to save order");
+      fetchExperiences();
+    }
+  };
 
   function formatDateRange(
     startDate: string,
@@ -160,15 +241,55 @@ export default function ExperiencePage() {
                 Work Experience
               </h1>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                Manage your professional work history
+                Manage your professional work history. Drag items to reorder.
               </p>
             </div>
-            <Link href="/studio/experience/new">
-              <Button className="w-full sm:w-auto">
-                <PlusCircle className="w-4 h-4 mr-2" />
-                Add Experience
+            <div className="flex gap-2 w-full sm:w-auto flex-wrap">
+              <Button
+                variant={isReordering ? "primary" : "outline"}
+                className={cn(
+                  "w-full sm:w-auto",
+                  isReordering &&
+                    "bg-primary text-primary-foreground font-semibold shadow-md",
+                )}
+                onClick={() => {
+                  if (isReordering) {
+                    setIsReordering(false);
+                  } else {
+                    setIsReordering(true);
+                    setSearchQuery("");
+                  }
+                }}
+              >
+                {isReordering ? (
+                  <>
+                    <Check className="w-4 h-4 mr-2" />
+                    Done
+                  </>
+                ) : (
+                  <>
+                    <ArrowUpDown className="w-4 h-4 mr-2" />
+                    Reorder
+                  </>
+                )}
               </Button>
-            </Link>
+              <Button
+                variant="outline"
+                className="w-full sm:w-auto"
+                onClick={async () => {
+                  await triggerRevalidate("homepage-experience", "/");
+                  toast.success("Cache Cleared", "Homepage cache revalidated");
+                }}
+              >
+                Refresh Cache
+              </Button>
+              <Link href="/studio/experience/new">
+                <Button className="w-full sm:w-auto">
+                  <PlusCircle className="w-4 h-4 mr-2" />
+                  Add Experience
+                </Button>
+              </Link>
+            </div>
           </div>
 
           {/* Stats Cards */}
@@ -206,6 +327,19 @@ export default function ExperiencePage() {
               </p>
             </Card>
           </div>
+
+          {/* Reorder Mode Banner */}
+          {isReordering && (
+            <div className="mb-6 p-4 rounded-xl bg-primary/10 border border-primary/20 flex items-center gap-2.5 text-primary text-sm font-medium animate-fade-in">
+              <GripVertical className="w-5 h-5 animate-pulse shrink-0" />
+              <span>
+                <strong>Mode Reorder Aktif:</strong> Geser kartu atau baris
+                untuk mengatur urutan riwayat pengalaman. Perubahan tampil
+                secara real-time dan otomatis tersimpan. Klik{" "}
+                <strong>Done</strong> jika sudah selesai.
+              </span>
+            </div>
+          )}
 
           {/* Search and View Toggle */}
           <div className="flex flex-col sm:flex-row gap-3">
@@ -279,7 +413,24 @@ export default function ExperiencePage() {
             {filteredExperiences.map((experience, index) => (
               <Card
                 key={experience.id}
-                className="p-6 hover:shadow-lg transition-shadow relative"
+                draggable={isReordering}
+                onDragStart={(e) =>
+                  isReordering && handleDragStart(e, experience.id)
+                }
+                onDragOver={(e) =>
+                  isReordering && handleDragOver(e, experience.id)
+                }
+                onDragEnd={handleDragEnd}
+                onDrop={(e) => isReordering && handleDrop(e, experience)}
+                className={cn(
+                  "p-6 transition-all relative",
+                  isReordering
+                    ? "cursor-grab active:cursor-grabbing border-2 border-dashed border-primary/40 hover:border-primary shadow-sm"
+                    : "hover:shadow-lg",
+                  draggedExpId === experience.id && "opacity-30 scale-[0.98]",
+                  dragOverExpId === experience.id &&
+                    "ring-2 ring-primary border-primary bg-primary/5",
+                )}
               >
                 {/* Timeline Indicator */}
                 {index < filteredExperiences.length - 1 && (
@@ -367,20 +518,31 @@ export default function ExperiencePage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
-                        <Link href={`/studio/experience/${experience.id}/edit`}>
-                          <Button variant="outline" size="sm" title="Edit">
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                        </Link>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setDeleteId(experience.id)}
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
-                          title="Delete"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                        {isReordering ? (
+                          <div className="flex items-center gap-1.5 py-1.5 px-3 rounded-lg bg-primary/10 text-primary text-xs font-semibold select-none border border-primary/20">
+                            <GripVertical className="w-4 h-4" />
+                            <span>Geser Urutan</span>
+                          </div>
+                        ) : (
+                          <>
+                            <Link
+                              href={`/studio/experience/${experience.id}/edit`}
+                            >
+                              <Button variant="outline" size="sm" title="Edit">
+                                <Pencil className="w-4 h-4" />
+                              </Button>
+                            </Link>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setDeleteId(experience.id)}
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                              title="Delete"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </>
+                        )}
                       </div>
                     </div>
 
@@ -389,7 +551,10 @@ export default function ExperiencePage() {
                     </p>
 
                     <div className="mt-3 flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
-                      <span>Display Order: #{experience.order_index}</span>
+                      <span className="flex items-center gap-1 font-mono">
+                        <GripVertical className="w-3.5 h-3.5 text-gray-400" />
+                        Display Order: #{experience.order_index}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -433,7 +598,22 @@ export default function ExperiencePage() {
                   {filteredExperiences.map((experience) => (
                     <tr
                       key={experience.id}
-                      className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                      draggable={isReordering}
+                      onDragStart={(e) =>
+                        isReordering && handleDragStart(e, experience.id)
+                      }
+                      onDragOver={(e) =>
+                        isReordering && handleDragOver(e, experience.id)
+                      }
+                      onDragEnd={handleDragEnd}
+                      onDrop={(e) => isReordering && handleDrop(e, experience)}
+                      className={cn(
+                        "hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors",
+                        isReordering && "cursor-grab active:cursor-grabbing",
+                        draggedExpId === experience.id && "opacity-40",
+                        dragOverExpId === experience.id &&
+                          "bg-primary/5 dark:bg-primary/10 border-t-2 border-primary",
+                      )}
                     >
                       <td className="px-6 py-4">
                         <div className="max-w-xs">
@@ -490,24 +670,31 @@ export default function ExperiencePage() {
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center justify-end gap-2">
-                          <Link
-                            href={`/studio/experience/${experience.id}/edit`}
-                          >
-                            <Button variant="outline" size="sm" title="Edit">
-                              <Pencil className="w-4 h-4" />
+                        {isReordering ? (
+                          <div className="flex items-center justify-end gap-1.5 text-primary text-xs font-semibold">
+                            <GripVertical className="w-4 h-4" />
+                            <span>Geser</span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-end gap-2">
+                            <Link
+                              href={`/studio/experience/${experience.id}/edit`}
+                            >
+                              <Button variant="outline" size="sm" title="Edit">
+                                <Pencil className="w-4 h-4" />
+                              </Button>
+                            </Link>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setDeleteId(experience.id)}
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                              title="Delete"
+                            >
+                              <Trash2 className="w-4 h-4" />
                             </Button>
-                          </Link>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setDeleteId(experience.id)}
-                            className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
-                            title="Delete"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))}

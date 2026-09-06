@@ -87,7 +87,7 @@ Dokumentasi untuk development:
    - Future ideas
 
 8a. **[ADMIN_CRUD_GUIDE.md](./ADMIN_CRUD_GUIDE.md)** 🔐  
- Admin CRUD quick reference - Quick access URLs - Projects, Experience & Skills management - Form field requirements - Validation rules - Devicon Icon Picker usage - Tips & tricks - Troubleshooting - Best practices
+ Admin CRUD quick reference - Quick access URLs - Projects, Experience, Skills & Certificates management - Form field requirements - Validation rules - Devicon Icon Picker usage - Tips & tricks - Troubleshooting - Best practices
 
 8b. **[ADMIN_ROUTE_CONFIG.md](./ADMIN_ROUTE_CONFIG.md)** 🔒 ⭐ NEW  
  Admin route configuration guide - Critical folder name & env variable sync - Security best practices - Migration from old setup - Verification checklist - Common mistakes & solutions - Testing authentication

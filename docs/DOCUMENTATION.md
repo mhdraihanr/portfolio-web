@@ -2,18 +2,18 @@
 
 ## 📋 Overview
 
-Portfolio website untuk Raffael Jonathan N.H - Fullstack Web Developer dengan fitur admin panel untuk manage projects, work experience, dan skills secara dinamis.
+Portfolio website untuk Muhammad Raihan Rafliansyah - Fullstack Web Developer dengan fitur Studio (admin panel) untuk manage projects, work experience, skills, dan certificates secara dinamis.
 
 ## 🛠 Tech Stack
 
-- **Frontend**: Next.js 15 (App Router), React, TypeScript
-- **Styling**: Tailwind CSS
+- **Frontend**: Next.js 16 (App Router), React 19, TypeScript
+- **Styling**: Tailwind CSS v4
 - **Animation**: Framer Motion, GSAP (via React Bits), CSS Animations
 - **Loading**: Custom fullscreen CSS loader via `GlobalLoader`
 - **Database**: Supabase (PostgreSQL)
-- **Authentication**: Supabase Auth (untuk admin panel)
+- **Authentication**: Supabase Auth (untuk Studio panel)
 - **Email**: Nodemailer
-- **Icons**: Lucide React
+- **Icons**: Lucide React, Devicon
 - **Form Handling**: React Hook Form + Zod validation
 - **Deployment**: Vercel
 
@@ -25,69 +25,44 @@ portfolio-web/
 │   ├── (public)/              # Public routes (homepage, etc)
 │   │   ├── layout.tsx
 │   │   ├── page.tsx           # Homepage
-│   │   └── components/        # Public components
-│   │       ├── Hero.tsx
-│   │       ├── Services.tsx
-│   │       ├── Projects.tsx
-│   │       ├── WorkExperience.tsx
-│   │       ├── Skills.tsx
-│   │       ├── About.tsx
-│   │       └── Contact.tsx
+│   │   └── _sections/         # Homepage sections (hero, about, certificates, projects, experience, contact)
 │   │
-│   ├── admin/                # Admin panel (configurable route)
+│   ├── projects/              # Projects catalog & dynamic detail
 │   │   ├── layout.tsx
-│   │   ├── page.tsx           # Admin dashboard
+│   │   ├── page.tsx
+│   │   └── [slug]/
+│   │       └── page.tsx
+│   │
+│   ├── studio/                # Studio panel (configurable via ADMIN_ROUTE_SECRET)
+│   │   ├── layout.tsx
+│   │   ├── page.tsx           # Studio dashboard
 │   │   ├── login/
 │   │   │   └── page.tsx
-│   │   ├── projects/
-│   │   │   ├── page.tsx       # List projects
-│   │   │   ├── new/
-│   │   │   │   └── page.tsx   # Create project
-│   │   │   └── [id]/
-│   │   │       └── edit/
-│   │   │           └── page.tsx # Edit project
-│   │   └── experience/
-│   │       ├── page.tsx       # List experience
-│   │       ├── new/
-│   │       │   └── page.tsx   # Create experience
-│   │       └── [id]/
-│   │           └── edit/
-│   │               └── page.tsx # Edit experience
-│   │   └── skills/
-│   │       ├── page.tsx       # List skills (grid/table view)
-│   │       ├── new/
-│   │       │   └── page.tsx   # Create skill (Devicon Picker)
-│   │       └── [id]/
-│   │           └── edit/
-│   │               └── page.tsx # Edit skill
+│   │   ├── projects/          # Projects CRUD + Drag & Drop reorder
+│   │   ├── experience/        # Experience CRUD + Drag & Drop reorder
+│   │   ├── skills/            # Skills CRUD + Drag & Drop reorder
+│   │   └── certificates/      # Certificates CRUD + Drag & Drop reorder
 │   │
 │   ├── api/
+│   │   ├── auth/              # Auth routes
 │   │   ├── contact/
 │   │   │   └── route.ts       # Send email endpoint
-│   │   ├── projects/
-│   │   │   └── route.ts       # CRUD projects
-│   │   └── experience/
-│   │       └── route.ts       # CRUD experience
+│   │   ├── imagekit-auth/
+│   │   ├── imagekit-delete/
+│   │   └── revalidate/        # On-demand cache revalidation endpoint
 │   │
 │   ├── layout.tsx             # Root layout
 │   └── globals.css
 │
 ├── components/
 │   ├── ui/                    # Reusable UI components
-│   │   ├── Button.tsx
-│   │   ├── Card.tsx
-│   │   ├── Input.tsx
-│   │   ├── Textarea.tsx
-│   │   └── Modal.tsx
-│   └── shared/                # Shared components
-│       ├── Navbar.tsx
-│       └── Footer.tsx
+│   ├── shared/                # Shared components (Navbar, Footer, etc.)
+│   ├── admin/                 # Studio components (Sidebar, Header, DeviconPicker, etc.)
+│   └── effects/               # Visual effects (LightRays, Orb, BlurText, etc.)
 │
 ├── lib/
-│   ├── supabase/
-│   │   ├── client.ts          # Supabase client (browser)
-│   │   ├── server.ts          # Supabase server client
-│   │   └── admin.ts           # Supabase admin client
+│   ├── supabase/              # Supabase clients & helpers
+│   ├── middleware/            # Route protection middleware
 │   ├── email.ts               # Email service
 │   ├── auth.ts                # Auth helpers
 │   └── utils.ts               # Utility functions
@@ -96,7 +71,8 @@ portfolio-web/
 │   ├── database.types.ts      # Supabase generated types
 │   ├── project.ts
 │   ├── experience.ts
-│   └── skill.ts               # Skill types (NEW)
+│   ├── skill.ts
+│   └── certificate.ts
 │
 ├── hooks/
 │   ├── useProjects.ts
@@ -122,11 +98,9 @@ portfolio-web/
 - title (text)
 - slug (text, unique)
 - description (text)
-- problem (text)
-- solution (text)
-- impact (text)
-- technologies (text[])
-- image_url (text)
+- technologies (jsonb, [{ name, icon, icon_svg }])
+- image_url (text, nullable)
+- images (jsonb, [{ url, fileId }])
 - project_url (text, nullable)
 - github_url (text, nullable)
 - featured (boolean, default: false)
@@ -142,8 +116,8 @@ portfolio-web/
 - company (text)
 - position (text)
 - description (text)
-- logo_url (text, nullable)      -- Company logo URL
-- employment_type (text, nullable) -- Full-time, Part-time, Internship, etc.
+- logo_url (text, nullable)        -- Company logo URL
+- employment_type (text, nullable) -- Full-time, Part-time, Internship, Freelance
 - start_date (date)
 - end_date (date, nullable)
 - is_current (boolean, default: false)
@@ -158,13 +132,31 @@ portfolio-web/
 - id (uuid, primary key)
 - name (text)
 - category (text, check: frontend/backend/tools/others)
-- icon (text, nullable)         -- Devicon class
-- icon_svg (text, nullable)      -- SVG URL
+- icon (text, nullable)           -- Devicon class
+- icon_svg (text, nullable)       -- SVG URL
 - order_index (integer, default: 0)
 - is_visible (boolean, default: true)
 - created_at (timestamp)
 - updated_at (timestamp)
 ```
+
+#### 4. certificates
+
+```sql
+- id (uuid, primary key)
+- title (text)
+- issuer (text)
+- issue_date (text, nullable)     -- Issue date / year
+- credential_id (text, nullable)
+- credential_url (text, nullable)
+- description (text, nullable)
+- image_url (text, nullable)
+- sort_order (integer, default: 0)
+- created_at (timestamp)
+- updated_at (timestamp)
+```
+
+> **Catatan Reordering:** Keempat tabel di atas menggunakan mekanisme **Zero-Duplicate HTML5 Drag & Drop Reordering** di Studio. Urutan di-reindex secara berurutan `0..N` secara unik tanpa duplikasi index.
 
 ## 🚀 Setup Instructions
 

@@ -108,24 +108,24 @@ Before deploying, verify:
 1. **Open incognito/private browsing**
 2. **Try accessing admin route directly:**
    ```
-   http://localhost:3000/admin
+   http://localhost:3000/studio
    ```
-3. **Expected:** Should redirect to `/admin/login`
+3. **Expected:** Should redirect to `/studio/login`
 4. **Try accessing admin subpages:**
    ```
-   http://localhost:3000/admin/projects
+   http://localhost:3000/studio/projects
    ```
-5. **Expected:** Should redirect to `/admin/login?redirectTo=/admin/projects`
+5. **Expected:** Should redirect to `/studio/login?redirectTo=/studio/projects`
 
 ### Test After Login
 
 1. **Login with valid credentials**
-2. **Should redirect to:** `/admin` (dashboard)
+2. **Should redirect to:** `/studio` (dashboard)
 3. **Try accessing login page while authenticated:**
    ```
-   http://localhost:3000/admin/login
+   http://localhost:3000/studio/login
    ```
-4. **Expected:** Should redirect to `/admin` (dashboard)
+4. **Expected:** Should redirect to `/studio` (dashboard)
 
 ---
 
@@ -138,14 +138,14 @@ If you previously used a different folder name (e.g., `admin`):
 1. **Rename folder:**
 
    ```bash
-   mv app/admin app/admin
+   mv app/admin app/studio
    ```
 
 2. **Update environment variables:**
 
    ```env
    # .env.local
-   ADMIN_ROUTE_SECRET=admin
+   ADMIN_ROUTE_SECRET=studio
    ```
 
 3. **Update any hardcoded references in code** (if any):
@@ -155,7 +155,7 @@ If you previously used a different folder name (e.g., `admin`):
    router.push("/admin/projects");
 
    // ✅ After
-   const adminRoute = process.env.ADMIN_ROUTE_SECRET || "admin";
+   const adminRoute = process.env.ADMIN_ROUTE_SECRET || "studio";
    router.push(`/${adminRoute}/projects`);
    ```
 

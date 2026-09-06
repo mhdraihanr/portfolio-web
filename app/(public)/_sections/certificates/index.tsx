@@ -1,5 +1,7 @@
+import { getCertificates } from "@/lib/supabase/public-data";
 import { LazyCertificatesClient } from "./lazy-certificates-client";
 
-export function Certificates() {
-  return <LazyCertificatesClient />;
+export async function Certificates() {
+  const certificates = await getCertificates();
+  return <LazyCertificatesClient certificates={certificates} />;
 }

@@ -9,6 +9,7 @@ import {
   Briefcase,
   FolderKanban,
   Code2,
+  Award,
   Menu,
   X,
   LogOut,
@@ -50,6 +51,11 @@ export function Sidebar({ adminRoute, userEmail }: SidebarProps) {
       label: "Skills",
       href: `/${adminRoute}/skills`,
       icon: Code2,
+    },
+    {
+      label: "Certificates",
+      href: `/${adminRoute}/certificates`,
+      icon: Award,
     },
   ];
 

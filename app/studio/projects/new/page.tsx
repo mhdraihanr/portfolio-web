@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -53,6 +53,23 @@ export default function NewProjectPage() {
 
   const technologies = watch("technologies");
   const featured = watch("featured");
+
+  useEffect(() => {
+    async function fetchNextOrder() {
+      try {
+        const supabase = createClient();
+        const { count } = await supabase
+          .from("projects")
+          .select("*", { count: "exact", head: true });
+        if (typeof count === "number") {
+          setValue("order_index", count);
+        }
+      } catch (err) {
+        console.error("Failed to fetch next order_index:", err);
+      }
+    }
+    fetchNextOrder();
+  }, [setValue]);
 
   // Auto-generate slug from title
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

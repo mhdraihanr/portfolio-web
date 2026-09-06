@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
@@ -45,6 +45,25 @@ export default function NewSkillPage() {
 
   const iconValue = watch("icon");
   const iconSvgValue = watch("icon_svg");
+  const categoryValue = watch("category");
+
+  useEffect(() => {
+    async function fetchNextOrder() {
+      try {
+        const supabase = createClient();
+        const { count } = await supabase
+          .from("skills")
+          .select("*", { count: "exact", head: true })
+          .eq("category", categoryValue);
+        if (typeof count === "number") {
+          setValue("order_index", count);
+        }
+      } catch (err) {
+        console.error("Failed to fetch next order_index for skill:", err);
+      }
+    }
+    fetchNextOrder();
+  }, [categoryValue, setValue]);
 
   const handleIconSelect = (data: { icon: string; icon_svg: string }) => {
     setValue("icon", data.icon);

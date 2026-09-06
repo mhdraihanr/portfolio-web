@@ -15,9 +15,13 @@ import {
   EyeOff,
   Globe,
   Database,
+  GripVertical,
+  ArrowUpDown,
+  Check,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { triggerRevalidate } from "@/lib/revalidate";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -68,6 +72,9 @@ export default function SkillsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [isReordering, setIsReordering] = useState(false);
+  const [draggedSkillId, setDraggedSkillId] = useState<string | null>(null);
+  const [dragOverSkillId, setDragOverSkillId] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -141,13 +148,112 @@ export default function SkillsPage() {
     }
   }
 
-  // Group skills by category for grid view
+  // Drag and drop reordering per category
+  const handleDragStart = (e: React.DragEvent, skillId: string) => {
+    setDraggedSkillId(skillId);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e: React.DragEvent, skillId: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    if (dragOverSkillId !== skillId) {
+      setDragOverSkillId(skillId);
+    }
+  };
+
+  const handleDragEnd = () => {
+    setDraggedSkillId(null);
+    setDragOverSkillId(null);
+  };
+
+  const handleDrop = async (e: React.DragEvent, targetSkill: Skill) => {
+    e.preventDefault();
+    if (!draggedSkillId || draggedSkillId === targetSkill.id) {
+      setDraggedSkillId(null);
+      setDragOverSkillId(null);
+      return;
+    }
+
+    const draggedSkill = skills.find((s) => s.id === draggedSkillId);
+    if (!draggedSkill) {
+      setDraggedSkillId(null);
+      setDragOverSkillId(null);
+      return;
+    }
+
+    if (draggedSkill.category !== targetSkill.category) {
+      toast.error(
+        "Category Mismatch",
+        "Skills can only be reordered within the same category",
+      );
+      setDraggedSkillId(null);
+      setDragOverSkillId(null);
+      return;
+    }
+
+    const category = targetSkill.category;
+    const catSkills = skills
+      .filter((s) => s.category === category)
+      .sort((a, b) => a.order_index - b.order_index);
+
+    const fromIdx = catSkills.findIndex((s) => s.id === draggedSkillId);
+    const toIdx = catSkills.findIndex((s) => s.id === targetSkill.id);
+
+    if (fromIdx === -1 || toIdx === -1) return;
+
+    const reorderedCat = Array.from(catSkills);
+    const [moved] = reorderedCat.splice(fromIdx, 1);
+    reorderedCat.splice(toIdx, 0, moved);
+
+    // Re-index to ensure strictly unique order_index (0..N) within category
+    const reindexedCat = reorderedCat.map((item, idx) => ({
+      ...item,
+      order_index: idx,
+    }));
+
+    // Merge with other categories AND sort to guarantee instant live visual update
+    const otherSkills = skills.filter((s) => s.category !== category);
+    const nextSkills = [...otherSkills, ...reindexedCat].sort((a, b) => {
+      if (a.category !== b.category) {
+        return a.category.localeCompare(b.category);
+      }
+      return a.order_index - b.order_index;
+    });
+
+    setSkills(nextSkills);
+    setFilteredSkills(nextSkills);
+    setDraggedSkillId(null);
+    setDragOverSkillId(null);
+
+    // Persist to Supabase
+    try {
+      const supabase = createClient();
+      await Promise.all(
+        reindexedCat.map((s) =>
+          supabase
+            .from("skills")
+            .update({ order_index: s.order_index })
+            .eq("id", s.id),
+        ),
+      );
+      await triggerRevalidate("homepage-skills", "/");
+      toast.success("Order Updated", "Skills reordered successfully");
+    } catch (err) {
+      console.error("Failed to reorder skills:", err);
+      toast.error("Error", "Failed to save order");
+      fetchSkills();
+    }
+  };
+
+  // Group skills by category for grid view - always sorted by order_index
   const skillsByCategory = filteredSkills.reduce(
     (acc, skill) => {
       if (!acc[skill.category]) {
         acc[skill.category] = [];
       }
       acc[skill.category].push(skill);
+      acc[skill.category].sort((a, b) => a.order_index - b.order_index);
       return acc;
     },
     {} as Record<string, Skill[]>,
@@ -181,10 +287,39 @@ export default function SkillsPage() {
                 Skills Management
               </h1>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                Manage your skills and technologies
+                Manage your skills and technologies. Drag cards to reorder
+                within categories.
               </p>
             </div>
-            <div className="flex gap-2 w-full sm:w-auto">
+            <div className="flex gap-2 w-full sm:w-auto flex-wrap">
+              <Button
+                variant={isReordering ? "primary" : "outline"}
+                className={cn(
+                  "w-full sm:w-auto",
+                  isReordering &&
+                    "bg-primary text-primary-foreground font-semibold shadow-md",
+                )}
+                onClick={() => {
+                  if (isReordering) {
+                    setIsReordering(false);
+                  } else {
+                    setIsReordering(true);
+                    setSearchQuery("");
+                  }
+                }}
+              >
+                {isReordering ? (
+                  <>
+                    <Check className="w-4 h-4 mr-2" />
+                    Done
+                  </>
+                ) : (
+                  <>
+                    <ArrowUpDown className="w-4 h-4 mr-2" />
+                    Reorder
+                  </>
+                )}
+              </Button>
               <Button
                 variant="outline"
                 className="w-full sm:w-auto"
@@ -247,6 +382,19 @@ export default function SkillsPage() {
               </p>
             </Card>
           </div>
+
+          {/* Reorder Mode Banner */}
+          {isReordering && (
+            <div className="mb-6 p-4 rounded-xl bg-primary/10 border border-primary/20 flex items-center gap-2.5 text-primary text-sm font-medium animate-fade-in">
+              <GripVertical className="w-5 h-5 animate-pulse shrink-0" />
+              <span>
+                <strong>Mode Reorder Aktif:</strong> Geser kartu untuk mengatur
+                urutan dalam tiap kategori. Perubahan tampil secara real-time
+                dan otomatis tersimpan. Klik <strong>Done</strong> jika sudah
+                selesai.
+              </span>
+            </div>
+          )}
 
           {/* Search, Filter, and View Toggle */}
           <div className="flex flex-col sm:flex-row gap-3">
@@ -361,7 +509,25 @@ export default function SkillsPage() {
                     {categorySkills.map((skill) => (
                       <Card
                         key={skill.id}
-                        className="p-4 hover:shadow-lg transition-shadow"
+                        draggable={isReordering}
+                        onDragStart={(e) =>
+                          isReordering && handleDragStart(e, skill.id)
+                        }
+                        onDragOver={(e) =>
+                          isReordering && handleDragOver(e, skill.id)
+                        }
+                        onDragEnd={handleDragEnd}
+                        onDrop={(e) => isReordering && handleDrop(e, skill)}
+                        className={cn(
+                          "p-4 transition-all relative",
+                          isReordering
+                            ? "cursor-grab active:cursor-grabbing border-2 border-dashed border-primary/40 hover:border-primary shadow-sm"
+                            : "hover:shadow-lg",
+                          draggedSkillId === skill.id &&
+                            "opacity-30 scale-[0.98]",
+                          dragOverSkillId === skill.id &&
+                            "ring-2 ring-primary border-primary bg-primary/5",
+                        )}
                       >
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -401,7 +567,8 @@ export default function SkillsPage() {
                               <h3 className="font-semibold text-gray-900 dark:text-white truncate">
                                 {skill.name}
                               </h3>
-                              <span className="text-xs text-gray-500 dark:text-gray-400">
+                              <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1 font-mono">
+                                <GripVertical className="w-3.5 h-3.5 text-gray-400" />
                                 Order: {skill.order_index}
                               </span>
                             </div>
@@ -414,31 +581,38 @@ export default function SkillsPage() {
                           )}
                         </div>
 
-                        {/* Actions */}
-                        <div className="flex gap-2">
-                          <Link
-                            href={`/studio/skills/${skill.id}/edit`}
-                            className="flex-1"
-                          >
+                        {/* Actions / Reorder handle */}
+                        {isReordering ? (
+                          <div className="flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg bg-primary/10 text-primary text-xs font-semibold select-none border border-primary/20">
+                            <GripVertical className="w-4 h-4" />
+                            <span>Geser Urutan</span>
+                          </div>
+                        ) : (
+                          <div className="flex gap-2">
+                            <Link
+                              href={`/studio/skills/${skill.id}/edit`}
+                              className="flex-1"
+                            >
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="w-full"
+                              >
+                                <Pencil className="w-3 h-3 mr-1" />
+                                Edit
+                              </Button>
+                            </Link>
                             <Button
                               variant="outline"
                               size="sm"
-                              className="w-full"
+                              onClick={() => setDeleteId(skill.id)}
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                              title="Delete"
                             >
-                              <Pencil className="w-3 h-3 mr-1" />
-                              Edit
+                              <Trash2 className="w-3 h-3" />
                             </Button>
-                          </Link>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setDeleteId(skill.id)}
-                            className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
-                            title="Delete"
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </Button>
-                        </div>
+                          </div>
+                        )}
                       </Card>
                     ))}
                   </div>
@@ -483,7 +657,22 @@ export default function SkillsPage() {
                     return (
                       <tr
                         key={skill.id}
-                        className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                        draggable={isReordering}
+                        onDragStart={(e) =>
+                          isReordering && handleDragStart(e, skill.id)
+                        }
+                        onDragOver={(e) =>
+                          isReordering && handleDragOver(e, skill.id)
+                        }
+                        onDragEnd={handleDragEnd}
+                        onDrop={(e) => isReordering && handleDrop(e, skill)}
+                        className={cn(
+                          "hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors",
+                          isReordering && "cursor-grab active:cursor-grabbing",
+                          draggedSkillId === skill.id && "opacity-40",
+                          dragOverSkillId === skill.id &&
+                            "bg-primary/5 dark:bg-primary/10 border-t-2 border-primary",
+                        )}
                       >
                         <td className="px-6 py-4">
                           {skill.icon_svg ? (
@@ -542,22 +731,33 @@ export default function SkillsPage() {
                           )}
                         </td>
                         <td className="px-6 py-4">
-                          <div className="flex items-center justify-end gap-2">
-                            <Link href={`/studio/skills/${skill.id}/edit`}>
-                              <Button variant="outline" size="sm" title="Edit">
-                                <Pencil className="w-4 h-4" />
+                          {isReordering ? (
+                            <div className="flex items-center justify-end gap-1.5 text-primary text-xs font-semibold">
+                              <GripVertical className="w-4 h-4" />
+                              <span>Geser</span>
+                            </div>
+                          ) : (
+                            <div className="flex items-center justify-end gap-2">
+                              <Link href={`/studio/skills/${skill.id}/edit`}>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  title="Edit"
+                                >
+                                  <Pencil className="w-4 h-4" />
+                                </Button>
+                              </Link>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setDeleteId(skill.id)}
+                                className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                                title="Delete"
+                              >
+                                <Trash2 className="w-4 h-4" />
                               </Button>
-                            </Link>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => setDeleteId(skill.id)}
-                              className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
-                              title="Delete"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </div>
+                            </div>
+                          )}
                         </td>
                       </tr>
                     );

@@ -149,7 +149,7 @@ Yang belum ada:
 - ❌ Page transitions
 - ❌ Deployment to production
 
-**Access admin:** Navigate to `/admin/login` dan login dengan credentials Supabase Anda!
+**Access studio:** Navigate to `/studio/login` dan login dengan credentials Supabase Anda!
 
 **Access contact:** Navigate to `/contact` untuk test contact form!
 
@@ -158,6 +158,8 @@ Yang belum ada:
 - Create, edit, and delete projects
 - Create, edit, and delete work experience
 - Create, edit, and delete skills (with Devicon Icon Picker)
+- Create, edit, and delete certificates
+- Reorder items via native HTML5 drag-and-drop (Zero-Duplicate Rule)
 - Send contact messages via email
 - Manage your portfolio content
 
@@ -195,90 +197,105 @@ Semua komponen sudah dibuat! ✅
 
 **Guide:** Lihat `docs/TODO.md` Phase 2 ✅
 
-### ✅ Priority 2: Admin Panel Complete! (100%)
+### ✅ Priority 2: Studio Panel Complete! (100%)
 
-**Location:** `app/admin/`
+**Location:** `app/studio/`
 
-Admin panel dengan full CRUD sudah selesai! ✅
+Studio panel dengan full CRUD dan Reorder Mode sudah selesai! ✅
 
 **Yang sudah dibuat:**
 
-1. **✅ Admin Login** (`app/admin/login/page.tsx`)
+1. **✅ Studio Login** (`app/studio/login/page.tsx`)
    - Login form dengan Supabase Auth
    - Error handling dengan toast
    - Loading states
    - Redirect after login
 
-2. **✅ Admin Layout** (`app/admin/layout.tsx`)
-   - Sidebar navigation (Dashboard, Projects, Experience)
+2. **✅ Studio Layout** (`app/studio/layout.tsx`)
+   - Sidebar navigation (Dashboard, Projects, Experience, Skills, Certificates)
    - Protected routes via middleware
    - Logout button
    - Mobile responsive dengan hamburger menu
 
-3. **✅ Dashboard** (`app/admin/page.tsx`)
-   - Statistics cards (Projects, Experience, Featured, Last Updated)
+3. **✅ Dashboard** (`app/studio/page.tsx`)
+   - Statistics cards (Projects, Experience, Skills, Certificates)
    - Quick action buttons
    - Fetch data dari Supabase
 
 4. **✅ Projects CRUD**
-   - **List** (`app/admin/projects/page.tsx`)
-     - Card view dengan full information
+   - **List** (`app/studio/projects/page.tsx`)
+     - Card view & Table view dengan Reorder Mode (drag & drop)
      - Featured badge & technologies tags
      - Edit & Delete buttons
      - Delete confirmation modal
-   - **Create** (`app/admin/projects/new/page.tsx`)
-     - Complete form dengan validation
+   - **Create** (`app/studio/projects/new/page.tsx`)
+     - Complete form dengan validation (auto order_index)
      - Auto-generate slug
      - Technologies tags input
      - Toast notifications
-   - **Edit** (`app/admin/projects/[id]/edit/page.tsx`)
+   - **Edit** (`app/studio/projects/[id]/edit/page.tsx`)
      - Pre-filled form
      - Update & Delete functionality
      - Confirmation modals
 
 5. **✅ Experience CRUD**
-   - **List** (`app/admin/experience/page.tsx`)
-     - Card view dengan full information
+   - **List** (`app/studio/experience/page.tsx`)
+     - Card view & Table view dengan Reorder Mode (drag & drop)
      - Current job badge
      - Date range formatting
      - Edit & Delete buttons
-   - **Create** (`app/admin/experience/new/page.tsx`)
-     - Complete form dengan validation
+   - **Create** (`app/studio/experience/new/page.tsx`)
+     - Complete form dengan validation (auto order_index)
      - Date pickers
      - "Is Current" checkbox
      - Toast notifications
-   - **Edit** (`app/admin/experience/[id]/edit/page.tsx`)
+   - **Edit** (`app/studio/experience/[id]/edit/page.tsx`)
      - Pre-filled form
      - Update & Delete functionality
      - Date validation
 
-6. **✅ Skills CRUD** ⭐ NEW
-   - **List** (`app/admin/skills/page.tsx`)
-     - Grid/Table view toggle
+6. **✅ Skills CRUD**
+   - **List** (`app/studio/skills/page.tsx`)
+     - Grid/Table view toggle dengan Reorder Mode (drag & drop per kategori)
      - Search & category filter
      - Visibility indicator
      - Stats cards
-   - **Create** (`app/admin/skills/new/page.tsx`)
+   - **Create** (`app/studio/skills/new/page.tsx`)
      - Devicon Icon Picker (fetch from devicon.dev)
      - Category selection
      - Visibility control
      - Toast notifications
-   - **Edit** (`app/admin/skills/[id]/edit/page.tsx`)
+   - **Edit** (`app/studio/skills/[id]/edit/page.tsx`)
      - Pre-filled form with icon preview
      - Update & Delete functionality
 
-7. **✅ Supporting Files**
+7. **✅ Certificates CRUD**
+   - **List** (`app/studio/certificates/page.tsx`)
+     - Grid view dengan Reorder Mode (drag & drop sort_order)
+     - Search & stats cards
+     - Cache refresh button
+     - Edit & Delete buttons
+   - **Create** (`app/studio/certificates/new/page.tsx`)
+     - Complete form dengan validation (auto sort_order)
+     - Toast notifications
+   - **Edit** (`app/studio/certificates/[id]/edit/page.tsx`)
+     - Pre-filled form
+     - Update & Delete functionality
+
+8. **✅ Supporting Files**
    - `lib/validations/project.ts` - Zod schemas
    - `lib/validations/experience.ts` - Zod schemas
-   - `lib/validations/skill.ts` - Zod schemas ⭐ NEW
+   - `lib/validations/skill.ts` - Zod schemas
+   - `lib/validations/certificate.ts` - Zod schemas
    - `lib/supabase/helpers.ts` - CRUD helpers
-   - `components/admin/devicon-picker.tsx` - Icon Picker ⭐ NEW
+   - `components/admin/devicon-picker.tsx` - Icon Picker
 
-8. **✅ API Routes** (`app/api/auth/`)
+9. **✅ API Routes** (`app/api/`)
    - `/api/auth/login` - Login endpoint
    - `/api/auth/logout` - Logout endpoint
+   - `/api/revalidate` - Cache revalidation endpoint
 
-**🎯 Access:** Navigate to `/admin/login`
+**🎯 Access:** Navigate to `/studio/login`
 
 **What you can do:**
 
