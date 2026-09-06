@@ -265,8 +265,20 @@ export default function Orb({
     container.addEventListener("mouseleave", handleMouseLeave);
 
     let rafId;
+    let isVisible = true;
+
+    // Pause the render loop when the canvas scrolls out of view.
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+      },
+      { threshold: 0 },
+    );
+    visibilityObserver.observe(container);
+
     const update = (t) => {
       rafId = requestAnimationFrame(update);
+      if (!isVisible) return;
       const dt = (t - lastTime) * 0.001;
       lastTime = t;
       program.uniforms.iTime.value = t * 0.001;
@@ -289,6 +301,7 @@ export default function Orb({
 
     return () => {
       cancelAnimationFrame(rafId);
+      visibilityObserver.disconnect();
       window.removeEventListener("resize", resize);
       container.removeEventListener("mousemove", handleMouseMove);
       container.removeEventListener("mouseleave", handleMouseLeave);

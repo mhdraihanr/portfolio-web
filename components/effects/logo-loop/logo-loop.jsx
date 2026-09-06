@@ -70,22 +70,25 @@ const useAnimationLoop = (
   const lastTimestampRef = useRef(null);
   const offsetRef = useRef(0);
   const velocityRef = useRef(0);
+  const isVisibleRef = useRef(false);
+  const runningRef = useRef(false);
 
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
+  const seqSize = isVertical ? seqHeight : seqWidth;
 
-    const seqSize = isVertical ? seqHeight : seqWidth;
-
-    if (seqSize > 0) {
-      offsetRef.current = ((offsetRef.current % seqSize) + seqSize) % seqSize;
-      const transformValue = isVertical
-        ? `translate3d(0, ${-offsetRef.current}px, 0)`
-        : `translate3d(${-offsetRef.current}px, 0, 0)`;
-      track.style.transform = transformValue;
+  const stopLoop = useCallback(() => {
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
     }
+    runningRef.current = false;
+  }, []);
 
-    const animate = (timestamp) => {
+  const startLoop = useCallback(
+    (timestamp) => {
+      if (!isVisibleRef.current) return;
+      const track = trackRef.current;
+      if (!track) return;
+      runningRef.current = true;
       if (lastTimestampRef.current === null) {
         lastTimestampRef.current = timestamp;
       }
@@ -112,18 +115,45 @@ const useAnimationLoop = (
         track.style.transform = transformValue;
       }
 
-      rafRef.current = requestAnimationFrame(animate);
-    };
+      rafRef.current = requestAnimationFrame(startLoop);
+    },
 
-    rafRef.current = requestAnimationFrame(animate);
+    [isHovered, hoverSpeed, targetVelocity, isVertical, seqSize, trackRef],
+  );
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    if (seqSize > 0) {
+      offsetRef.current = ((offsetRef.current % seqSize) + seqSize) % seqSize;
+      const transformValue = isVertical
+        ? `translate3d(0, ${-offsetRef.current}px, 0)`
+        : `translate3d(${-offsetRef.current}px, 0, 0)`;
+      track.style.transform = transformValue;
+    }
+
+    // Pause the rAF loop when the track scrolls out of view.
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting;
+        if (entry.isIntersecting && !runningRef.current) {
+          lastTimestampRef.current = null;
+          rafRef.current = requestAnimationFrame(startLoop);
+        } else if (!entry.isIntersecting) {
+          stopLoop();
+        }
+      },
+      { threshold: 0 },
+    );
+    observer.observe(track);
 
     return () => {
-      if (rafRef.current !== null) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
-      }
+      observer.disconnect();
+      stopLoop();
       lastTimestampRef.current = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     targetVelocity,
     seqWidth,

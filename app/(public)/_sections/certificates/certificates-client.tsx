@@ -6,6 +6,7 @@ import LogoLoop from "@/components/effects/logo-loop";
 import { Award } from "lucide-react";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
 import { useMobileWidth } from "@/hooks/use-mobile-width";
+import { useEffect, useMemo, useRef } from "react";
 
 interface CertificatesClientProps {
   certificates: Certificate[];
@@ -13,17 +14,41 @@ interface CertificatesClientProps {
 
 export function CertificatesClient({ certificates }: CertificatesClientProps) {
   const isMobileWidth = useMobileWidth();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Mount LogoLoop only once when the section is near the viewport, so the
+  // rAF loop does not run when the section is off-screen (e.g. after navigating
+  // back from a project detail page).
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          obs.unobserve(el);
+        }
+      },
+      { threshold: 0.1 },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   // Transform certificates into LogoLoop format
-  const certificateNodes = certificates.map((cert) => ({
-    node: <CertificateCard certificate={cert} />,
-    title: cert.title,
-    ariaLabel: `${cert.title} from ${cert.provider}`,
-  }));
+  const certificateNodes = useMemo(
+    () =>
+      certificates.map((cert) => ({
+        node: <CertificateCard certificate={cert} />,
+        title: cert.title,
+        ariaLabel: `${cert.title} from ${cert.provider}`,
+      })),
+    [certificates],
+  );
 
   return (
     <section
       id="certificates"
+      ref={sectionRef}
       className="pt-12 pb-20 bg-white dark:bg-gray-950"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">

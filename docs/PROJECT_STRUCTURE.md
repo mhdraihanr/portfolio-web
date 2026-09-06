@@ -276,15 +276,15 @@ components/
 
 - **AnimatedShinyText**: Shimmer/shine text effect from Magic UI. Used in Hero section for greeting text. Configurable shimmer width.
 
-- **LightRays**: WebGL-powered animated light rays background using OGL library. Supports mouse following, customizable colors, speed, and spread. Used in Hero section background.
+- **LightRays**: WebGL-powered animated light rays background using OGL library. Supports mouse following, customizable colors, speed, and spread. Render loop pauses while the canvas is outside the viewport (IntersectionObserver). Used in Hero section background.
 
-- **Orb**: Animated gradient orb background effect. Used in Experience section.
+- **Orb**: Animated gradient orb background effect. Render loop skips GPU work while the canvas is outside the viewport. Used in Experience section.
 
 - **ScrollReveal**: Intersection Observer-based bidirectional scroll animation wrapper. Animates elements IN when entering viewport and OUT when leaving. Supports configurable direction (up/down/left/right), delay, duration, distance, and threshold. Includes prefers-reduced-motion support for accessibility. By default animations repeat on every scroll, but can be set to `once={true}` for one-time animations. Used across all sections for dynamic content reveal.
 
 - **certificate-card.tsx**: Fixed-height (340px) card for displaying certificates with gradient header, icon, title, provider, issue date badge, description, and "View Details" link. Designed for consistent display in infinite scroll carousel.
 
-- **LogoLoop**: Infinite scroll carousel component from React Bits. Used for certificates section with pause-on-hover functionality. Includes TypeScript wrapper (LogoLoop.tsx) with SSR disabled and type definitions.
+- **LogoLoop**: Infinite scroll carousel component from React Bits. Used for certificates section with pause-on-hover functionality. rAF loop pauses via IntersectionObserver when the track scrolls out of view. Includes TypeScript wrapper (LogoLoop.tsx) with SSR disabled and type definitions.
 
 **Example Component Structure:**
 
