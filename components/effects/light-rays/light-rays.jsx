@@ -63,6 +63,7 @@ const LightRays = ({
   const meshRef = useRef(null);
   const cleanupFunctionRef = useRef(null);
   const pausedRef = useRef(false);
+  const inViewportRef = useRef(true);
   const boundsRef = useRef({ left: 0, top: 0, width: 1, height: 1 });
   const [isVisible, setIsVisible] = useState(false);
   const observerRef = useRef(null);
@@ -77,6 +78,7 @@ const LightRays = ({
         if (entry.isIntersecting && !isVisible) {
           setIsVisible(true);
         }
+        inViewportRef.current = entry.isIntersecting;
       },
       { threshold: 0.01, rootMargin: "50px" },
     );
@@ -300,7 +302,7 @@ void main() {
           return;
         }
 
-        if (pausedRef.current || document.hidden) {
+        if (pausedRef.current || document.hidden || !inViewportRef.current) {
           animationIdRef.current = requestAnimationFrame(loop);
           return;
         }

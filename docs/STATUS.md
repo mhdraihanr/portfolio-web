@@ -1,12 +1,33 @@
 # 📊 Project Status
 
-**Last Updated:** September 6, 2026
+**Last Updated:** September 7, 2026
 
 ---
 
 ## 🎉 Project Progress: 92% Complete
 
-## 🆕 Latest Update: Navigation Performance Pass (Projects SSG + Layout Slim)
+## 🆕 Latest Update: Viewport-Paused Animations (rAF offscreen gating)
+
+**Status:** ✅ **IMPLEMENTED AND VERIFIED**
+
+Fix untuk homepage yang terasa berat setelah membuka project detail atau refresh di `/#projects`. Penyebab: tiga loop `requestAnimationFrame` (`LightRays` WebGL, `LogoLoop`, `Orb`) berjalan terus tanpa henti bahkan saat elemennya di luar viewport — berebut main thread dengan decode gambar + hydration.
+
+- ✅ **LogoLoop** (`components/effects/logo-loop/logo-loop.jsx`): rAF loop di-pause via `IntersectionObserver` (threshold 0) — `cancelAnimationFrame` saat track keluar viewport, restart saat masuk kembali. Juga memperbaiki `seqSize`/`track` ReferenceError yang mematikan loop di frame pertama.
+- ✅ **Orb** (`components/effects/orb/orb.jsx`): render loop skip `renderer.render()` saat canvas offscreen (IntersectionObserver), rAF tetap hidup tapi tanpa GPU work.
+- ✅ **LightRays** (`components/effects/light-rays/light-rays.jsx`): loop skip render saat `!inViewportRef.current` (observer yang sudah ada kini juga men-track exit viewport, bukan hanya entry).
+- ✅ **Certificates section**: `content-visibility: auto` dihapus (menyebabkan stutter LogoLoop — ResizeObserver mendapat dimensi 0 saat offscreen lalu snap saat masuk viewport); diganti `useMemo` untuk `certificateNodes`.
+- ✅ Visual tidak berubah — animasi tetap jalan penuh saat elemen terlihat; hanya idle saat offscreen.
+- ✅ Verified with `pnpm lint` (0 error) and `pnpm exec tsc --noEmit`.
+
+### Kenapa jadi ringan lagi (kesimpulan)
+
+Sebelumnya: refresh di `/#projects` langsung mengaktifkan LogoLoop (sudah 10% terlihat) + LightRays tetap render penuh walau hero offscreen + Orb di Experience juga jalan — 3 loop rAF + WebGL bersamaan di main thread.
+
+Sekarang: hanya animasi yang benar-benar terlihat yang dikonsumsi. Scroll ke mana pun, GPU/CPU hanya mengerjakan section di layar.
+
+---
+
+## Previous: Navigation Performance Pass (Projects SSG + Layout Slim)
 
 **Status:** ✅ **IMPLEMENTED AND VERIFIED**
 

@@ -11,6 +11,7 @@ The homepage hero keeps the React Bits `LightRays` WebGL background and `BlurTex
 - `LightRays` caps device pixel ratio at `1.5` to reduce canvas fill-rate and GPU work.
 - `LightRays` uses passive `resize` and `mousemove` listeners.
 - The animation loop pauses rendering work while `document.hidden` is true.
+- The animation loop also skips rendering while the canvas is outside the viewport (`IntersectionObserver`), so refresh at `/#projects` or navigation back from a detail page does not keep the hero WebGL loop consuming GPU.
 - Users with `prefers-reduced-motion: reduce` skip WebGL initialization and are marked ready after a frame.
 
 These changes target high Total Blocking Time, Speed Index, and "minimize main-thread work" diagnostics without removing the global loader or the WebGL visual style.

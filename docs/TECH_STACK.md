@@ -75,6 +75,7 @@ Project ini menggunakan modern web development stack dengan fokus pada:
 - The homepage avoids broad public-section barrel imports so the hero path does not eagerly pull unrelated section modules.
 - Hero text readiness now controls the global loading signal, while `LightRays` initializes after initial paint and fades in when its first WebGL frame is ready.
 - WebGL animation runtime caps DPR, uses passive listeners, pauses hidden-tab rendering, and respects `prefers-reduced-motion`.
+- All continuous rAF/WebGL loops (`LightRays`, `LogoLoop`, `Orb`) pause their render work while their element is outside the viewport (`IntersectionObserver`), so only visible sections consume main-thread/GPU time.
 - Shared `ScrollReveal` animations run only once on phone/mobile widths (`width <= 767px`) to avoid repeated animation work during mobile scrolling, while non-mobile widths keep the existing repeatable behavior.
 - The hero title continues using `BlurText`, while surrounding content avoids being hidden behind WebGL readiness.
 - Public homepage Supabase data (`Projects`, `Work Experience`, visible skills) is fetched through a server-only cached helper with 5-minute revalidation, avoiding request-cookie reads on the homepage document path and reducing TTFB/document latency.
