@@ -44,6 +44,7 @@ async function fetchWorkExperiences(): Promise<WorkExperience[]> {
   const { data, error } = await supabase
     .from("work_experience")
     .select("*")
+    .order("order_index", { ascending: true })
     .order("start_date", { ascending: false });
 
   if (error) {

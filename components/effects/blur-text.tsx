@@ -81,7 +81,7 @@ const BlurText: React.FC<BlurTextProps> = ({
     );
     observer.observe(element);
     return () => observer.disconnect();
-  }, [threshold, rootMargin, isMobileWidth]);
+  }, [threshold, rootMargin, isMobileWidth, once]);
 
   const defaultFrom = useMemo(
     () =>

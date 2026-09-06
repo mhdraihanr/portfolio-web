@@ -17,6 +17,7 @@ Transition the Certificates section from **hardcoded static data** to a **data-d
 ### 1. Database Layer (`migrations/migration-add-certificates-table.sql`)
 
 Created `certificates` table in Supabase:
+
 - `id` (UUID, primary key)
 - `title` (TEXT, required)
 - `provider` (TEXT, required — issuer name)
@@ -31,11 +32,13 @@ Created `certificates` table in Supabase:
 - Pre-seeded with 3 existing Dicoding certificates
 
 ### 2. Type Layer
+
 - `types/database.types.ts`: Added `certificates` table types (Row, Insert, Update)
 - `types/certificate.ts`: Refactored to derive from `Database["public"]["Tables"]["certificates"]`
 - `components/ui/certificate-card.tsx`: Updated field accessors (`issue_date`, `credential_url`)
 
 ### 3. Validation Layer (`lib/validations/certificate.ts`)
+
 - Zod schema matching form requirements:
   - `title` (min 2, max 200) — required
   - `provider` (min 2, max 100) — required
@@ -43,6 +46,7 @@ Created `certificates` table in Supabase:
   - URL validations on `credential_url` and `image`
 
 ### 4. Data Access Layer
+
 - `lib/supabase/helpers.ts`:
   - `insertCertificate`
   - `updateCertificate`
@@ -51,6 +55,7 @@ Created `certificates` table in Supabase:
   - `getCertificates` (unstable_cache with 300s TTL and `homepage-certificates` tag)
 
 ### 5. Studio / Admin Panel
+
 - **List Page** (`app/studio/certificates/page.tsx`):
   - Card grid view with search filter
   - Total and Provider stats
@@ -69,6 +74,7 @@ Created `certificates` table in Supabase:
   - Added "Add Certificate" quick action
 
 ### 6. Public Display Integration
+
 - `app/(public)/_sections/certificates/index.tsx`: Converted to async Server Component fetching via `getCertificates()`
 - `app/(public)/_sections/certificates/lazy-certificates-client.tsx`: Passes fetched certificates to client component
 - `app/(public)/_sections/certificates/certificates-client.tsx`: Renders dynamic data passed via props

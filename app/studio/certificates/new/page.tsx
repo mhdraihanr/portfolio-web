@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,6 +30,7 @@ export default function NewCertificatePage() {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<CertificateFormData>({
     resolver: zodResolver(certificateSchema),
     defaultValues: {
@@ -43,6 +44,23 @@ export default function NewCertificatePage() {
       sort_order: 0,
     },
   });
+
+  useEffect(() => {
+    async function fetchNextOrder() {
+      try {
+        const supabase = createClient();
+        const { count } = await supabase
+          .from("certificates")
+          .select("*", { count: "exact", head: true });
+        if (typeof count === "number") {
+          setValue("sort_order", count);
+        }
+      } catch (err) {
+        console.error("Failed to fetch next sort_order for certificate:", err);
+      }
+    }
+    fetchNextOrder();
+  }, [setValue]);
 
   const onSubmit = async (data: CertificateFormData) => {
     setIsSubmitting(true);

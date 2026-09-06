@@ -9,6 +9,9 @@ import {
   Award,
   Search,
   ExternalLink,
+  GripVertical,
+  ArrowUpDown,
+  Check,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { triggerRevalidate } from "@/lib/revalidate";
@@ -19,6 +22,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useToast } from "@/components/ui/toast";
 import { Modal } from "@/components/ui/modal";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import type { Certificate } from "@/types/certificate";
 
 export default function CertificatesPage() {
@@ -28,6 +32,9 @@ export default function CertificatesPage() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isReordering, setIsReordering] = useState(false);
+  const [draggedCertId, setDraggedCertId] = useState<string | null>(null);
+  const [dragOverCertId, setDragOverCertId] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -94,6 +101,77 @@ export default function CertificatesPage() {
     }
   }
 
+  // Drag and drop reordering
+  const handleDragStart = (e: React.DragEvent, id: string) => {
+    setDraggedCertId(id);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", id);
+  };
+
+  const handleDragOver = (e: React.DragEvent, id: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    if (dragOverCertId !== id) {
+      setDragOverCertId(id);
+    }
+  };
+
+  const handleDragEnd = () => {
+    setDraggedCertId(null);
+    setDragOverCertId(null);
+  };
+
+  const handleDrop = async (e: React.DragEvent, targetCert: Certificate) => {
+    e.preventDefault();
+    if (!draggedCertId || draggedCertId === targetCert.id) {
+      setDraggedCertId(null);
+      setDragOverCertId(null);
+      return;
+    }
+
+    const currentIdx = certificates.findIndex((c) => c.id === draggedCertId);
+    const targetIdx = certificates.findIndex((c) => c.id === targetCert.id);
+    if (currentIdx === -1 || targetIdx === -1) {
+      setDraggedCertId(null);
+      setDragOverCertId(null);
+      return;
+    }
+
+    const updated = Array.from(certificates);
+    const [moved] = updated.splice(currentIdx, 1);
+    updated.splice(targetIdx, 0, moved);
+
+    // Re-index to ensure strictly unique, consecutive sort_order (0..N)
+    const reindexed = updated.map((item, idx) => ({
+      ...item,
+      sort_order: idx,
+    }));
+
+    // Real-time optimistic update
+    setCertificates(reindexed);
+    setFiltered(reindexed);
+    setDraggedCertId(null);
+    setDragOverCertId(null);
+
+    try {
+      const supabase = createClient();
+      await Promise.all(
+        reindexed.map((cert) =>
+          supabase
+            .from("certificates")
+            .update({ sort_order: cert.sort_order })
+            .eq("id", cert.id),
+        ),
+      );
+      await triggerRevalidate("homepage-certificates", "/");
+      toast.success("Order Updated", "Certificates reordered successfully");
+    } catch (err) {
+      console.error("Failed to reorder certificates:", err);
+      toast.error("Error", "Failed to save order");
+      fetchCertificates();
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -113,10 +191,38 @@ export default function CertificatesPage() {
                 Certificates Management
               </h1>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                Manage your professional certificates
+                Manage your professional certificates. Drag cards to reorder.
               </p>
             </div>
-            <div className="flex gap-2 w-full sm:w-auto">
+            <div className="flex gap-2 w-full sm:w-auto flex-wrap">
+              <Button
+                variant={isReordering ? "primary" : "outline"}
+                className={cn(
+                  "w-full sm:w-auto",
+                  isReordering &&
+                    "bg-primary text-primary-foreground font-semibold shadow-md",
+                )}
+                onClick={() => {
+                  if (isReordering) {
+                    setIsReordering(false);
+                  } else {
+                    setIsReordering(true);
+                    setSearchQuery("");
+                  }
+                }}
+              >
+                {isReordering ? (
+                  <>
+                    <Check className="w-4 h-4 mr-2" />
+                    Done
+                  </>
+                ) : (
+                  <>
+                    <ArrowUpDown className="w-4 h-4 mr-2" />
+                    Reorder
+                  </>
+                )}
+              </Button>
               <Button
                 variant="outline"
                 className="w-full sm:w-auto"
@@ -155,6 +261,19 @@ export default function CertificatesPage() {
               </p>
             </Card>
           </div>
+
+          {/* Reorder Mode Banner */}
+          {isReordering && (
+            <div className="mb-6 p-4 rounded-xl bg-primary/10 border border-primary/20 flex items-center gap-2.5 text-primary text-sm font-medium animate-fade-in">
+              <GripVertical className="w-5 h-5 animate-pulse shrink-0" />
+              <span>
+                <strong>Mode Reorder Aktif:</strong> Geser kartu untuk mengatur
+                urutan sertifikat. Perubahan tampil secara real-time dan
+                otomatis tersimpan. Klik <strong>Done</strong> jika sudah
+                selesai.
+              </span>
+            </div>
+          )}
 
           {/* Search */}
           <div className="relative">
@@ -206,7 +325,20 @@ export default function CertificatesPage() {
             {filtered.map((cert) => (
               <Card
                 key={cert.id}
-                className="p-5 hover:shadow-lg transition-shadow"
+                draggable={isReordering}
+                onDragStart={(e) => isReordering && handleDragStart(e, cert.id)}
+                onDragOver={(e) => isReordering && handleDragOver(e, cert.id)}
+                onDragEnd={handleDragEnd}
+                onDrop={(e) => isReordering && handleDrop(e, cert)}
+                className={cn(
+                  "p-5 transition-all relative flex flex-col",
+                  isReordering
+                    ? "cursor-grab active:cursor-grabbing border-2 border-dashed border-primary/40 hover:border-primary shadow-sm"
+                    : "hover:shadow-lg",
+                  draggedCertId === cert.id && "opacity-30 scale-[0.98]",
+                  dragOverCertId === cert.id &&
+                    "ring-2 ring-primary border-primary bg-primary/5",
+                )}
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -249,26 +381,34 @@ export default function CertificatesPage() {
                 )}
 
                 <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-100 dark:border-gray-800">
-                  <span className="text-xs text-gray-400">
+                  <span className="text-xs text-gray-400 flex items-center gap-1 font-mono">
+                    <GripVertical className="w-3.5 h-3.5 text-gray-400" />
                     Order: {cert.sort_order}
                   </span>
-                  <div className="flex gap-2">
-                    <Link href={`/studio/certificates/${cert.id}/edit`}>
-                      <Button variant="outline" size="sm">
-                        <Pencil className="w-3 h-3 mr-1" />
-                        Edit
+                  {isReordering ? (
+                    <div className="flex items-center gap-1.5 py-1.5 px-3 rounded-lg bg-primary/10 text-primary text-xs font-semibold select-none border border-primary/20">
+                      <GripVertical className="w-4 h-4" />
+                      <span>Geser Urutan</span>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <Link href={`/studio/certificates/${cert.id}/edit`}>
+                        <Button variant="outline" size="sm">
+                          <Pencil className="w-3 h-3 mr-1" />
+                          Edit
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setDeleteId(cert.id)}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                        title="Delete"
+                      >
+                        <Trash2 className="w-3 h-3" />
                       </Button>
-                    </Link>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setDeleteId(cert.id)}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
-                      title="Delete"
-                    >
-                      <Trash2 className="w-3 h-3" />
-                    </Button>
-                  </div>
+                    </div>
+                  )}
                 </div>
               </Card>
             ))}

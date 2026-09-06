@@ -6,9 +6,11 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ## 🚀 Quick Access
 
-**Admin Panel URL:** `http://localhost:3000/admin`
+**Studio Panel URL:** `http://localhost:3000/studio`
 
-**Login URL:** `http://localhost:3000/admin/login`
+**Login URL:** `http://localhost:3000/studio/login`
+
+_(Catatan: Path `/studio` dapat disesuaikan melalui environment variable `ADMIN_ROUTE_SECRET`)_
 
 ---
 
@@ -16,7 +18,7 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ### List Projects
 
-**URL:** `/admin/projects`
+**URL:** `/studio/projects`
 
 **Features:**
 
@@ -35,16 +37,13 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ### Create Project
 
-**URL:** `/admin/projects/new`
+**URL:** `/studio/projects/new`
 
 **Required Fields:**
 
 - Title (3-100 characters)
 - Slug (auto-generated, editable)
 - Description (10-500 characters)
-- Problem (10-1000 characters)
-- Solution (10-1000 characters)
-- Impact (10-1000 characters)
 - Technologies (at least 1, max 20, with Devicon icons)
 
 **Optional Fields:**
@@ -74,7 +73,7 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ### Edit Project
 
-**URL:** `/admin/projects/[id]/edit`
+**URL:** `/studio/projects/[id]/edit`
 
 **Features:**
 
@@ -89,7 +88,7 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ### List Experience
 
-**URL:** `/admin/experience`
+**URL:** `/studio/experience`
 
 **Features:**
 
@@ -108,7 +107,7 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ### Create Experience
 
-**URL:** `/admin/experience/new`
+**URL:** `/studio/experience/new`
 
 **Required Fields:**
 
@@ -142,7 +141,7 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ### Edit Experience
 
-**URL:** `/admin/experience/[id]/edit`
+**URL:** `/studio/experience/[id]/edit`
 
 **Features:**
 
@@ -157,7 +156,7 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ### List Skills
 
-**URL:** `/admin/skills`
+**URL:** `/studio/skills`
 
 **Features:**
 
@@ -179,7 +178,7 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ### Create Skill
 
-**URL:** `/admin/skills/new`
+**URL:** `/studio/skills/new`
 
 **Required Fields:**
 
@@ -210,7 +209,7 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ### Edit Skill
 
-**URL:** `/admin/skills/[id]/edit`
+**URL:** `/studio/skills/[id]/edit`
 
 **Features:**
 
@@ -221,11 +220,11 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ---
 
-## � Certificates Management
+## 📜 Certificates Management
 
 ### List Certificates
 
-**URL:** `/admin/certificates`
+**URL:** `/studio/certificates`
 
 **Features:**
 
@@ -245,7 +244,7 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ### Create Certificate
 
-**URL:** `/admin/certificates/new`
+**URL:** `/studio/certificates/new`
 
 **Required Fields:**
 
@@ -263,7 +262,7 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ### Edit Certificate
 
-**URL:** `/admin/certificates/[id]/edit`
+**URL:** `/studio/certificates/[id]/edit`
 
 **Features:**
 
@@ -273,24 +272,45 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 
 ---
 
+## 🔄 Dedicated Reorder Mode & Drag-and-Drop (Zero-Duplicate Rule)
+
+Semua entitas di studio yang memiliki urutan tampilan kini memiliki tombol **"Reorder"** di header untuk mengaktifkan mode drag and drop khusus secara aman dan real-time:
+
+### Entitas yang Didukung:
+
+1. **Projects** (`order_index`): Drag card pada Grid View atau baris pada Table View.
+2. **Work Experience** (`order_index`): Drag card timeline pada Grid View atau baris pada Table View.
+3. **Skills** (`order_index`): Drag card pada Grid View (reorder otomatis terisolasi **per kategori**: Frontend, Backend, Tools, Others) atau baris pada Table View.
+4. **Certificates** (`sort_order`): Drag card pada Grid View.
+
+### Cara Kerja & Mekanisme Real-Time:
+
+- **Dedicated "Reorder" Button**: Terletak di samping tombol "+ Add [Item]". Klik untuk mengaktifkan mode drag and drop dengan border dashed indikatif dan banner instruksi. Klik "Done" di header untuk kembali ke mode navigasi biasa.
+- **Tampilan Real-Time Langsung**: Perpindahan posisi kartu/baris langsung ter-render seketika tanpa perlu reload/refresh halaman.
+- **Re-indexing Otomatis**: Setiap kali item digeser dan dilepas, seluruh urutan di-reindex secara berurutan `0, 1, 2, ... N`.
+- **Tidak Ada Angka Kembar**: Dijamin 100% unik tanpa duplikasi index.
+- **Auto-Assign Form Baru**: Saat membuat item baru (`/new`), form otomatis mengisi urutan berikutnya (`order = total_items`).
+- **Optimistic UI & Cache Revalidation**: Tampilan list berpindah secara instan, update Supabase berjalan di background dengan auto revalidation cache homepage.
+- **Safety**: Tombol Edit/Delete otomatis disembunyikan saat Reorder Mode aktif dan digantikan dengan badge "Geser Urutan" untuk mencegah klik yang tidak disengaja. Search query otomatis di-reset saat masuk ke Reorder Mode.
+
+---
+
 ## �🎨 Form Validation Rules
 
 ### Projects
 
-| Field        | Min | Max  | Format                 |
-| ------------ | --- | ---- | ---------------------- |
-| Title        | 3   | 100  | Any text               |
-| Slug         | 3   | 100  | lowercase-with-hyphens |
-| Description  | 10  | 500  | Any text               |
-| Problem      | 10  | 1000 | Any text               |
-| Solution     | 10  | 1000 | Any text               |
-| Impact       | 10  | 1000 | Any text               |
-| Technologies | 1   | 20   | Array of strings       |
-| Image URL    | -   | -    | Valid URL or empty     |
-| Project URL  | -   | -    | Valid URL or empty     |
-| GitHub URL   | -   | -    | Valid URL or empty     |
-| Featured     | -   | -    | Boolean (checkbox)     |
-| Order Index  | 0   | ∞    | Whole number           |
+| Field        | Min | Max | Format                          |
+| ------------ | --- | --- | ------------------------------- |
+| Title        | 3   | 100 | Any text                        |
+| Slug         | 3   | 100 | lowercase-with-hyphens          |
+| Description  | 10  | 500 | Any text                        |
+| Technologies | 1   | 20  | Array of {name, icon, icon_svg} |
+| Images       | 0   | 10  | Array of {url, fileId}          |
+| Image URL    | -   | -   | Valid URL or empty              |
+| Project URL  | -   | -   | Valid URL or empty              |
+| GitHub URL   | -   | -   | Valid URL or empty              |
+| Featured     | -   | -   | Boolean (checkbox)              |
+| Order Index  | 0   | ∞   | Whole number                    |
 
 ### Experience
 
@@ -323,9 +343,9 @@ Panduan cepat untuk menggunakan admin panel CRUD functionality.
 | Provider       | 2   | 100 | Any text                      |
 | Issue Date     | -   | -   | Free text (year, month, etc.) |
 | Credential ID  | -   | -   | Any text                      |
-| Credential URL | -   | -   | Valid URL or empty             |
+| Credential URL | -   | -   | Valid URL or empty            |
 | Description    | -   | 500 | Any text                      |
-| Image          | -   | -   | Valid URL or empty             |
+| Image          | -   | -   | Valid URL or empty            |
 | Sort Order     | 0   | ∞   | Whole number                  |
 
 ---

@@ -99,8 +99,16 @@ export default async function AllProjectsPage() {
                   key={project.id}
                   delay={index * 0.1}
                   duration={0.6}
+                  className="h-full"
                 >
-                  <Card className="group relative overflow-hidden hover:shadow-xl hover:scale-[1.02] transition-all duration-300 h-full flex flex-col">
+                  <Card className="group relative overflow-hidden hover:shadow-xl hover:scale-[1.02] transition-all duration-300 h-full flex flex-col cursor-pointer">
+                    {/* Full card clickable link */}
+                    <Link
+                      href={`/projects/${project.slug}`}
+                      className="absolute inset-0 z-10"
+                      aria-label={`View details for ${project.title}`}
+                    />
+
                     {/* Project Image with Overlay */}
                     {(project.images && project.images.length > 0) ||
                     project.image_url ? (
@@ -120,18 +128,16 @@ export default async function AllProjectsPage() {
                         />
 
                         {/* Overlay with See Details Button */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                          <Link href={`/projects/${project.slug}`}>
-                            <Button
-                              size="lg"
-                              className="shadow-lg backdrop-blur-sm bg-white/95 dark:bg-gray-900/95 hover:bg-white dark:hover:bg-gray-900 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700"
-                              rightIcon={
-                                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                              }
-                            >
-                              See Details
-                            </Button>
-                          </Link>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                          <Button
+                            size="lg"
+                            className="shadow-lg backdrop-blur-sm bg-white/95 dark:bg-gray-900/95 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700"
+                            rightIcon={
+                              <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                            }
+                          >
+                            See Details
+                          </Button>
                         </div>
                       </div>
                     ) : null}
@@ -139,13 +145,13 @@ export default async function AllProjectsPage() {
                     <CardHeader>
                       <CardTitle className="flex items-start justify-between gap-2">
                         <span>{project.title}</span>
-                        <div className="flex gap-2 flex-shrink-0">
+                        <div className="flex gap-2 flex-shrink-0 relative z-20">
                           {project.github_url && (
                             <Link
                               href={project.github_url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-500 transition-colors"
+                              className="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-500 transition-colors p-1 -m-1"
                               aria-label={`View ${project.title} on GitHub`}
                             >
                               <Github className="w-5 h-5" />
@@ -156,7 +162,7 @@ export default async function AllProjectsPage() {
                               href={project.project_url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-500 transition-colors"
+                              className="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-500 transition-colors p-1 -m-1"
                               aria-label={`Visit ${project.title} live site`}
                             >
                               <ExternalLink className="w-5 h-5" />
@@ -166,16 +172,16 @@ export default async function AllProjectsPage() {
                       </CardTitle>
                     </CardHeader>
 
-                    <CardContent className="space-y-4 flex-1 flex flex-col">
+                    <CardContent className="space-y-4 flex-1 flex flex-col justify-between">
                       {/* Description */}
-                      <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3">
+                      <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3 min-h-[3.75rem]">
                         {project.description}
                       </p>
 
                       {/* Technologies */}
                       {project.technologies &&
                         project.technologies.length > 0 && (
-                          <div className="flex flex-wrap gap-2 min-h-[32px] mt-auto">
+                          <div className="flex flex-wrap gap-2 min-h-[52px] items-start mt-auto">
                             {project.technologies
                               .slice(0, 4)
                               .map((tech, idx: number) => (

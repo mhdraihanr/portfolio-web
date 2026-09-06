@@ -1,7 +1,22 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from "react";
 import { useMobileWidth } from "@/hooks/use-mobile-width";
+
+const subscribeReducedMotion = (callback: () => void) => {
+  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  mq.addEventListener("change", callback);
+  return () => mq.removeEventListener("change", callback);
+};
+const getReducedMotionSnapshot = () =>
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const getReducedMotionServerSnapshot = () => false;
 
 interface ScrollRevealProps {
   children: ReactNode;
@@ -26,20 +41,14 @@ export function ScrollReveal({
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isMobileWidth = useMobileWidth();
-  const [disableAnimation, setDisableAnimation] = useState(false);
+  const prefersReducedMotion = useSyncExternalStore(
+    subscribeReducedMotion,
+    getReducedMotionSnapshot,
+    getReducedMotionServerSnapshot,
+  );
   const [isVisible, setIsVisible] = useState(false);
+  const disableAnimation = prefersReducedMotion || isMobileWidth;
   const shouldAnimateOnce = once || isMobileWidth;
-
-  useEffect(() => {
-    const prefersReducedMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const shouldDisable = prefersReducedMotion || isMobileWidth;
-    setDisableAnimation(shouldDisable);
-    if (shouldDisable) {
-      setIsVisible(true);
-    }
-  }, [isMobileWidth]);
 
   useEffect(() => {
     const element = ref.current;

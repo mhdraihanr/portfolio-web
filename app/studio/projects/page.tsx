@@ -12,8 +12,13 @@ import {
   Search,
   LayoutGrid,
   Table as TableIcon,
+  GripVertical,
+  ArrowUpDown,
+  Check,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { triggerRevalidate } from "@/lib/revalidate";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -33,6 +38,11 @@ export default function ProjectsPage() {
   const [deleting, setDeleting] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [isReordering, setIsReordering] = useState(false);
+  const [draggedProjectId, setDraggedProjectId] = useState<string | null>(null);
+  const [dragOverProjectId, setDragOverProjectId] = useState<string | null>(
+    null,
+  );
   const { toast } = useToast();
 
   useEffect(() => {
@@ -100,6 +110,79 @@ export default function ProjectsPage() {
     }
   }
 
+  // Drag and drop reordering
+  const handleDragStart = (e: React.DragEvent, id: string) => {
+    setDraggedProjectId(id);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", id);
+  };
+
+  const handleDragOver = (e: React.DragEvent, id: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    if (dragOverProjectId !== id) {
+      setDragOverProjectId(id);
+    }
+  };
+
+  const handleDragEnd = () => {
+    setDraggedProjectId(null);
+    setDragOverProjectId(null);
+  };
+
+  const handleDrop = async (e: React.DragEvent, targetProject: Project) => {
+    e.preventDefault();
+    if (!draggedProjectId || draggedProjectId === targetProject.id) {
+      setDraggedProjectId(null);
+      setDragOverProjectId(null);
+      return;
+    }
+
+    const currentIdx = projects.findIndex((p) => p.id === draggedProjectId);
+    const targetIdx = projects.findIndex((p) => p.id === targetProject.id);
+    if (currentIdx === -1 || targetIdx === -1) {
+      setDraggedProjectId(null);
+      setDragOverProjectId(null);
+      return;
+    }
+
+    // Reorder array
+    const updated = Array.from(projects);
+    const [moved] = updated.splice(currentIdx, 1);
+    updated.splice(targetIdx, 0, moved);
+
+    // Re-index to ensure strictly unique, consecutive order_index (0..N)
+    const reindexed = updated.map((item, idx) => ({
+      ...item,
+      order_index: idx,
+    }));
+
+    // Real-time optimistic update
+    setProjects(reindexed);
+    setFilteredProjects(reindexed);
+    setDraggedProjectId(null);
+    setDragOverProjectId(null);
+
+    // Persist to Supabase
+    try {
+      const supabase = createClient();
+      await Promise.all(
+        reindexed.map((p) =>
+          supabase
+            .from("projects")
+            .update({ order_index: p.order_index })
+            .eq("id", p.id),
+        ),
+      );
+      await triggerRevalidate("homepage-projects", "/");
+      toast.success("Order Updated", "Projects reordered successfully");
+    } catch (err) {
+      console.error("Failed to reorder projects:", err);
+      toast.error("Error", "Failed to save order");
+      fetchProjects();
+    }
+  };
+
   const featuredCount = projects.filter((p) => p.featured).length;
 
   if (loading) {
@@ -121,15 +204,55 @@ export default function ProjectsPage() {
                 Projects
               </h1>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                Manage your portfolio projects
+                Manage your portfolio projects. Drag cards to reorder.
               </p>
             </div>
-            <Link href="/studio/projects/new">
-              <Button className="w-full sm:w-auto">
-                <PlusCircle className="w-4 h-4 mr-2" />
-                Add Project
+            <div className="flex gap-2 w-full sm:w-auto flex-wrap">
+              <Button
+                variant={isReordering ? "primary" : "outline"}
+                className={cn(
+                  "w-full sm:w-auto",
+                  isReordering &&
+                    "bg-primary text-primary-foreground font-semibold shadow-md",
+                )}
+                onClick={() => {
+                  if (isReordering) {
+                    setIsReordering(false);
+                  } else {
+                    setIsReordering(true);
+                    setSearchQuery("");
+                  }
+                }}
+              >
+                {isReordering ? (
+                  <>
+                    <Check className="w-4 h-4 mr-2" />
+                    Done
+                  </>
+                ) : (
+                  <>
+                    <ArrowUpDown className="w-4 h-4 mr-2" />
+                    Reorder
+                  </>
+                )}
               </Button>
-            </Link>
+              <Button
+                variant="outline"
+                className="w-full sm:w-auto"
+                onClick={async () => {
+                  await triggerRevalidate("homepage-projects", "/");
+                  toast.success("Cache Cleared", "Homepage cache revalidated");
+                }}
+              >
+                Refresh Cache
+              </Button>
+              <Link href="/studio/projects/new">
+                <Button className="w-full sm:w-auto">
+                  <PlusCircle className="w-4 h-4 mr-2" />
+                  Add Project
+                </Button>
+              </Link>
+            </div>
           </div>
 
           {/* Stats Cards */}
@@ -167,6 +290,19 @@ export default function ProjectsPage() {
               </p>
             </Card>
           </div>
+
+          {/* Reorder Mode Banner */}
+          {isReordering && (
+            <div className="mb-6 p-4 rounded-xl bg-primary/10 border border-primary/20 flex items-center gap-2.5 text-primary text-sm font-medium animate-fade-in">
+              <GripVertical className="w-5 h-5 animate-pulse shrink-0" />
+              <span>
+                <strong>Mode Reorder Aktif:</strong> Geser kartu atau baris
+                untuk mengatur urutan proyek. Perubahan tampil secara real-time
+                dan otomatis tersimpan. Klik <strong>Done</strong> jika sudah
+                selesai.
+              </span>
+            </div>
+          )}
 
           {/* Search and View Toggle */}
           <div className="flex flex-col sm:flex-row gap-3">
@@ -240,7 +376,24 @@ export default function ProjectsPage() {
             {filteredProjects.map((project) => (
               <Card
                 key={project.id}
-                className="p-6 hover:shadow-lg transition-shadow"
+                draggable={isReordering}
+                onDragStart={(e) =>
+                  isReordering && handleDragStart(e, project.id)
+                }
+                onDragOver={(e) =>
+                  isReordering && handleDragOver(e, project.id)
+                }
+                onDragEnd={handleDragEnd}
+                onDrop={(e) => isReordering && handleDrop(e, project)}
+                className={cn(
+                  "p-6 transition-all relative",
+                  isReordering
+                    ? "cursor-grab active:cursor-grabbing border-2 border-dashed border-primary/40 hover:border-primary shadow-sm"
+                    : "hover:shadow-lg",
+                  draggedProjectId === project.id && "opacity-30 scale-[0.98]",
+                  dragOverProjectId === project.id &&
+                    "ring-2 ring-primary border-primary bg-primary/5",
+                )}
               >
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div className="flex-1 min-w-0">
@@ -292,8 +445,9 @@ export default function ProjectsPage() {
                 {/* Footer with Links and Actions */}
                 <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-800">
                   <div className="flex items-center gap-3">
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                      #{project.order_index}
+                    <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1 font-mono">
+                      <GripVertical className="w-3.5 h-3.5 text-gray-400" />#
+                      {project.order_index}
                     </span>
                     {project.project_url && (
                       <a
@@ -321,20 +475,33 @@ export default function ProjectsPage() {
                     )}
                   </div>
                   <div className="flex items-center gap-2">
-                    <Link href={`/studio/projects/${project.id}/edit`}>
-                      <Button variant="outline" size="sm" title="Edit Project">
-                        <Pencil className="w-4 h-4" />
-                      </Button>
-                    </Link>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setDeleteId(project.id)}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
-                      title="Delete Project"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                    {isReordering ? (
+                      <div className="flex items-center gap-1.5 py-1.5 px-3 rounded-lg bg-primary/10 text-primary text-xs font-semibold select-none border border-primary/20">
+                        <GripVertical className="w-4 h-4" />
+                        <span>Geser Urutan</span>
+                      </div>
+                    ) : (
+                      <>
+                        <Link href={`/studio/projects/${project.id}/edit`}>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            title="Edit Project"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                        </Link>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setDeleteId(project.id)}
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                          title="Delete Project"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
               </Card>
@@ -371,7 +538,22 @@ export default function ProjectsPage() {
                   {filteredProjects.map((project) => (
                     <tr
                       key={project.id}
-                      className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                      draggable={isReordering}
+                      onDragStart={(e) =>
+                        isReordering && handleDragStart(e, project.id)
+                      }
+                      onDragOver={(e) =>
+                        isReordering && handleDragOver(e, project.id)
+                      }
+                      onDragEnd={handleDragEnd}
+                      onDrop={(e) => isReordering && handleDrop(e, project)}
+                      className={cn(
+                        "hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors",
+                        isReordering && "cursor-grab active:cursor-grabbing",
+                        draggedProjectId === project.id && "opacity-40",
+                        dragOverProjectId === project.id &&
+                          "bg-primary/5 dark:bg-primary/10 border-t-2 border-primary",
+                      )}
                     >
                       <td className="px-6 py-4">
                         <div className="max-w-sm">
@@ -458,22 +640,29 @@ export default function ProjectsPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center justify-end gap-2">
-                          <Link href={`/studio/projects/${project.id}/edit`}>
-                            <Button variant="outline" size="sm" title="Edit">
-                              <Pencil className="w-4 h-4" />
+                        {isReordering ? (
+                          <div className="flex items-center justify-end gap-1.5 text-primary text-xs font-semibold">
+                            <GripVertical className="w-4 h-4" />
+                            <span>Geser</span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-end gap-2">
+                            <Link href={`/studio/projects/${project.id}/edit`}>
+                              <Button variant="outline" size="sm" title="Edit">
+                                <Pencil className="w-4 h-4" />
+                              </Button>
+                            </Link>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setDeleteId(project.id)}
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                              title="Delete"
+                            >
+                              <Trash2 className="w-4 h-4" />
                             </Button>
-                          </Link>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setDeleteId(project.id)}
-                            className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
-                            title="Delete"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))}

@@ -269,10 +269,12 @@ GET /api/projects?featured=true&limit=6
   "title": "New Project",
   "slug": "new-project",
   "description": "Project description",
-  "problem": "Problem statement",
-  "solution": "Solution description",
-  "impact": "Impact description",
-  "technologies": ["Next.js", "React"],
+  "technologies": [
+    { "name": "Next.js", "icon": "devicon-nextjs-plain", "icon_svg": "https://..." }
+  ],
+  "images": [
+    { "url": "https://...", "fileId": "..." }
+  ],
   "image_url": "https://...",
   "project_url": "https://...",
   "github_url": "https://...",
@@ -283,13 +285,11 @@ GET /api/projects?featured=true&limit=6
 
 **Validation:**
 
-- `title`: Required, min 3 characters, max 200 characters
+- `title`: Required, min 3 characters, max 100 characters
 - `slug`: Required, unique, URL-safe format
-- `description`: Required, min 10 characters
-- `problem`: Required, min 10 characters
-- `solution`: Required, min 10 characters
-- `impact`: Required, min 10 characters
-- `technologies`: Required, array, min 1 item
+- `description`: Required, min 10 characters, max 500 characters
+- `technologies`: Required, array of `{ name, icon, icon_svg }`, min 1 item, max 20
+- `images`: Optional, array of `{ url, fileId }`, max 10 items
 - `image_url`: Optional, valid URL
 - `project_url`: Optional, valid URL
 - `github_url`: Optional, valid URL
@@ -580,11 +580,56 @@ const { data } = await supabase
   .order("order_index", { ascending: true });
 ```
 
-#### Admin Pages
+#### Studio Pages
 
-- **List:** `/admin/skills` - Grid/Table view with search & category filter
-- **Create:** `/admin/skills/new` - Form with Devicon Icon Picker
-- **Edit:** `/admin/skills/[id]/edit` - Pre-filled form with update & delete
+- **List:** `/studio/skills` - Grid/Table view with search & category filter
+- **Create:** `/studio/skills/new` - Form with Devicon Icon Picker
+- **Edit:** `/studio/skills/[id]/edit` - Pre-filled form with update & delete
+
+---
+
+### 6. Cache Revalidation
+
+Revalidate Next.js cache tags and paths on-demand.
+
+**Endpoint:** `POST /api/revalidate`
+
+**Authentication:** Required (Authenticated user session)
+
+**Request Body:**
+
+```json
+{
+  "tag": "homepage-certificates",
+  "path": "/"
+}
+```
+
+**Cache Tags Supported:**
+
+- `homepage-skills`
+- `homepage-projects`
+- `homepage-experience`
+- `homepage-certificates`
+- `all-projects`
+- `project-[slug]`
+
+**Success Response (200):**
+
+```json
+{
+  "revalidated": true,
+  "now": 1716500000000
+}
+```
+
+**Error Response (401):**
+
+```json
+{
+  "error": "Unauthorized"
+}
+```
 
 ---
 

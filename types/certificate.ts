@@ -6,8 +6,7 @@
 
 import type { Database } from "./database.types";
 
-export type Certificate =
-  Database["public"]["Tables"]["certificates"]["Row"];
+export type Certificate = Database["public"]["Tables"]["certificates"]["Row"];
 export type CertificateInsert =
   Database["public"]["Tables"]["certificates"]["Insert"];
 export type CertificateUpdate =

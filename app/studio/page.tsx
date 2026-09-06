@@ -15,14 +15,15 @@ export default async function AdminDashboard() {
   const supabase = await createClient();
 
   // Fetch statistics
-  const [projectsResult, experienceResult, skillsResult, certificatesResult] = await Promise.all([
-    supabase.from("projects").select("id, featured", { count: "exact" }),
-    supabase.from("work_experience").select("id, is_current", {
-      count: "exact",
-    }),
-    supabase.from("skills").select("id, is_visible", { count: "exact" }),
-    supabase.from("certificates").select("id", { count: "exact" }),
-  ]);
+  const [projectsResult, experienceResult, skillsResult, certificatesResult] =
+    await Promise.all([
+      supabase.from("projects").select("id, featured", { count: "exact" }),
+      supabase.from("work_experience").select("id, is_current", {
+        count: "exact",
+      }),
+      supabase.from("skills").select("id, is_visible", { count: "exact" }),
+      supabase.from("certificates").select("id", { count: "exact" }),
+    ]);
 
   const totalProjects = projectsResult.count || 0;
 

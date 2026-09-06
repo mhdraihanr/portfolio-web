@@ -57,7 +57,7 @@ export async function middleware(request: NextRequest) {
 - ✅ Runs BEFORE any page loads
 - ✅ Checks authentication status
 - ✅ Redirects non-authenticated users to login
-- ✅ Prevents access to all `/admin/*` routes (except login)
+- ✅ Prevents access to all `/studio/*` routes (except login)
 
 **Routes Protected:**
 
@@ -72,6 +72,9 @@ export async function middleware(request: NextRequest) {
 ✅ /studio/skills
 ✅ /studio/skills/new
 ✅ /studio/skills/[id]/edit
+✅ /studio/certificates
+✅ /studio/certificates/new
+✅ /studio/certificates/[id]/edit
 ```
 
 **Routes Public:**
@@ -223,7 +226,7 @@ const supabase = createClient(); // Includes auth token if logged in
 **Scenario:** User types admin URL directly in browser
 
 ```
-User types: http://localhost:3000/admin/projects/new
+User types: http://localhost:3000/studio/projects/new
 ```
 
 **Result:**
@@ -231,7 +234,7 @@ User types: http://localhost:3000/admin/projects/new
 ```
 1. Middleware checks authentication
 2. User not found in session
-3. REDIRECT to /admin/login
+3. REDIRECT to /studio/login
 4. ✅ PROTECTED
 ```
 

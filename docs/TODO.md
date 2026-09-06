@@ -391,6 +391,31 @@ Task list untuk development portfolio website. Update status seiring progress.
   - [x] Loading states
   - [x] Redirect after success/delete
 
+### Certificates Management
+
+- [x] List certificates page (`app/studio/certificates/page.tsx`)
+  - [x] Fetch all certificates from Supabase
+  - [x] Grid view with search and stats
+  - [x] Dedicated Reorder Mode (HTML5 drag & drop)
+  - [x] Refresh Cache action (`homepage-certificates`)
+  - [x] Edit/Delete with confirmation modal
+- [x] Create certificate page (`app/studio/certificates/new/page.tsx`)
+  - [x] Form with all fields (title, issuer, issue_date, credential_id, credential_url, description, image_url, sort_order)
+  - [x] Auto-assign next sort_order
+  - [x] Validation and toast notifications
+- [x] Edit certificate page (`app/studio/certificates/[id]/edit/page.tsx`)
+  - [x] Pre-filled form with current data
+  - [x] Update & Delete functionality
+
+### Studio Drag & Drop Reordering (Zero-Duplicate Rule)
+
+- [x] Dedicated "Reorder" mode button in header across all 4 entities
+- [x] Projects reordering (`order_index`) in Grid & Table views
+- [x] Work Experience reordering (`order_index`) in Grid & Table views
+- [x] Skills reordering (`order_index`) isolated per category in Grid & Table views
+- [x] Certificates reordering (`sort_order`) in Grid view
+- [x] Real-time optimistic UI re-sorting + automatic `0..N` sequential re-indexing
+
 ### Database Migrations
 
 - [x] `migration-add-logo-employment-type.sql` - Add logo_url and employment_type to work_experience

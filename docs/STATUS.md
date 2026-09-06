@@ -179,18 +179,27 @@ Today's homepage optimization pass focused on mobile LCP/TBT/layout cost while p
    - ✅ Loading states
    - ✅ Homepage About section fetches from database
 
-8. **✅ Validation Schemas** 🆕
-   - ✅ Project validation (`lib/validations/project.ts`)
-   - ✅ Experience validation (`lib/validations/experience.ts`)
-   - ✅ Skill validation (`lib/validations/skill.ts`) ⭐ NEW
-   - ✅ React Hook Form + Zod integration
+9. **✅ Dedicated Reorder Mode & Live Drag-and-Drop** ⭐ NEW
+   - ✅ Dedicated "Reorder" toggle button in header for all ordered entities (Projects, Experience, Skills, Certificates)
+   - ✅ Live real-time UI state reordering without requiring manual page reload/refresh
+   - ✅ Zero-duplicate guarantee: auto-reindex `0..N` on every drop
+   - ✅ Category-isolated reordering for Skills
+   - ✅ Auto-incrementing default order on all create forms (`new/page.tsx`)
+   - ✅ Optimistic UI update with background Supabase sync & cache invalidation
+   - ✅ Active Reorder banner, card dashed borders, and action replacement with "Geser Urutan"
 
-9. **✅ Helper Functions** 🆕
-   - ✅ CRUD helpers (`lib/supabase/helpers.ts`)
-   - ✅ Type-safe operations (projects, experience, skills)
-   - ✅ Supabase type inference workarounds
+10. **✅ Validation Schemas** 🆕
+    - ✅ Project validation (`lib/validations/project.ts`)
+    - ✅ Experience validation (`lib/validations/experience.ts`)
+    - ✅ Skill validation (`lib/validations/skill.ts`) ⭐ NEW
+    - ✅ React Hook Form + Zod integration
 
-10. **✅ API Routes** (`app/api/auth/`)
+11. **✅ Helper Functions** 🆕
+    - ✅ CRUD helpers (`lib/supabase/helpers.ts`)
+    - ✅ Type-safe operations (projects, experience, skills)
+    - ✅ Supabase type inference workarounds
+
+12. **✅ API Routes** (`app/api/auth/`)
 
 - ✅ `/api/auth/login` - Login endpoint
 - ✅ `/api/auth/logout` - Logout endpoint

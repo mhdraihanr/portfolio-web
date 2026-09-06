@@ -16,7 +16,11 @@ export const certificateSchema = z.object({
     .url("Must be a valid URL")
     .optional()
     .or(z.literal("")),
-  description: z.string().max(500, "Description too long").optional().or(z.literal("")),
+  description: z
+    .string()
+    .max(500, "Description too long")
+    .optional()
+    .or(z.literal("")),
   image: z.string().url("Must be a valid URL").optional().or(z.literal("")),
   sort_order: z
     .number()

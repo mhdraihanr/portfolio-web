@@ -25,7 +25,9 @@ interface LazyCertificatesClientProps {
   certificates: Certificate[];
 }
 
-export function LazyCertificatesClient({ certificates }: LazyCertificatesClientProps) {
+export function LazyCertificatesClient({
+  certificates,
+}: LazyCertificatesClientProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [shouldRender, setShouldRender] = useState(false);
 
@@ -48,7 +50,11 @@ export function LazyCertificatesClient({ certificates }: LazyCertificatesClientP
 
   return (
     <div ref={ref} style={{ minHeight: "420px" }}>
-      {shouldRender ? <CertificatesClient certificates={certificates} /> : <CertificatesPlaceholder />}
+      {shouldRender ? (
+        <CertificatesClient certificates={certificates} />
+      ) : (
+        <CertificatesPlaceholder />
+      )}
     </div>
   );
 }

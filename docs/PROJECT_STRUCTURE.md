@@ -91,14 +91,14 @@ app/
 │   │   └── [id]/
 │   │       └── edit/
 │   │           └── page.tsx    # Edit experience
-│   └── skills/                 # Skills management ✅ NEW
-│       ├── page.tsx            # List all skills (grid/table view)
-│       ├── new/
-│       │   └── page.tsx        # Create new skill (with Devicon Picker)
-│       └── [id]/
-│           └── edit/
-│               └── page.tsx    # Edit skill
-│   └── certificates/           # Certificates management ✅ NEW
+│   ├── skills/                 # Skills management
+│   │   ├── page.tsx            # List all skills (grid/table view)
+│   │   ├── new/
+│   │   │   └── page.tsx        # Create new skill (with Devicon Picker)
+│   │   └── [id]/
+│   │       └── edit/
+│   │           └── page.tsx    # Edit skill
+│   └── certificates/           # Certificates management
 │       ├── page.tsx            # List all certificates
 │       ├── new/
 │       │   └── page.tsx        # Create new certificate
@@ -107,16 +107,17 @@ app/
 │               └── page.tsx    # Edit certificate
 │
 ├── api/                        # API routes
+│   ├── auth/
+│   │   └── [action]/
+│   │       └── route.ts       # Auth handlers
 │   ├── contact/
 │   │   └── route.ts           # POST - Send contact email
 │   ├── imagekit-auth/
-│   │   └── route.ts           # GET - ImageKit authentication ✅ NEW
+│   │   └── route.ts           # GET - ImageKit authentication
 │   ├── imagekit-delete/
-│   │   └── route.ts           # POST - Delete image from ImageKit ✅ NEW
-│   ├── projects/
-│   │   └── route.ts           # GET, POST - CRUD projects
-│   └── experience/
-│       └── route.ts           # GET, POST - CRUD experience
+│   │   └── route.ts           # POST - Delete image from ImageKit
+│   └── revalidate/
+│       └── route.ts           # POST - Revalidate Next.js cache tags
 │
 ├── layout.tsx                  # Root layout
 ├── globals.css                 # Global styles
@@ -168,6 +169,8 @@ All Projects page — menampilkan seluruh project:
 - Image display: supports both `images[]` array (ImageKit) and `image_url` (legacy)
 - Technology badges with icons
 - Hover overlay with "See Details" button
+- Clickable card via Stretched Link pattern (clicking anywhere navigates to project detail)
+- Equalized card heights, description heights, and badge container alignment
 - Linked from "View All Projects" di homepage
 - Metadata for SEO (title, description)
 
@@ -177,15 +180,15 @@ Dynamic project detail page:
 
 - Server component dengan SSR
 - Fetch project by slug dari Supabase
-- Display full project information (title, description, image, technologies, problem, solution, impact)
+- Display full project information (title, description, images/image_url, technologies)
 - Action buttons (GitHub, Live Site)
 - Back navigation ke all projects page
 - Not found handling (404)
 - Light & dark mode support
 
-#### `app/admin/layout.tsx`
+#### `app/studio/layout.tsx`
 
-Admin layout dengan:
+Studio layout dengan:
 
 **Note:** Folder name `studio` MUST match the `ADMIN_ROUTE_SECRET` value in `.env.local`. For better security, you can rename this folder to a unique name and update the environment variable accordingly.
 
