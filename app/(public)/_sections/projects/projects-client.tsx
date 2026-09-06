@@ -8,6 +8,7 @@ import { ExternalLink, Github, Code2, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
+import { localizeIconSvgUrl } from "@/lib/devicon";
 
 interface ProjectsClientProps {
   projects: Project[];
@@ -51,12 +52,14 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
                     {/* Full card clickable link */}
                     <Link
                       href={`/projects/${project.slug}`}
+                      prefetch={index < 2}
                       className="absolute inset-0 z-10"
                       aria-label={`View details for ${project.title}`}
                     />
 
                     {project.images && project.images.length > 0 ? (
                       <div className="relative aspect-video w-full overflow-hidden bg-gray-100 dark:bg-gray-800">
+                        {/* ponytail: no priority here — homepage LCP is hero text, not card images. */}
                         <Image
                           src={
                             typeof project.images[0] === "string"
@@ -155,7 +158,10 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
                                 >
                                   {tech.icon_svg ? (
                                     <Image
-                                      src={tech.icon_svg}
+                                      src={
+                                        localizeIconSvgUrl(tech.icon_svg) ??
+                                        tech.icon_svg
+                                      }
                                       alt={tech.name}
                                       width={14}
                                       height={14}

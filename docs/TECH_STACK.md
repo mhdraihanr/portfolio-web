@@ -71,13 +71,16 @@ Project ini menggunakan modern web development stack dengan fokus pada:
 - `Certificates` remains IntersectionObserver-gated and client-only because it contains LogoLoop animation work.
 - `Projects` keeps cached server data fetching, but its interactive grid and reveal runtime are now loaded only when the section is near the viewport.
 - `Work Experience` keeps cached server data fetching, but the client timeline, theme hook, and React Bits `Orb` WebGL background are loaded only when the section is near the viewport.
-- Next.js `experimental.optimizePackageImports` is enabled for `lucide-react` to reduce package import overhead from the icon library.
+- Next.js `experimental.optimizePackageImports` is enabled for `lucide-react` and `motion` to reduce package import overhead.
 - The homepage avoids broad public-section barrel imports so the hero path does not eagerly pull unrelated section modules.
 - Hero text readiness now controls the global loading signal, while `LightRays` initializes after initial paint and fades in when its first WebGL frame is ready.
 - WebGL animation runtime caps DPR, uses passive listeners, pauses hidden-tab rendering, and respects `prefers-reduced-motion`.
 - Shared `ScrollReveal` animations run only once on phone/mobile widths (`width <= 767px`) to avoid repeated animation work during mobile scrolling, while non-mobile widths keep the existing repeatable behavior.
 - The hero title continues using `BlurText`, while surrounding content avoids being hidden behind WebGL readiness.
 - Public homepage Supabase data (`Projects`, `Work Experience`, visible skills) is fetched through a server-only cached helper with 5-minute revalidation, avoiding request-cookie reads on the homepage document path and reducing TTFB/document latency.
+- Below-fold homepage sections (`Certificates`, `Experience`) use `content-visibility: auto` with `contain-intrinsic-size` so the browser skips offscreen render work without removing any animation. (`Projects` is excluded — it sits near the viewport and its images must be discovered early.)
+- ImageKit is preconnected in the root layout to shave DNS/TLS latency off the LCP image.
+- `next/image` uses AVIF-first format negotiation (`images.formats`) for smaller LCP payloads.
 - Public static assets such as local font files, the current profile image, and root SVGs receive explicit long-lived cache headers from `next.config.ts` to address efficient cache lifetime diagnostics.
 - The About profile image is not marked as `priority`, keeping browser resource priority focused on the hero/LCP path while still using `next/image` responsive sizing.
 

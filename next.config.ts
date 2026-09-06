@@ -66,7 +66,8 @@ const immutableAssetHeaders = [
 
 const nextConfig: NextConfig = {
   experimental: {
-    optimizePackageImports: ["lucide-react"],
+    // ponytail: add more entries only when a barrel-imported lib shows up in bundle analyzer.
+    optimizePackageImports: ["lucide-react", "motion"],
   },
   // Security Headers - Protects against common vulnerabilities
   async headers() {
@@ -90,6 +91,8 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    // ponytail: AVIF first; drop if ImageKit already negotiates formats optimally.
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: "https",

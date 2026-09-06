@@ -7,10 +7,16 @@ import LightRays from "@/components/effects/light-rays";
 import { useTheme } from "next-themes";
 import { useCallback, useEffect, useRef, useState } from "react";
 import localFont from "next/font/local";
-import BlurText from "@/components/effects/blur-text";
+import dynamic from "next/dynamic";
 import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
 import { usePageLoading } from "@/contexts/page-loading-context";
 import { useMobileWidth } from "@/hooks/use-mobile-width";
+
+// ponytail: BlurText (motion runtime) is code-split; chunk is preloaded on mount
+// so the title renders the moment animationsReady flips.
+const BlurText = dynamic(() => import("@/components/effects/blur-text"), {
+  ssr: false,
+});
 
 // Import Delargo DT font
 const delargoDT = localFont({
@@ -31,8 +37,9 @@ export function Hero() {
 
   // Prevent hydration mismatch
   useEffect(() => {
-    // eslint-disable-next-line
     setMounted(true);
+    // Warm the BlurText chunk so the title paints the moment animationsReady flips.
+    void import("@/components/effects/blur-text");
   }, []);
 
   // Let the browser paint the static hero first, then load the WebGL layer.
@@ -165,7 +172,7 @@ export function Hero() {
           >
             {animationsReady && (
               <BlurText
-                text="Fullstack Developer ━ designing clarity inside powerful systems"
+                text="Fullstack Developer turning ideas into working products."
                 delay={isMobileWidth ? 60 : 120}
                 stepDuration={isMobileWidth ? 0.55 : 1}
                 animateBy="words"

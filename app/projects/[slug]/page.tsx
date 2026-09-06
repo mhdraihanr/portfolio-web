@@ -1,5 +1,5 @@
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { unstable_cache } from "next/cache";
+import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 import type { Database } from "@/types/database.types";
 import type { Project } from "@/types/project";
@@ -10,36 +10,49 @@ import { ImageCarousel } from "@/components/ui/image-carousel";
 import { ExternalLink, Github, ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { localizeIconSvgUrl } from "@/lib/devicon";
 
-async function getProject(slug: string): Promise<Project | null> {
-  const cookieStore = await cookies();
-
-  const supabase = createServerClient<Database>(
+// ponytail: cookie-free cached client keeps detail pages static; switch back to
+// SSR client only when per-user data is needed on this route.
+function createPublicSupabaseClient() {
+  return createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll() {
-          // Server component - read-only cookies
-        },
-      },
-    },
+    { auth: { autoRefreshToken: false, persistSession: false } },
   );
+}
 
+async function fetchProjectSlugs(): Promise<string[]> {
+  const supabase = createPublicSupabaseClient();
+  const { data, error } = await supabase.from("projects").select("slug");
+  if (error || !data) return [];
+  return data.map((p) => p.slug);
+}
+
+async function fetchProject(slug: string): Promise<Project | null> {
+  const supabase = createPublicSupabaseClient();
   const { data, error } = await supabase
     .from("projects")
     .select("*")
     .eq("slug", slug)
     .single();
 
-  if (error || !data) {
-    return null;
-  }
-
+  if (error || !data) return null;
   return data as Project;
+}
+
+const getProject = (slug: string) =>
+  unstable_cache(fetchProject.bind(null, slug), [`project-${slug}`], {
+    revalidate: 300,
+    tags: [`project-${slug}`, "all-projects"],
+  })();
+
+export async function generateStaticParams() {
+  const slugs = await unstable_cache(fetchProjectSlugs, ["project-slugs"], {
+    revalidate: 300,
+    tags: ["all-projects"],
+  })();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export default async function ProjectDetailPage({
@@ -59,10 +72,10 @@ export default async function ProjectDetailPage({
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="max-w-4xl mx-auto">
           {/* Back Button */}
-          <Link href="/projects">
+          <Link href="/#projects">
             <Button variant="ghost" className="mb-8 group">
               <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-              Back to Projects
+              Back to Home
             </Button>
           </Link>
 
@@ -141,7 +154,7 @@ export default async function ProjectDetailPage({
                   >
                     {tech.icon_svg ? (
                       <Image
-                        src={tech.icon_svg}
+                        src={localizeIconSvgUrl(tech.icon_svg) ?? tech.icon_svg}
                         alt={tech.name}
                         width={16}
                         height={16}

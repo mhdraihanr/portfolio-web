@@ -45,7 +45,10 @@ export function ExperienceClient({ experiences }: ExperienceClientProps) {
   const hasMore = experiences.length > 3;
 
   return (
-    <section id="experience" className="relative pt-12 pb-20 overflow-hidden">
+    <section
+      id="experience"
+      className="relative pt-12 pb-20 overflow-hidden [content-visibility:auto] [contain-intrinsic-size:auto_800px]"
+    >
       {/* Orb Background */}
       <div className={`absolute inset-0 ${bgClass}`}>
         {mounted && !isMobileWidth && (

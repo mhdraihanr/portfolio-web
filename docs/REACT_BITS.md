@@ -15,14 +15,13 @@ The homepage hero keeps the React Bits `LightRays` WebGL background and `BlurTex
 
 These changes target high Total Blocking Time, Speed Index, and "minimize main-thread work" diagnostics without removing the global loader or the WebGL visual style.
 
-## Priority 3 Approach A: Hero Text/WebGL Decoupling
+## Priority 3 Approach A: Hero Text/WebGL Decoupling (Reverted)
 
-The latest performance pass decouples the largest above-the-fold text from `LightRays` readiness:
+An earlier pass decoupled the largest above-the-fold text from `LightRays` readiness by painting hero copy immediately (`opacity-100`) and replaying fade/blur animations on top. It improved LCP (6306ms → 720ms) but caused a visible double-transition flash: text appeared instantly, then the entrance animation replayed over it. This was reverted.
 
-- `BlurText` and surrounding hero content now start from a lightweight hero-readiness timer after initial paint.
-- `LightRays` readiness no longer blocks `setPageReady()` or the hero title animation.
-- The WebGL canvas uses an opacity transition so it can appear smoothly after the text is already visible.
-- This improves the LCP and Speed Index path because the visible hero copy is no longer held behind shader compilation and the first WebGL render.
+- Hero text is gated behind `animationsReady` again (`opacity-0 → animate-fade-in-*`), so the entrance animation runs exactly once from hidden.
+- `BlurText` remains dynamically imported (`next/dynamic`, `ssr: false`) so the `motion` runtime stays out of the hero initial bundle; the chunk is preloaded on mount so the title paints the moment `animationsReady` flips.
+- `LightRays` readiness still does not block `setPageReady()` or the hero title animation.
 - Visual quality remains: `BlurText`, global loading, and `LightRays` are all retained.
 
 ## Mobile Hero LCP Animation Phase 1 Notes

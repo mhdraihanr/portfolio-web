@@ -1,12 +1,55 @@
 # 📊 Project Status
 
-**Last Updated:** May 31, 2026
+**Last Updated:** September 6, 2026
 
 ---
 
 ## 🎉 Project Progress: 92% Complete
 
-## 🆕 Latest Update: Mobile Homepage Performance Pass
+## 🆕 Latest Update: Navigation Performance Pass (Projects SSG + Layout Slim)
+
+**Status:** ✅ **IMPLEMENTED AND VERIFIED**
+
+This pass makes `/projects` static and removes the redundant GlobalLoader from the projects route:
+
+- ✅ `/projects` kini **SSG** (static) — beralih dari `cookies()` SSR ke `createClient` + `unstable_cache` 5 menit. Navigasi dari mana pun langsung instan (tidak perlu nunggu server).
+- ✅ `app/projects/layout.tsx` di-simplify — hapus `PageLoadingProvider`, `GlobalLoader`, dan `useTheme`/`useEffect` 100ms. Kini server component murni (Footer + BackToTop). Loading skeleton `loading.tsx` tetap berfungsi.
+- ✅ `Back to Home` → `/#projects` di halaman detail project.
+
+---
+
+## Previous: LCP & Navigation Performance Pass (Revised)
+
+**Status:** ✅ **IMPLEMENTED AND VERIFIED**
+
+This pass targets Lighthouse LCP/TBT and See-Details navigation speed while preserving all existing animations. Revised after a Chrome DevTools trace showed the homepage LCP element is **hero text** (render-delay bound), not an image:
+
+- ✅ `next/image` AVIF-first negotiation (`images.formats`) dan `optimizePackageImports` untuk `lucide-react` + `motion`.
+- ✅ ImageKit preconnect di root layout (DNS/TLS lebih awal untuk gambar).
+- ✅ `/projects/[slug]` kini **SSG** (`generateStaticParams` + `unstable_cache` 5 menit, tanpa `cookies()`), detail page ter-prerender saat build.
+- ✅ `loading.tsx` skeletons (fixed height, anti-CLS) untuk `/projects` dan `/projects/[slug]`.
+- ✅ Detail link pada card memakai `prefetch` (2 card pertama) untuk navigasi instan.
+- ✅ Section bawah-fold (`Certificates`, `Experience`) memakai `content-visibility: auto` + `contain-intrinsic-size`.
+- ↩️ **Rolled back:** `priority`/`fetchPriority` pada gambar project card (LCP bukan gambar — hanya menambah bandwidth contention) dan `content-visibility` pada section Projects (menunda image discovery dekat viewport).
+- ↩️ **Rolled back (step 1 LCP decoupling):** paint langsung `opacity-100` + swap h1→BlurText menyebabkan flash ganda (teks muncul dulu lalu ikut transisi lagi). Hero kembali ke gating `opacity-0 → animate` asli; LCP kembali mengikuti akhir animasi entrance seperti semula.
+- ✅ **BlurText dynamic import (kept):** `motion` runtime keluar dari bundle awal hero (`next/dynamic`, `ssr:false`, mount saat `animationsReady`, chunk di-preload saat mount) — animasi title tetap sama, tanpa flash.
+- ✅ **Devicon SVG localization (step 3):** 44 ikon di `public/icons/devicon/` (~198KB), helper `lib/devicon.ts` (`getDeviconSvgUrl` + `localizeIconSvgUrl`, local-first + fallback CDN). Semua render publik (About skills, project tech badges homepage/`/projects`/`[slug]`) kini serve dari path lokal — tidak ada lagi request gambar ke JSDelivr. Studio (admin-only) sengaja tetap CDN.
+- ✅ Semua animasi (`BlurText`, `ScrollReveal`, `LightRays`, `LogoLoop`, `Orb`, hover scale) tetap utuh.
+- ✅ Verified with `pnpm lint`, `pnpm type-check`, and `pnpm build` (29/29 routes, `/projects/[slug]` → SSG).
+
+### Trace Findings (Chrome DevTools, desktop, no throttling)
+
+- Before LCP decoupling: LCP 6306ms (hero text gated by `animationsReady` + `animate-fade-in-down delay-200`), CLS 0.05.
+- During LCP decoupling (reverted): **LCP 720ms** (TTFB 501ms + render delay 219ms), **CLS 0.00** — tapi menimbulkan flash ganda: teks paint instan lalu animasi fade/blur replay di atasnya, terlihat muncul-duluan-lalu-transisi-lagi saat reload.
+- After BlurText dynamic import (step 2, kept): **LCP 714ms** (TTFB 358ms + render delay 356ms), **CLS 0.05** (single late shift ~4.2s, no identified culprit; still Good < 0.1). `motion` runtime no longer in hero initial bundle; chunk di-preload saat mount agar title langsung paint saat `animationsReady` flip.
+- Render-blocking: 2 internal Next.js CSS files (~91ms FCP/LCP saving potential, architectural — cannot remove).
+- Third-party: JSDelivr Devicon SVG hotspot **resolved** — semua `<img>` ikon publik kini dari `/icons/devicon/` lokal (CDN URL hanya tersisa sebagai teks serialized di RSC flight data, bukan request).
+
+### Next Recommended Performance Targets
+
+- Reduce hero hydration cost further (TTFB 501ms is now the largest LCP slice)
+
+### Previous Update: Mobile Homepage Performance Pass
 
 **Status:** ✅ **IMPLEMENTED AND VERIFIED**
 
@@ -25,11 +68,10 @@ Today's homepage optimization pass focused on mobile LCP/TBT/layout cost while p
 - ✅ `CLS`: `0.00`
 - ✅ Forced reflow reduced to about `162 ms`
 - ⚠️ Remaining render-blocking requests: two internal Next.js CSS files
-- ⚠️ Remaining third-party transfer hotspot: Devicon SVG requests from JSDelivr
+- ✅ Devicon SVG hotspot resolved — public icons served from `/icons/devicon/` (step 3)
 
 ### Next Recommended Performance Targets
 
-- Localize or replace public Devicon SVG/CDN usage
 - Reduce hero-related render-blocking CSS and font cost on mobile
 - Continue trimming mobile critical-path CSS and above-the-fold network dependencies
 

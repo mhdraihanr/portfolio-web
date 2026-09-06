@@ -67,7 +67,7 @@ app/
 │       └── Contact.tsx         # Contact form
 │
 ├── projects/                    # Project pages (outside public group)
-│   ├── layout.tsx              # Projects layout (Footer, BackToTop, Loading) ✅
+│   ├── layout.tsx              # Projects layout (Footer, BackToTop) ✅
 │   ├── page.tsx                # All Projects page ✅ NEW
 │   └── [slug]/                 # Dynamic project detail route
 │       └── page.tsx            # Project detail page ✅
@@ -153,23 +153,25 @@ Shared layout untuk semua project pages (All Projects & Detail):
 - Tidak menggunakan Navbar (clean, focused view)
 - Footer tetap ditampilkan
 - BackToTop button
-- PageLoadingProvider with custom GlobalLoader overlay
+- Server component (no GlobalLoader, no PageLoadingProvider)
 - Shared across `/projects` and `/projects/[slug]`
 
-#### `app/projects/page.tsx` ✅ NEW
+#### `app/projects/page.tsx` ✅ SSG
 
 All Projects page — menampilkan seluruh project:
 
-- Server component dengan SSR
+- **Static** — cookie-free `unstable_cache` 5 menit, client `createClient` tanpa `cookies()`
 - Fetch ALL projects dari Supabase (tidak hanya featured)
 - Grid layout 2 kolom (responsive)
 - Same card style as homepage featured projects
 - ScrollReveal animations (staggered)
+- `loading.tsx` skeleton untuk navigasi cepat antar halaman
 - Back to Home button
 - Image display: supports both `images[]` array (ImageKit) and `image_url` (legacy)
 - Technology badges with icons
 - Hover overlay with "See Details" button
 - Clickable card via Stretched Link pattern (clicking anywhere navigates to project detail)
+- Detail links prefetch 2 card pertama untuk navigasi instan
 - Equalized card heights, description heights, and badge container alignment
 - Linked from "View All Projects" di homepage
 - Metadata for SEO (title, description)
@@ -178,9 +180,11 @@ All Projects page — menampilkan seluruh project:
 
 Dynamic project detail page:
 
-- Server component dengan SSR
+- **Static (SSG)** via `generateStaticParams` + `unstable_cache` (revalidate 5 menit, tags `project-[slug]` & `all-projects`)
+- Tanpa `cookies()` — pakai public Supabase client agar bisa full static & cepat
 - Fetch project by slug dari Supabase
 - Display full project information (title, description, images/image_url, technologies)
+- `loading.tsx` skeleton dengan fixed height (anti-CLS saat navigasi)
 - Action buttons (GitHub, Live Site)
 - Back navigation ke all projects page
 - Not found handling (404)
@@ -518,6 +522,14 @@ General utility functions:
 - `truncate()` - Truncate text
 - `validateEmail()` - Validate email
 
+#### `lib/devicon.ts` ✅
+
+Local-first Devicon SVG helper (step 3 perf pass):
+
+- `getDeviconSvgUrl(icon)` - Local `/icons/devicon/` path from a devicon font class, CDN fallback for unknown icons
+- `localizeIconSvgUrl(iconSvg)` - Rewrite stored CDN `icon_svg` URLs to local copies when available
+- Map covers 44 icons; add new entries + download the SVG when new skills use new icons
+
 ---
 
 ### `/types` - TypeScript Types
@@ -677,6 +689,7 @@ public/
 │       └── project-2.jpg
 │
 ├── fonts/                      # Custom fonts (if any)
+├── icons/devicon/               # Localized Devicon SVGs (44 files, ~198KB) ✅
 ├── favicon.ico                 # Favicon
 ├── robots.txt                  # SEO robots file
 └── sitemap.xml                 # SEO sitemap

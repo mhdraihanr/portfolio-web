@@ -27,7 +27,7 @@ portfolio-web/
 │   │   ├── page.tsx           # Homepage
 │   │   └── _sections/         # Homepage sections (hero, about, certificates, projects, experience, contact)
 │   │
-│   ├── projects/              # Projects catalog & dynamic detail
+│   ├── projects/              # Projects catalog (SSG) & detail (SSG)
 │   │   ├── layout.tsx
 │   │   ├── page.tsx
 │   │   └── [slug]/

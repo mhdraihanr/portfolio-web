@@ -1,5 +1,5 @@
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { unstable_cache } from "next/cache";
+import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database.types";
 import type { Project } from "@/types/project";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,25 +15,20 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
+import { localizeIconSvgUrl } from "@/lib/devicon";
 
-async function getAllProjects(): Promise<Project[]> {
-  const cookieStore = await cookies();
-
-  const supabase = createServerClient<Database>(
+// ponytail: cookie-free cached client keeps projects page static; switch to SSR
+// client only when per-user data is needed.
+function createPublicSupabaseClient() {
+  return createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll() {
-          // Server component - read-only cookies
-        },
-      },
-    },
+    { auth: { autoRefreshToken: false, persistSession: false } },
   );
+}
 
+async function fetchAllProjects(): Promise<Project[]> {
+  const supabase = createPublicSupabaseClient();
   const { data, error } = await supabase
     .from("projects")
     .select("*")
@@ -46,6 +41,12 @@ async function getAllProjects(): Promise<Project[]> {
 
   return (data as Project[]) || [];
 }
+
+const getAllProjects = () =>
+  unstable_cache(fetchAllProjects, ["all-projects-page"], {
+    revalidate: 300,
+    tags: ["all-projects"],
+  })();
 
 export const metadata = {
   title: "All Projects | Portfolio",
@@ -105,6 +106,7 @@ export default async function AllProjectsPage() {
                     {/* Full card clickable link */}
                     <Link
                       href={`/projects/${project.slug}`}
+                      prefetch={index < 2}
                       className="absolute inset-0 z-10"
                       aria-label={`View details for ${project.title}`}
                     />
@@ -192,7 +194,10 @@ export default async function AllProjectsPage() {
                                 >
                                   {tech.icon_svg ? (
                                     <Image
-                                      src={tech.icon_svg}
+                                      src={
+                                        localizeIconSvgUrl(tech.icon_svg) ??
+                                        tech.icon_svg
+                                      }
                                       alt={tech.name}
                                       width={14}
                                       height={14}

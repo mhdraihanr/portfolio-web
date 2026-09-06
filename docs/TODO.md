@@ -115,8 +115,12 @@ Task list untuk development portfolio website. Update status seiring progress.
   - [x] Priority 3 Approach A: decouple hero text/global loader readiness from LightRays first frame, keeping BlurText and fading WebGL in after it is ready
   - [x] Priority 4B Approach A: cache public Supabase homepage data for Featured Projects and Work Experience with 5-minute revalidation to reduce document latency/TTFB
   - [x] Phase 1 approved package import optimization: enable `experimental.optimizePackageImports` for `lucide-react`
+  - [x] Package import optimization Phase 2: add `motion` to `optimizePackageImports`
   - [x] Cache lifetime/LCP Phase 1: add long-lived immutable cache headers for safe public static assets
   - [x] Mobile LCP Phase 1: keep delayed `BlurText` rendering and animation, but shorten mobile-only blur/transform/delay, make mobile loader non-blocking, and defer mobile LightRays startup further
+  - [x] LCP Phase 2: AVIF-first `images.formats`, ImageKit preconnect
+  - [x] LCP Phase 2 revision: card-image `priority`/`fetchPriority` rolled back — trace showed homepage LCP is hero text, image priority only added bandwidth contention
+  - [x] Below-fold Phase 2: `content-visibility: auto` + `contain-intrinsic-size` on Certificates/Experience sections (Projects excluded to keep near-viewport image discovery fast; animations preserved)
 - [x] About section ✅ **COMPLETE**
   - [x] Two-column layout (profile photo left, info right)
   - [x] Real profile photo (public/profile.jpg) with next/image
@@ -908,17 +912,19 @@ Future ideas to consider:
   - Button fade-in with backdrop blur effect
 - ✅ Light & dark mode support
 - ✅ Staggered fade-in animations
-- ✅ Links to `/projects/[slug]` for detail pages
+- ✅ Links to `/projects/[slug]` for detail pages (Stretched Link: full card clickable, prefetch 2 first cards)
 - ✅ Empty state message
 - ✅ "View All Projects" link
 - ✅ **Project Detail Pages:**
   - Dynamic route (`app/projects/[slug]/page.tsx`)
-  - Custom layout without Navbar (`app/projects/[slug]/layout.tsx`)
-  - Server component with SSR
+  - Custom layout without Navbar (shared `/projects/layout.tsx`)
+  - **Static (SSG)** via `generateStaticParams` + `unstable_cache` (revalidate 5 min, tags `project-[slug]` & `all-projects`)
+  - Cookie-free public Supabase client (no `cookies()` on public route)
+  - `loading.tsx` skeletons with fixed height (anti-CLS)
   - Fetch project by slug from Supabase
-  - Full project information display (title, description, image, technologies with icons, problem, solution, impact)
+  - Full project information display (title, description, image, technologies with icons)
   - Action buttons (GitHub, Live Site)
-  - Back to projects navigation
+  - Back to Home (`/#projects`) navigation
   - Not found handling (404)
   - Light & dark mode support
   - Responsive design
@@ -1239,9 +1245,9 @@ feat(security): add rate limiting and IP whitelist for admin routes
 
 2. **Projects Layout** (`app/projects/layout.tsx`)
    - Shared layout for `/projects` and `/projects/[slug]`
-   - Footer, BackToTop, PageLoadingProvider
-   - Custom GlobalLoader with theme-aware colors
-   - Removed duplicate `[slug]/layout.tsx` to prevent double-wrapping
+   - Footer, BackToTop
+   - Server component (no GlobalLoader, no PageLoadingProvider)
+   - Loading skeleton via `loading.tsx` instead
 
 3. **Updated Navigation Links**
    - Project detail page back links now point to `/projects` instead of `/#projects`
@@ -1426,7 +1432,7 @@ feat(security): add rate limiting and IP whitelist for admin routes
    - Global `isLoading` state management across all routes
    - `setPageReady()` function to signal loading completion
    - 3-second fallback timeout for safety
-   - Used in all layouts (public, project detail pages)
+   - Used in all layouts (public)
 
 2. **Loading Overlays** (Custom GlobalLoader)
    - Uses local `GlobalLoader` component without external loading dependency
@@ -1460,7 +1466,7 @@ feat(security): add rate limiting and IP whitelist for admin routes
 - `components/SplitText.tsx` - NEW: GSAP split text animations
 - `components/LightRays.tsx` + `LightRays.jsx` - Added `onReady` callback
 - `app/(public)/layout.tsx` - Converted to client, added PageLoadingProvider
-- `app/projects/[slug]/layout.tsx` - Added loading overlay
+- `app/projects/layout.tsx` - Shared layout (no Navbar, no GlobalLoader)
 - `app/(public)/components/hero.tsx` - Animation sequencing after loading
 - `app/(public)/components/about.tsx` - SplitText + ScrollReveal
 - `app/(public)/components/projects.tsx` - ScrollReveal with stagger
@@ -1895,7 +1901,7 @@ EMAIL_TO=recipient@example.com
    - Reason: To have independent layout control
 
 2. **Created Dedicated Layout for Project Details**
-   - File: `app/projects/[slug]/layout.tsx`
+   - File: `app/projects/layout.tsx` (shared for `/projects` and `/projects/[slug]`)
    - No Navbar (clean, immersive experience)
    - Footer and BackToTop button retained
    - Allows users to focus on project content
@@ -1980,10 +1986,10 @@ EMAIL_TO=recipient@example.com
    - White cards with proper spacing
    - Responsive max-width (max-w-4xl)
 
-9. **`app/projects/[slug]/layout.tsx`** - Custom layout (NEW)
+9. **`app/projects/layout.tsx`** - Project routes layout (shared)
    - No Navbar for cleaner, focused view
    - Footer and BackToTop button retained
-   - Allows full-screen immersive experience
+   - Server component (no GlobalLoader, no PageLoadingProvider)
    - Prevents navigation clutter on detail pages
 
 **Features Implemented:**
