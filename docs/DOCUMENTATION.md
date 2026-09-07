@@ -2,7 +2,7 @@
 
 ## 📋 Overview
 
-Portfolio website untuk Muhammad Raihan Rafliansyah - Fullstack Web Developer dengan fitur Studio (admin panel) untuk manage projects, work experience, skills, dan certificates secara dinamis.
+Portfolio website untuk Muhammad Raihan Rafliansyah - Fullstack Web Developer dengan fitur Studio (admin panel) untuk manage projects, work experience, skills, certificates, dan profile (photo, CV, section texts) secara dinamis.
 
 ## 🛠 Tech Stack
 
@@ -41,7 +41,8 @@ portfolio-web/
 │   │   ├── projects/          # Projects CRUD + Drag & Drop reorder
 │   │   ├── experience/        # Experience CRUD + Drag & Drop reorder
 │   │   ├── skills/            # Skills CRUD + Drag & Drop reorder
-│   │   └── certificates/      # Certificates CRUD + Drag & Drop reorder
+│   │   ├── certificates/      # Certificates CRUD + Drag & Drop reorder
+│   │   └── profile/           # Profile settings (photo, CV, section texts)
 │   │
 │   ├── api/
 │   │   ├── auth/              # Auth routes
@@ -157,6 +158,24 @@ portfolio-web/
 ```
 
 > **Catatan Reordering:** Keempat tabel di atas menggunakan mekanisme **Zero-Duplicate HTML5 Drag & Drop Reordering** di Studio. Urutan di-reindex secara berurutan `0..N` secara unik tanpa duplikasi index.
+
+#### 5. profile
+
+Single-row table (`id = 1`) untuk pengaturan profil situs:
+
+```sql
+- id (integer, primary key, check: id = 1)
+- full_name (text)
+- tagline (text)
+- hero_title (text)
+- hero_tagline (text)
+- about_text (text)
+- photo_url (text, nullable)      -- ImageKit URL
+- cv_url (text, nullable)         -- URL eksternal (Google Drive, Notion, dll)
+- updated_at (timestamp)
+```
+
+> **Catatan:** Tabel `profile` tidak ikut reordering (bukan list). Dikelola via `/studio/profile`.
 
 ## 🚀 Setup Instructions
 

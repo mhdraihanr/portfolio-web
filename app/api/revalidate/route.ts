@@ -21,6 +21,7 @@ export async function POST(request: Request) {
     // Default revalidate homepage caches
     revalidatePath("/");
     revalidatePath("/projects");
+    revalidateTag("homepage-profile", "max");
     revalidateTag("homepage-skills", "max");
     revalidateTag("homepage-projects", "max");
     revalidateTag("homepage-experience", "max");
