@@ -1,5 +1,5 @@
 import type { Skill } from "@/types/skill";
-import { getVisibleSkills } from "@/lib/supabase/public-data";
+import { getVisibleSkills, getProfile } from "@/lib/supabase/public-data";
 import { AboutClient } from "./about-client";
 
 export type HomepageSkill = Pick<
@@ -14,7 +14,10 @@ export interface HomepageSkillsByCategory {
 }
 
 export async function About() {
-  const visibleSkills = await getVisibleSkills();
+  const [visibleSkills, profile] = await Promise.all([
+    getVisibleSkills(),
+    getProfile(),
+  ]);
   const skills: HomepageSkillsByCategory = {
     frontend: visibleSkills.filter((skill) => skill.category === "frontend"),
     backend: visibleSkills.filter((skill) => skill.category === "backend"),
@@ -23,5 +26,5 @@ export async function About() {
     ),
   };
 
-  return <AboutClient skills={skills} />;
+  return <AboutClient skills={skills} profile={profile} />;
 }

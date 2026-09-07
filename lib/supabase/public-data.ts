@@ -5,6 +5,7 @@ import type { Project } from "@/types/project";
 import type { WorkExperience } from "@/types/experience";
 import type { Skill } from "@/types/skill";
 import type { Certificate } from "@/types/certificate";
+import type { Profile } from "@/types/profile";
 
 export const HOMEPAGE_PUBLIC_DATA_REVALIDATE_SECONDS = 300;
 
@@ -98,6 +99,32 @@ export const getVisibleSkills = unstable_cache(
     tags: ["homepage-skills"],
   },
 );
+
+// ============================================
+// PROFILE
+// ============================================
+
+async function fetchProfile(): Promise<Profile | null> {
+  const supabase = createPublicSupabaseClient();
+
+  const { data, error } = await supabase
+    .from("profile")
+    .select("*")
+    .eq("id", 1)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Error fetching profile:", error);
+    return null;
+  }
+
+  return (data as Profile) || null;
+}
+
+export const getProfile = unstable_cache(fetchProfile, ["homepage-profile"], {
+  revalidate: HOMEPAGE_PUBLIC_DATA_REVALIDATE_SECONDS,
+  tags: ["homepage-profile"],
+});
 
 // ============================================
 // CERTIFICATES

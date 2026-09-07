@@ -10,6 +10,7 @@ import {
   FolderKanban,
   Code2,
   Award,
+  User,
   Menu,
   X,
   LogOut,
@@ -56,6 +57,11 @@ export function Sidebar({ adminRoute, userEmail }: SidebarProps) {
       label: "Certificates",
       href: `/${adminRoute}/certificates`,
       icon: Award,
+    },
+    {
+      label: "Profile",
+      href: `/${adminRoute}/profile`,
+      icon: User,
     },
   ];
 

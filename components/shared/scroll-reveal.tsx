@@ -56,8 +56,9 @@ export function ScrollReveal({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // Update visibility state on both entry and exit
-        setIsVisible(entry.isIntersecting);
+        // ponytail: hysteresis — element scrolled past the top edge stays revealed,
+        // so isIntersecting can't flicker when it straddles the viewport top.
+        setIsVisible(entry.isIntersecting || entry.boundingClientRect.top < 0);
 
         // Stop observing after first intersection when explicitly once or on mobile widths.
         if (entry.isIntersecting && shouldAnimateOnce) {

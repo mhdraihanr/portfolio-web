@@ -58,6 +58,17 @@ export async function deleteSkill(
 }
 
 // ============================================
+// PROFILE
+// ============================================
+
+export async function updateProfile(
+  client: SupabaseClient<Database>,
+  data: Database["public"]["Tables"]["profile"]["Update"],
+) {
+  return await client.from("profile").update(data).eq("id", 1);
+}
+
+// ============================================
 // CERTIFICATES
 // ============================================
 

@@ -272,6 +272,33 @@ _(Catatan: Path `/studio` dapat disesuaikan melalui environment variable `ADMIN_
 
 ---
 
+## 👤 Profile Settings
+
+### Edit Profile
+
+**URL:** `/studio/profile`
+
+Single-row settings (bukan list — tidak ada create/delete/reorder). Mengatur konten yang sebelumnya hardcoded di Hero & About section:
+
+**Sections:**
+
+1. **Identity** — Full Name (dipakai di hero greeting & about), Tagline (about section)
+2. **Photo & CV** — Profile Photo (upload via ImageKit), CV URL (link eksternal: Google Drive, Notion, dll)
+3. **Hero Section** — Hero Title (teks animasi BlurText), Hero Tagline (paragraf di samping tombol CV)
+4. **About Section** — About Text (paragraf bio)
+
+**Actions:**
+
+- Klik "Save Changes" untuk menyimpan
+- Cache homepage otomatis di-revalidate (`homepage-profile` tag)
+
+**Catatan:**
+
+- Jika Photo dihapus dari uploader, About fallback ke `/profile.jpg`
+- Jika CV URL kosong, tombol "See My CV" disembunyikan di hero
+
+---
+
 ## 🔄 Dedicated Reorder Mode & Drag-and-Drop (Zero-Duplicate Rule)
 
 Semua entitas di studio yang memiliki urutan tampilan kini memiliki tombol **"Reorder"** di header untuk mengaktifkan mode drag and drop khusus secara aman dan real-time:
@@ -347,6 +374,18 @@ Semua entitas di studio yang memiliki urutan tampilan kini memiliki tombol **"Re
 | Description    | -   | 500 | Any text                      |
 | Image          | -   | -   | Valid URL or empty            |
 | Sort Order     | 0   | ∞   | Whole number                  |
+
+### Profile
+
+| Field        | Min | Max  | Format                   |
+| ------------ | --- | ---- | ------------------------ |
+| Full Name    | 2   | 120  | Any text                 |
+| Tagline      | 2   | 120  | Any text                 |
+| Hero Title   | 2   | 200  | Any text                 |
+| Hero Tagline | 2   | 600  | Any text                 |
+| About Text   | 10  | 2000 | Any text                 |
+| Photo        | -   | -    | ImageKit upload (1 file) |
+| CV URL       | -   | -    | Valid URL or empty       |
 
 ---
 
