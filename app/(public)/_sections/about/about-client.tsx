@@ -60,7 +60,7 @@ export function AboutClient({ skills, profile }: AboutClientProps) {
     <section id="about" className="py-20 bg-white dark:bg-gray-950">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             <ScrollReveal className="lg:col-span-4" delay={0.1}>
               <div className="relative w-full aspect-square max-w-sm mx-auto lg:mx-0">
                 <div className="relative bg-gray-200 dark:bg-gray-800 rounded-2xl overflow-hidden border-4 border-white dark:border-gray-900 shadow-xl">
@@ -119,7 +119,7 @@ export function AboutClient({ skills, profile }: AboutClientProps) {
             </div>
           </div>
 
-          <ScrollReveal className="pt-12" delay={0.1} once>
+          <ScrollReveal className="pt-8" delay={0.1} once>
             <h4 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
               Skills & Technologies
             </h4>
