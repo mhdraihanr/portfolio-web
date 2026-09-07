@@ -57,7 +57,7 @@ export function AboutClient({ skills, profile }: AboutClientProps) {
   useMobileWidth();
 
   return (
-    <section id="about" className="py-20 bg-white dark:bg-gray-950">
+    <section id="about" className="py-15 bg-white dark:bg-gray-950">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
@@ -65,10 +65,10 @@ export function AboutClient({ skills, profile }: AboutClientProps) {
               <div className="relative w-full aspect-square max-w-sm mx-auto lg:mx-0">
                 <div className="relative bg-gray-200 dark:bg-gray-800 rounded-2xl overflow-hidden border-4 border-white dark:border-gray-900 shadow-xl">
                   <Image
-                    src={profile?.photo_url || "/profile.jpg"}
+                    src={profile?.photo_url || ""}
                     alt={`${profile?.full_name ?? "Raihan"} - Fullstack Developer`}
-                    width={400}
-                    height={400}
+                    width={384}
+                    height={384}
                     className="w-full h-full object-cover"
                     sizes="(max-width: 1024px) 384px, 33vw"
                   />
@@ -101,18 +101,9 @@ export function AboutClient({ skills, profile }: AboutClientProps) {
 
               <div className="space-y-4 leading-relaxed">
                 <ScrollReveal delay={0.1} once>
-                  <p className="text-gray-700 dark:text-gray-300">
+                  <p className="whitespace-pre-line text-gray-700 dark:text-gray-300">
                     {profile?.about_text ??
                       "Passionate Fullstack Developer dedicated to building beautiful, functional, and user-friendly web applications. By bridging the gap between frontend and backend technologies, I transform complex ideas into reality through clean code and modern design principles."}
-                  </p>
-                </ScrollReveal>
-
-                <ScrollReveal delay={0.18} once>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    Focused on optimizing AI coding assistants to streamline
-                    workflows and accelerate prototyping. I constantly refine
-                    prompt engineering to push the boundaries of AI-driven
-                    software development.
                   </p>
                 </ScrollReveal>
               </div>
