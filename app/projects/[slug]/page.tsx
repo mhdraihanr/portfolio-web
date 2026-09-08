@@ -108,9 +108,9 @@ export default async function ProjectDetailPage({
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Button className="gap-2">
+                  <Button variant="outline" className="gap-2">
                     <ExternalLink className="w-4 h-4" />
-                    Demo
+                    Site
                   </Button>
                 </Link>
               )}
@@ -170,6 +170,49 @@ export default async function ProjectDetailPage({
               </div>
             </CardContent>
           </Card>
+
+          {/* Role */}
+          {project.role ? (
+            <Card className="mb-8">
+              <CardContent className="pt-6">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  My Role
+                </h2>
+                <p className="text-gray-700 dark:text-gray-300">
+                  {project.role}
+                </p>
+              </CardContent>
+            </Card>
+          ) : null}
+
+          {/* What I Did (one bullet per non-empty line) */}
+          {project.what_i_did
+            ?.split("\n")
+            .map((line) => line.trim())
+            .filter(Boolean).length ? (
+            <Card className="mb-8">
+              <CardContent className="pt-6">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                  What I Did
+                </h2>
+                <ul className="space-y-3">
+                  {project.what_i_did
+                    .split("\n")
+                    .map((line) => line.trim())
+                    .filter(Boolean)
+                    .map((line, idx) => (
+                      <li
+                        key={idx}
+                        className="flex items-start gap-3 text-gray-700 dark:text-gray-300"
+                      >
+                        <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary-500" />
+                        <span>{line}</span>
+                      </li>
+                    ))}
+                </ul>
+              </CardContent>
+            </Card>
+          ) : null}
 
           {/* Back to Projects Link */}
           <div className="text-center mt-12">

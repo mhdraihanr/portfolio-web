@@ -48,6 +48,8 @@ _(Catatan: Path `/studio` dapat disesuaikan melalui environment variable `ADMIN_
 
 **Optional Fields:**
 
+- **My Role** (max 200 chars) — peranmu di proyek, tampil di halaman detail
+- **What I Did** (max 2000 chars) — **1 baris = 1 bullet**; tampil sebagai bullet list di halaman detail
 - Images (via ImageKit upload, max 10)
 - Project URL
 - GitHub URL
@@ -326,18 +328,20 @@ Semua entitas di studio yang memiliki urutan tampilan kini memiliki tombol **"Re
 
 ### Projects
 
-| Field        | Min | Max | Format                          |
-| ------------ | --- | --- | ------------------------------- |
-| Title        | 3   | 100 | Any text                        |
-| Slug         | 3   | 100 | lowercase-with-hyphens          |
-| Description  | 10  | 500 | Any text                        |
-| Technologies | 1   | 20  | Array of {name, icon, icon_svg} |
-| Images       | 0   | 10  | Array of {url, fileId}          |
-| Image URL    | -   | -   | Valid URL or empty              |
-| Project URL  | -   | -   | Valid URL or empty              |
-| GitHub URL   | -   | -   | Valid URL or empty              |
-| Featured     | -   | -   | Boolean (checkbox)              |
-| Order Index  | 0   | ∞   | Whole number                    |
+| Field        | Min | Max  | Format                          |
+| ------------ | --- | ---- | ------------------------------- |
+| Title        | 3   | 100  | Any text                        |
+| Slug         | 3   | 100  | lowercase-with-hyphens          |
+| Description  | 10  | 500  | Any text                        |
+| Role         | -   | 200  | Any text (optional)             |
+| What I Did   | -   | 2000 | Newline = bullet (optional)     |
+| Technologies | 1   | 20   | Array of {name, icon, icon_svg} |
+| Images       | 0   | 10   | Array of {url, fileId}          |
+| Image URL    | -   | -    | Valid URL or empty              |
+| Project URL  | -   | -    | Valid URL or empty              |
+| GitHub URL   | -   | -    | Valid URL or empty              |
+| Featured     | -   | -    | Boolean (checkbox)              |
+| Order Index  | 0   | ∞    | Whole number                    |
 
 ### Experience
 

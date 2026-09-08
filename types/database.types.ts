@@ -96,6 +96,8 @@ export interface Database {
           title: string;
           slug: string;
           description: string;
+          role: string | null;
+          what_i_did: string | null;
           technologies: {
             name: string;
             icon?: string | null;
@@ -115,6 +117,8 @@ export interface Database {
           title: string;
           slug: string;
           description: string;
+          role?: string | null;
+          what_i_did?: string | null;
           technologies: {
             name: string;
             icon?: string | null;
@@ -134,6 +138,8 @@ export interface Database {
           title?: string;
           slug?: string;
           description?: string;
+          role?: string | null;
+          what_i_did?: string | null;
           technologies?: {
             name: string;
             icon?: string | null;
