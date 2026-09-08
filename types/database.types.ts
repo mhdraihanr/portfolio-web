@@ -14,6 +14,7 @@ export interface Database {
           id: number;
           full_name: string;
           tagline: string;
+          hero_greeting: string | null;
           hero_title: string;
           hero_tagline: string;
           about_text: string;
@@ -25,6 +26,7 @@ export interface Database {
           id?: number;
           full_name?: string;
           tagline?: string;
+          hero_greeting?: string | null;
           hero_title?: string;
           hero_tagline?: string;
           about_text?: string;
@@ -36,6 +38,7 @@ export interface Database {
           id?: number;
           full_name?: string;
           tagline?: string;
+          hero_greeting?: string | null;
           hero_title?: string;
           hero_tagline?: string;
           about_text?: string;

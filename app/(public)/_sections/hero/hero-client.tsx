@@ -109,6 +109,15 @@ export function HeroClient({ profile }: HeroClientProps) {
     ? "hover:text-primary-500"
     : "hover:text-primary-700";
 
+  // Greeting: editable full line from profile. When empty, fall back to the
+  // legacy "Hello, I'm {first name of full_name}" behavior.
+  const greeting =
+    profile?.hero_greeting?.trim() ||
+    (() => {
+      const firstName = profile?.full_name?.trim().split(" ")[0];
+      return firstName ? `Hello, I'm ${firstName}` : "Hello, I'm Raihan";
+    })();
+
   return (
     <section
       id="home"
@@ -165,7 +174,7 @@ export function HeroClient({ profile }: HeroClientProps) {
               className={`text-lg md:text-xl ${textGreeting} font-medium inline-block`}
               shimmerWidth={150}
             >
-              Hello, I&apos;m {profile?.full_name?.split(" ")[0] ?? "Raihan"}
+              {greeting}
             </AnimatedShinyText>
           </div>
 

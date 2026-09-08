@@ -9,6 +9,11 @@ export const profileSchema = z.object({
     .string()
     .min(2, "Tagline must be at least 2 characters")
     .max(120, "Tagline too long"),
+  hero_greeting: z
+    .string()
+    .max(120, "Hero greeting too long")
+    .optional()
+    .or(z.literal("")),
   hero_title: z
     .string()
     .min(2, "Hero title must be at least 2 characters")

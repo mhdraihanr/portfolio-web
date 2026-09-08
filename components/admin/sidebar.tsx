@@ -34,6 +34,11 @@ export function Sidebar({ adminRoute, userEmail }: SidebarProps) {
 
   const navItems: NavItem[] = [
     {
+      label: "Profile",
+      href: `/${adminRoute}/profile`,
+      icon: User,
+    },
+    {
       label: "Dashboard",
       href: `/${adminRoute}`,
       icon: LayoutDashboard,
@@ -57,11 +62,6 @@ export function Sidebar({ adminRoute, userEmail }: SidebarProps) {
       label: "Certificates",
       href: `/${adminRoute}/certificates`,
       icon: Award,
-    },
-    {
-      label: "Profile",
-      href: `/${adminRoute}/profile`,
-      icon: User,
     },
   ];
 
