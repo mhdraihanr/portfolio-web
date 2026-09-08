@@ -63,16 +63,24 @@ export function AboutClient({ skills, profile }: AboutClientProps) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             <ScrollReveal className="lg:col-span-4" delay={0.1}>
               <div className="relative w-full aspect-square max-w-sm mx-auto lg:mx-0">
-                <div className="relative bg-gray-200 dark:bg-gray-800 rounded-2xl overflow-hidden border-4 border-white dark:border-gray-900 shadow-xl">
-                  <Image
-                    src={profile?.photo_url || ""}
-                    alt={`${profile?.full_name ?? "Raihan"} - Fullstack Developer`}
-                    width={384}
-                    height={384}
-                    className="w-full h-full object-cover"
-                    sizes="(max-width: 1024px) 384px, 33vw"
-                  />
+                {/* Decorative gradient blobs behind the cutout photo */}
+                <div
+                  className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                  aria-hidden="true"
+                >
+                  <div className="absolute w-[80%] h-[80%] rounded-full bg-gradient-to-tr from-primary-300/80 via-primary-200/50 to-transparent dark:from-primary-600/60 dark:via-primary-700/30 blur-2xl" />
+                  <div className="absolute w-[58%] h-[58%] rounded-full bg-gradient-to-bl from-secondary-300/70 via-secondary-200/40 to-transparent dark:from-secondary-500/40 dark:via-secondary-600/20 blur-3xl translate-x-10 translate-y-10" />
                 </div>
+
+                {/* Cutout photo (PNG transparent) with soft body shadow */}
+                <Image
+                  src={profile?.photo_url || ""}
+                  alt={`${profile?.full_name ?? "Raihan"} - Fullstack Developer`}
+                  width={384}
+                  height={384}
+                  className="relative w-full h-full object-contain drop-shadow-[0_20px_25px_rgba(0,0,0,0.30)] drop-shadow-[0_45px_45px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_20px_25px_rgba(0,0,0,0.65)] dark:drop-shadow-[0_45px_45px_rgba(0,0,0,0.40)]"
+                  sizes="(max-width: 1024px) 384px, 33vw"
+                />
               </div>
             </ScrollReveal>
 
