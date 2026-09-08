@@ -78,7 +78,7 @@ export function AboutClient({ skills, profile }: AboutClientProps) {
                   alt={`${profile?.full_name ?? "Raihan"} - Fullstack Developer`}
                   width={384}
                   height={384}
-                  className="relative w-full h-full object-contain drop-shadow-[0_20px_25px_rgba(0,0,0,0.30)] drop-shadow-[0_45px_45px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_20px_25px_rgba(0,0,0,0.65)] dark:drop-shadow-[0_45px_45px_rgba(0,0,0,0.40)]"
+                  className="relative w-full h-full object-contain -translate-y-6 drop-shadow-[0_20px_25px_rgba(0,0,0,0.30)] drop-shadow-[0_45px_45px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_20px_25px_rgba(0,0,0,0.65)] dark:drop-shadow-[0_45px_45px_rgba(0,0,0,0.40)]"
                   sizes="(max-width: 1024px) 384px, 33vw"
                 />
               </div>
