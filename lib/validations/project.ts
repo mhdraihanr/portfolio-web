@@ -31,6 +31,16 @@ export const projectSchema = z.object({
     .string()
     .min(10, "Description must be at least 10 characters")
     .max(500, "Description must be less than 500 characters"),
+  role: z
+    .string()
+    .max(200, "Role must be less than 200 characters")
+    .optional()
+    .or(z.literal("")),
+  what_i_did: z
+    .string()
+    .max(2000, "What I Did must be less than 2000 characters")
+    .optional()
+    .or(z.literal("")),
   technologies: z
     .array(technologySchema)
     .min(1, "At least one technology is required")

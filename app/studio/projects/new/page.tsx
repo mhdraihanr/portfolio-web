@@ -8,6 +8,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { insertProject } from "@/lib/supabase/helpers";
+import { triggerRevalidate } from "@/lib/revalidate";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -41,6 +42,8 @@ export default function NewProjectPage() {
       title: "",
       slug: "",
       description: "",
+      role: "",
+      what_i_did: "",
       technologies: [],
       images: [],
       image_url: "",
@@ -103,6 +106,8 @@ export default function NewProjectPage() {
         title: data.title,
         slug: data.slug,
         description: data.description,
+        role: data.role?.trim() || null,
+        what_i_did: data.what_i_did?.trim() || null,
         technologies: data.technologies as {
           name: string;
           icon?: string | null;
@@ -118,6 +123,7 @@ export default function NewProjectPage() {
 
       if (error) throw error;
 
+      await triggerRevalidate("homepage-projects", "/");
       toast.success("Success", "Project created successfully");
 
       router.push("/studio/projects");
@@ -194,6 +200,38 @@ export default function NewProjectPage() {
                   rows={3}
                   {...register("description")}
                   error={errors.description?.message}
+                />
+              </div>
+            </div>
+          </Card>
+
+          {/* Role & What I Did */}
+          <Card className="p-6">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              Role & What I Did
+            </h2>
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="role">My Role</Label>
+                <Input
+                  id="role"
+                  placeholder="e.g. Frontend Developer — dashboard & API integration"
+                  {...register("role")}
+                  error={errors.role?.message}
+                  helperText="Shown on the project detail page. Optional."
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="what_i_did">What I Did</Label>
+                <Textarea
+                  id="what_i_did"
+                  placeholder={
+                    "One point per line, e.g.:\nDesigned and built the admin dashboard\nSet up the ImageKit upload pipeline\nImproved page load with caching"
+                  }
+                  rows={5}
+                  {...register("what_i_did")}
+                  error={errors.what_i_did?.message}
+                  helperText="Each line becomes one bullet on the project page. Don't type dashes. Optional."
                 />
               </div>
             </div>

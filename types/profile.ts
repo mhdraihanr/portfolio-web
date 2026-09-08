@@ -13,6 +13,7 @@ export type ProfileUpdate = Database["public"]["Tables"]["profile"]["Update"];
 export interface ProfileFormData {
   full_name: string;
   tagline: string;
+  hero_greeting?: string;
   hero_title: string;
   hero_tagline: string;
   about_text: string;

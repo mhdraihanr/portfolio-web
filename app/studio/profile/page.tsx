@@ -36,6 +36,7 @@ export default function ProfilePage() {
     defaultValues: {
       full_name: "",
       tagline: "",
+      hero_greeting: "",
       hero_title: "",
       hero_tagline: "",
       about_text: "",
@@ -61,6 +62,7 @@ export default function ProfilePage() {
           reset({
             full_name: profile.full_name,
             tagline: profile.tagline,
+            hero_greeting: profile.hero_greeting || "",
             hero_title: profile.hero_title,
             hero_tagline: profile.hero_tagline,
             about_text: profile.about_text,
@@ -90,6 +92,7 @@ export default function ProfilePage() {
       const { error } = await updateProfile(supabase, {
         full_name: data.full_name.trim(),
         tagline: data.tagline.trim(),
+        hero_greeting: data.hero_greeting?.trim() || null,
         hero_title: data.hero_title.trim(),
         hero_tagline: data.hero_tagline.trim(),
         about_text: data.about_text.trim(),
@@ -201,6 +204,14 @@ export default function ProfilePage() {
               Hero Section
             </h2>
             <div className="space-y-6">
+              <Input
+                id="hero_greeting"
+                label="Hero Greeting"
+                placeholder="Hello, I'm Muhammad"
+                helperText="Full greeting line shown above the title. Leave empty to auto-use your first name (Hello, I'm ...)."
+                error={errors.hero_greeting?.message}
+                {...register("hero_greeting")}
+              />
               <Input
                 id="hero_title"
                 label="Hero Title"

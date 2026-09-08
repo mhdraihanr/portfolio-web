@@ -55,6 +55,16 @@ Single-row `profile` table (`id = 1`, enforced by CHECK constraint), same RLS pa
 | `app/(public)/_sections/about/index.tsx`        | Fetch profile (parallel dengan skills), pass ke client                                                 |
 | `app/(public)/_sections/about/about-client.tsx` | Terima `profile` prop untuk photo, name, tagline, about text                                           |
 
+## 🔄 Follow-up (2026-09-08): Hero Greeting editable penuh
+
+**Kolom baru:** `profile.hero_greeting TEXT` (opsional) — menyimpan **satu baris greeting utuh** (mis. `Hello, I'm Muhammad`), sehingga kata "Hello" **dan** nama bisa diganti dari `/studio`.
+
+- Migration: `migrations/migration-add-hero-greeting.sql` (jalankan manual di Supabase SQL Editor)
+- Hero render: `hero-client.tsx` memakai `profile.hero_greeting?.trim()`. Jika kosong → fallback ke perilaku lama `Hello, I'm {kata pertama full_name}`, dengan hardening string kosong (fallback terakhir `Hello, I'm Raihan`)
+- `full_name` **tidak berubah makna** — tetap identitas lengkap untuk About
+- Studio Profile → bagian **Hero Section** → input baru **"Hero Greeting"**
+- `hero_greeting` disimpan `null` saat dikosongkan di form (bukan `""`), jadi logika `.trim()`/fallback konsisten di sisi baca
+
 ## 🚀 Deployment Steps
 
 1. Run `migrations/migration-add-profile-table.sql` di Supabase SQL Editor
