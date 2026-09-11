@@ -6,7 +6,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const toastVariants = cva(
-  "pointer-events-auto flex w-full max-w-md items-start gap-3 rounded-lg border p-4 shadow-lg transition-all animate-in slide-in-from-top-full fade-in",
+  "pointer-events-auto flex w-full max-w-md items-start gap-3 rounded-lg border p-4 shadow-lg transition-all animate-in slide-in-from-bottom-full fade-in",
   {
     variants: {
       variant: {
@@ -185,5 +185,5 @@ export function useToast() {
 // Toaster - Self-contained component untuk di root layout
 export function Toaster() {
   const { toasts } = useToast();
-  return <ToastContainer toasts={toasts} position="top-right" />;
+  return <ToastContainer toasts={toasts} position="bottom-right" />;
 }

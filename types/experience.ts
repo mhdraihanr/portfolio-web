@@ -7,6 +7,11 @@ export type WorkExperienceInsert =
 export type WorkExperienceUpdate =
   Database["public"]["Tables"]["work_experience"]["Update"];
 
+export interface ExperienceImage {
+  url: string;
+  fileId: string;
+}
+
 export interface ExperienceFormData {
   company: string;
   position: string;
@@ -17,6 +22,7 @@ export interface ExperienceFormData {
   order_index: number;
   logo_url?: string;
   employment_type?: string;
+  images: ExperienceImage[];
 }
 
 export type EmploymentType =

@@ -30,6 +30,7 @@ export default function NewExperiencePage() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadedLogo, setUploadedLogo] = useState<UploadedImage | null>(null);
+  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
 
   const {
     register,
@@ -49,6 +50,7 @@ export default function NewExperiencePage() {
       order_index: 0,
       logo_url: "",
       employment_type: "",
+      images: [],
     },
   });
 
@@ -96,6 +98,7 @@ export default function NewExperiencePage() {
         employment_type: data.employment_type || null,
         is_current: data.is_current,
         order_index: data.order_index,
+        images: uploadedImages,
       });
 
       if (error) throw error;
@@ -281,6 +284,36 @@ export default function NewExperiencePage() {
                   error={errors.logo_url?.message}
                   helperText="URL to company logo (optional)"
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Experience Images (max 2)</Label>
+                <ImageUploader
+                  multiple
+                  maxFiles={2}
+                  currentImages={uploadedImages}
+                  onUploadComplete={(images) => {
+                    const newImages = [...uploadedImages, ...images];
+                    setUploadedImages(newImages);
+                    setValue("images", newImages);
+                  }}
+                  onDelete={(_, index) => {
+                    const newImages = uploadedImages.filter(
+                      (_, i) => i !== index,
+                    );
+                    setUploadedImages(newImages);
+                    setValue("images", newImages);
+                  }}
+                  disabled={isSubmitting}
+                />
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Upload office photos or certificates (max 2)
+                </p>
+                {errors.images && (
+                  <p className="text-sm text-red-600 dark:text-red-400">
+                    {errors.images.message}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">

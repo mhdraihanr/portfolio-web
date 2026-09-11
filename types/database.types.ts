@@ -204,6 +204,7 @@ export interface Database {
           order_index: number;
           logo_url: string | null;
           employment_type: string | null;
+          images: { url: string; fileId: string }[];
           created_at: string;
           updated_at: string;
         };
@@ -218,6 +219,7 @@ export interface Database {
           order_index?: number;
           logo_url?: string | null;
           employment_type?: string | null;
+          images?: { url: string; fileId: string }[];
           created_at?: string;
           updated_at?: string;
         };
@@ -232,6 +234,7 @@ export interface Database {
           order_index?: number;
           logo_url?: string | null;
           employment_type?: string | null;
+          images?: { url: string; fileId: string }[];
           created_at?: string;
           updated_at?: string;
         };

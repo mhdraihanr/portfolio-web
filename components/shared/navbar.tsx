@@ -30,6 +30,7 @@ const FOCUSABLE_SELECTOR = [
 export function Navbar() {
   const [isOpen, setIsOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
+  const [mounted, setMounted] = React.useState(false);
   const pathname = usePathname();
   const { isLoading } = usePageLoading();
   const menuButtonRef = React.useRef<HTMLButtonElement>(null);
@@ -56,6 +57,10 @@ export function Navbar() {
     });
     window.history.pushState(null, "", targetHash);
     return true;
+  }, []);
+
+  React.useEffect(() => {
+    setMounted(true);
   }, []);
 
   React.useEffect(() => {
@@ -199,6 +204,7 @@ export function Navbar() {
           "fixed top-4 right-4 left-auto z-50 w-auto max-w-fit translate-x-0 transition-all duration-300 md:left-1/2 md:right-auto md:-translate-x-1/2",
           !isLoading && "animate-fade-in-down",
           isLoading && "opacity-0",
+          !mounted && "opacity-0",
           isOpen &&
             "pointer-events-none opacity-0 md:pointer-events-auto md:opacity-100",
           scrolled

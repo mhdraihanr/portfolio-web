@@ -37,6 +37,7 @@ export default function EditExperiencePage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [experience, setExperience] = useState<WorkExperience | null>(null);
   const [uploadedLogo, setUploadedLogo] = useState<UploadedImage | null>(null);
+  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
 
   const {
     register,
@@ -91,6 +92,10 @@ export default function EditExperiencePage() {
         });
       }
 
+      const existingImages =
+        (experienceData.images as unknown as UploadedImage[]) || [];
+      setUploadedImages(existingImages);
+
       reset({
         company: experienceData.company,
         position: experienceData.position,
@@ -101,6 +106,7 @@ export default function EditExperiencePage() {
         order_index: experienceData.order_index,
         logo_url: experienceData.logo_url || "",
         employment_type: experienceData.employment_type || "",
+        images: existingImages,
       });
     } catch (error) {
       console.error("Error fetching experience:", error);
@@ -136,6 +142,7 @@ export default function EditExperiencePage() {
         order_index: data.order_index,
         logo_url: uploadedLogo?.url || data.logo_url || null,
         employment_type: data.employment_type || null,
+        images: uploadedImages,
       };
 
       const { error } = await updateWorkExperience(
@@ -370,6 +377,36 @@ export default function EditExperiencePage() {
                   error={errors.logo_url?.message}
                   helperText="URL to company logo (optional)"
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Experience Images (max 2)</Label>
+                <ImageUploader
+                  multiple
+                  maxFiles={2}
+                  currentImages={uploadedImages}
+                  onUploadComplete={(images) => {
+                    const newImages = [...uploadedImages, ...images];
+                    setUploadedImages(newImages);
+                    setValue("images", newImages);
+                  }}
+                  onDelete={(_, index) => {
+                    const newImages = uploadedImages.filter(
+                      (_, i) => i !== index,
+                    );
+                    setUploadedImages(newImages);
+                    setValue("images", newImages);
+                  }}
+                  disabled={isSubmitting}
+                />
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Upload office photos or certificates (max 2)
+                </p>
+                {errors.images && (
+                  <p className="text-sm text-red-600 dark:text-red-400">
+                    {errors.images.message}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">

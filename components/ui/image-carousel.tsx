@@ -8,12 +8,14 @@ interface ImageCarouselProps {
   images: Array<string | { url: string; fileId: string }>;
   alt: string;
   className?: string;
+  objectFit?: "cover" | "contain";
 }
 
 export function ImageCarousel({
   images,
   alt,
   className = "",
+  objectFit = "cover",
 }: ImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [touchStart, setTouchStart] = useState(0);
@@ -92,14 +94,16 @@ export function ImageCarousel({
   if (images.length === 1) {
     return (
       <div
-        className={`relative w-full h-[400px] rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 ${className}`}
+        className={`relative w-full h-[280px] sm:h-[360px] md:h-[400px] rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 ${className}`}
       >
         <Image
           src={getImageUrl(images[0])}
           alt={alt}
           fill
           sizes="(max-width: 768px) 100vw, 800px"
-          className="object-cover"
+          className={
+            objectFit === "contain" ? "object-contain" : "object-cover"
+          }
           priority
         />
       </div>
@@ -111,7 +115,7 @@ export function ImageCarousel({
     <div className={`relative w-full ${className}`}>
       {/* Main Image */}
       <div
-        className="relative w-full h-[400px] rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 group touch-pan-y"
+        className="relative w-full h-[280px] sm:h-[360px] md:h-[400px] rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 group touch-pan-y"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -121,7 +125,7 @@ export function ImageCarousel({
           alt={`${alt} - Image ${currentIndex + 1}`}
           fill
           sizes="(max-width: 768px) 100vw, 800px"
-          className="object-cover transition-opacity duration-300 select-none"
+          className={`${objectFit === "contain" ? "object-contain" : "object-cover"} transition-opacity duration-300 select-none`}
           priority={currentIndex === 0}
           draggable={false}
         />

@@ -35,7 +35,7 @@ export function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={handleToggle}
-      aria-label={`Toggle theme (current: ${resolvedTheme})`}
+      aria-label="Toggle theme"
       title={`Switch to ${isDark ? "light" : "dark"} mode`}
     >
       {isDark ? (
