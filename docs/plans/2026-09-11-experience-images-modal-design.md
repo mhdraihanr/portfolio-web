@@ -10,11 +10,11 @@ Tambah maksimal 2 gambar per work experience (foto kantor + sertifikat) yang tam
 
 ## 📋 Scope (Decided)
 
-| Item           | Before                                                  | After                                                                                                                          |
-| -------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| Storage        | `work_experience` tanpa kolom gambar                    | Kolom `images JSONB DEFAULT '[]'` (array max 2 URL) — pattern sama dengan `projects.images`                                    |
-| Studio form    | Hanya logo uploader                                     | Tambah `ImageUploader multiple maxFiles={2}` untuk images (logo tetap terpisah)                                                |
-| Kartu timeline | Hanya logo + posisi + tanggal, description tidak tampil | Thumbnail kecil (gambar pertama, `tr:w-400,q-70`) + hint "View details"                                                        |
+| Item           | Before                                                  | After                                                                                                                                  |
+| -------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Storage        | `work_experience` tanpa kolom gambar                    | Kolom `images JSONB DEFAULT '[]'` (array max 2 URL) — pattern sama dengan `projects.images`                                            |
+| Studio form    | Hanya logo uploader                                     | Tambah `ImageUploader multiple maxFiles={2}` untuk images (logo tetap terpisah)                                                        |
+| Kartu timeline | Hanya logo + posisi + tanggal, description tidak tampil | Thumbnail kecil (gambar pertama, `tr:w-400,q-70`) + hint "View details"                                                                |
 | Modal          | Tidak ada                                               | Klik kartu → modal `lg`/`xl`: `ImageCarousel` (swipe + keyboard, `tr:w-1200,q-75`) + full description + meta (company, position, date) |
 
 **Out of scope (ponytail):**
@@ -42,15 +42,15 @@ Tambah maksimal 2 gambar per work experience (foto kantor + sertifikat) yang tam
 
 ## 📁 Files Changed
 
-| File                                                      | Change                                                                                                                         |
-| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `migrations/migration-add-experience-images.sql`          | **New** — `ALTER TABLE work_experience ADD COLUMN images JSONB DEFAULT '[]'` + comment                                         |
-| `types/database.types.ts`                                 | Add `images: string[]` ke Row/Insert/Update `work_experience`                                                                  |
-| `types/experience.ts`                                     | Add `images?: string[]` ke `ExperienceFormData`                                                                                |
-| `lib/validations/experience.ts`                           | Add `images: z.array(z.string().url()).max(2)`                                                                                 |
-| `app/studio/experience/new/page.tsx`                      | State `uploadedImages: UploadedImage[]`, `ImageUploader multiple maxFiles={2}`, submit `images`                                |
-| `app/studio/experience/[id]/edit/page.tsx`                | Sama — load existing `images` ke uploader, submit `images`                                                                     |
-| `components/ui/image-carousel.tsx`                        | Tambah prop opsional `objectFit?: "cover" \| "contain"` (default `"cover"` — backward compatible, project detail tidak berubah) |
+| File                                                      | Change                                                                                                                                              |
+| --------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `migrations/migration-add-experience-images.sql`          | **New** — `ALTER TABLE work_experience ADD COLUMN images JSONB DEFAULT '[]'` + comment                                                              |
+| `types/database.types.ts`                                 | Add `images: string[]` ke Row/Insert/Update `work_experience`                                                                                       |
+| `types/experience.ts`                                     | Add `images?: string[]` ke `ExperienceFormData`                                                                                                     |
+| `lib/validations/experience.ts`                           | Add `images: z.array(z.string().url()).max(2)`                                                                                                      |
+| `app/studio/experience/new/page.tsx`                      | State `uploadedImages: UploadedImage[]`, `ImageUploader multiple maxFiles={2}`, submit `images`                                                     |
+| `app/studio/experience/[id]/edit/page.tsx`                | Sama — load existing `images` ke uploader, submit `images`                                                                                          |
+| `components/ui/image-carousel.tsx`                        | Tambah prop opsional `objectFit?: "cover" \| "contain"` (default `"cover"` — backward compatible, project detail tidak berubah)                     |
 | `app/(public)/_sections/experience/experience-client.tsx` | Kartu jadi clickable (button), thumbnail kecil, state `selectedExp`, render `Modal` dengan `ImageCarousel objectFit="contain"` + description + meta |
 
 ## 🖼️ Modal Layout (carousel)

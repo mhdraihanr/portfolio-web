@@ -71,7 +71,7 @@ export function Modal({
 
   const modalContent = (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200"
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? "modal-title" : undefined}
@@ -87,15 +87,15 @@ export function Modal({
       {/* Modal */}
       <div
         className={cn(
-          "relative z-50 w-full bg-white dark:bg-gray-900 rounded-lg shadow-lg",
+          "relative z-50 w-full my-auto max-h-[calc(100vh-2rem)] flex flex-col overflow-hidden bg-white dark:bg-gray-900 rounded-lg shadow-lg",
           "animate-in zoom-in-95 duration-200",
           sizeClasses[size],
-          className
+          className,
         )}
       >
         {/* Header */}
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between p-6 pb-4 border-b border-gray-200 dark:border-gray-800">
+          <div className="flex flex-shrink-0 items-center justify-between p-6 pb-4 border-b border-gray-200 dark:border-gray-800">
             <div>
               {title && (
                 <h2
@@ -129,7 +129,7 @@ export function Modal({
         )}
 
         {/* Content */}
-        <div className="p-6">{children}</div>
+        <div className="p-6 overflow-y-auto">{children}</div>
       </div>
     </div>
   );
@@ -146,7 +146,7 @@ export const ModalHeader = React.forwardRef<
     ref={ref}
     className={cn(
       "flex flex-col space-y-1.5 p-6 pb-4 border-b border-gray-200 dark:border-gray-800",
-      className
+      className,
     )}
     {...props}
   />
@@ -162,7 +162,7 @@ export const ModalFooter = React.forwardRef<
     ref={ref}
     className={cn(
       "flex items-center justify-end gap-2 p-6 pt-4 border-t border-gray-200 dark:border-gray-800",
-      className
+      className,
     )}
     {...props}
   />

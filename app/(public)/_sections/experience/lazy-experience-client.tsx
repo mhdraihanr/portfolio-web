@@ -42,7 +42,7 @@ export function LazyExperienceClient({
         setShouldRender(true);
         observer.disconnect();
       },
-      { rootMargin: "700px 0px" },
+      { rootMargin: "200px 0px" },
     );
 
     observer.observe(element);

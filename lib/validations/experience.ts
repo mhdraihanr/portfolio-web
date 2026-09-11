@@ -27,6 +27,14 @@ export const experienceSchema = z
       .optional()
       .or(z.literal("")),
     employment_type: z.string().optional().or(z.literal("")),
+    images: z
+      .array(
+        z.object({
+          url: z.string().url("Must be a valid URL"),
+          fileId: z.string().min(1, "File ID is required"),
+        }),
+      )
+      .max(2, "Maximum 2 images allowed"),
   })
   .refine(
     (data) => {
