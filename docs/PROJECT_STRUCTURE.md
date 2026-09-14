@@ -112,7 +112,7 @@ app/
 │   │       └── route.ts       # Auth handlers
 │   ├── contact/
 │   │   └── route.ts           # POST - Send contact email
-│   ├── imagekit-auth/
+│   ├── imagekit-upload/
 │   │   └── route.ts           # GET - ImageKit authentication
 │   ├── imagekit-delete/
 │   │   └── route.ts           # POST - Delete image from ImageKit

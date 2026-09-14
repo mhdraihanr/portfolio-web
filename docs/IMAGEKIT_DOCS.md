@@ -67,10 +67,10 @@ pnpm add @imagekit/nodejs
 ```
 app/
 ├── api/
-│   ├── imagekit-auth/
-│   │   └── route.ts        # GET - Authentication endpoint
+│   ├── imagekit-upload/
+│   │   └── route.ts        # POST - Upload endpoint (validated, server-side)
 │   └── imagekit-delete/
-│       └── route.ts        # POST - Delete image endpoint
+│       └── route.ts        # POST - Delete image endpoint (scoped to /portfolio)
 
 components/
 └── ui/
@@ -85,36 +85,61 @@ types/
 
 ## 📁 API Routes
 
-### GET `/api/imagekit-auth`
+### POST `/api/imagekit-upload`
 
-Generate authentication parameters untuk client-side upload.
+Upload gambar ke folder `/portfolio`. Browser mengirim file ke route ini; route memvalidasi (session admin, ukuran, magic bytes) lalu meneruskan ke ImageKit memakai private key. Kunci tidak pernah sampai ke client.
+
+**Request:** `multipart/form-data` dengan field `file`.
 
 **Response:**
 
 ```json
 {
-  "token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-  "expire": 1707500000,
-  "signature": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  "url": "https://ik.imagekit.io/xxxxx/portfolio/nama-file.jpg",
+  "fileId": "xxxxxxxxxxxxxxxxxxxxxxxx",
+  "filePath": "/portfolio/nama-file.jpg",
+  "mime": "image/jpeg"
 }
 ```
 
 **Implementation:**
 
 ```typescript
-// app/api/imagekit-auth/route.ts
+// app/api/imagekit-upload/route.ts
 import ImageKit from "@imagekit/nodejs";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { getUser } from "@/lib/auth";
 
 const imagekit = new ImageKit({
-  publicKey: process.env.IMAGEKIT_PUBLIC_KEY!,
   privateKey: process.env.IMAGEKIT_PRIVATE_KEY!,
-  urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT!,
 });
 
-export async function GET() {
-  const authParams = imagekit.getAuthenticationParameters();
-  return NextResponse.json(authParams);
+const PORTFOLIO_FOLDER = "/portfolio";
+
+export async function POST(request: NextRequest) {
+  const user = await getUser();
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const formData = await request.formData();
+  const file = formData.get("file");
+  if (!(file instanceof File)) {
+    return NextResponse.json({ error: "file is required" }, { status: 400 });
+  }
+
+  const uploaded = await imagekit.files.upload({
+    file: await file.arrayBuffer(),
+    fileName: file.name,
+    folder: PORTFOLIO_FOLDER,
+    checks: '"file.mime" : image AND "file.size" <= 5242880',
+  });
+
+  return NextResponse.json({
+    url: uploaded.url,
+    fileId: uploaded.fileId,
+    filePath: uploaded.filePath,
+  });
 }
 ```
 
@@ -380,19 +405,23 @@ export const projectSchema = z.object({
 
 ### Authentication Flow
 
-1. Client requests auth params from `/api/imagekit-auth`
-2. Server generates token using private key (never exposed to client)
-3. Client uses token to upload directly to ImageKit
-4. Token expires after short period (security)
+1. Client POST file ke `/api/imagekit-upload` (session admin wajib)
+2. Route memvalidasi session, ukuran, dan magic bytes file
+3. Route upload ke ImageKit memakai private key — kunci tidak pernah keluar dari server
+4. Delete hanya melayani file di dalam `/portfolio` (dicek via `files.get` sebelum hapus)
 
 ### Best Practices
 
 - ✅ Private key stored in environment variables only
-- ✅ Authentication endpoint server-side only
-- ✅ Delete endpoint validates fileId before deletion
-- ✅ Upload folder organized (`/portfolio`)
-- ✅ File size limits handled by ImageKit dashboard
-- ✅ CSP (`Content-Security-Policy`) in `next.config.ts` allows `https://upload.imagekit.io` in `connect-src` and `https://ik.imagekit.io` in `img-src`/`connect-src`
+- ✅ Upload lewat server route, bukan signed upload langsung dari browser
+- ✅ Format diverifikasi dari magic bytes, bukan `Content-Type` kiriman client
+- ✅ `checks` ImageKit menegakkan `file.mime: image` + `file.size` di sisi ImageKit
+- ✅ Delete endpoint scoped ke folder `/portfolio`
+- ✅ CSP (`Content-Security-Policy`) in `next.config.ts` allows `https://ik.imagekit.io` in `img-src`/`connect-src`
+
+### Kenapa server-side upload
+
+Pendekatan lama membagikan `token` + `signature` ke browser, dan signature itu bisa dipakai untuk upload dari folder mana pun. Dengan route server, private key tetap di server dan setiap upload melewati validasi kita dulu. Efek sampingnya `https://upload.imagekit.io` tidak lagi dibutuhkan di CSP `connect-src`.
 
 ---
 

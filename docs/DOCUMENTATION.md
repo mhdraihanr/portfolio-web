@@ -48,7 +48,7 @@ portfolio-web/
 │   │   ├── auth/              # Auth routes
 │   │   ├── contact/
 │   │   │   └── route.ts       # Send email endpoint
-│   │   ├── imagekit-auth/
+│   │   ├── imagekit-upload/
 │   │   ├── imagekit-delete/
 │   │   └── revalidate/        # On-demand cache revalidation endpoint
 │   │

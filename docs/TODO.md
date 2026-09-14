@@ -1150,7 +1150,7 @@ feat(security): add rate limiting and IP whitelist for admin routes
 
 1. **ImageKit.io Integration**
    - Server-side SDK integration (`@imagekit/nodejs` v7.3.0)
-   - Client-side upload via Next.js API route (`/api/imagekit-auth`)
+   - Server-side upload via Next.js API route (`/api/imagekit-upload`)
    - Delete functionality via API route (`/api/imagekit-delete`)
    - Automatic folder organization (`/portfolio`)
    - CDN delivery with URL endpoint

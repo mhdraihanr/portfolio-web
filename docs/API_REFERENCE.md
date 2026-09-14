@@ -114,35 +114,50 @@ Send email dari contact form.
 
 API endpoints untuk upload dan delete gambar via ImageKit.io CDN.
 
-#### Get Upload Authentication
+#### Upload Image
 
-Generate authentication parameters untuk client-side upload.
+Upload satu gambar ke folder `/portfolio` ImageKit. File dikirim ke server, divalidasi, baru diteruskan ke ImageKit memakai private key — kunci tidak pernah sampai ke browser.
 
-**Endpoint:** `GET /api/imagekit-auth`
+**Endpoint:** `POST /api/imagekit-upload`
 
-**Authentication:** None (Public)
+**Authentication:** Required (Supabase session)
+
+**Request Body:** `multipart/form-data`
+
+| Field  | Type | Required | Keterangan                            |
+| ------ | ---- | -------- | ------------------------------------- |
+| `file` | File | Ya       | JPEG, PNG, WebP, atau AVIF. Maks 5MB. |
 
 **Success Response (200):**
 
 ```json
 {
-  "token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-  "expire": 1707500000,
-  "signature": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  "url": "https://ik.imagekit.io/xxxxx/portfolio/nama-file.jpg",
+  "fileId": "xxxxxxxxxxxxxxxxxxxxxxxx",
+  "filePath": "/portfolio/nama-file.jpg",
+  "mime": "image/jpeg"
 }
 ```
 
-**Usage:** Client uses these params to upload directly to ImageKit CDN.
+**Error Responses:**
+
+| Status | Penyebab                                              |
+| ------ | ----------------------------------------------------- |
+| `400`  | Field `file` tidak ada, atau file kosong              |
+| `401`  | Tidak ada session admin                               |
+| `413`  | Ukuran file melebihi 5MB                              |
+| `415`  | Magic bytes bukan JPEG/PNG/WebP/AVIF                  |
+| `500`  | ImageKit menolak upload (termasuk kegagalan `checks`) |
 
 ---
 
 #### Delete Image
 
-Delete image from ImageKit CDN by fileId.
+Delete image from ImageKit CDN by fileId. Hanya file di dalam folder `/portfolio` yang boleh dihapus.
 
 **Endpoint:** `POST /api/imagekit-delete`
 
-**Authentication:** None (Public - fileId acts as secret)
+**Authentication:** Required (Supabase session)
 
 **Request Body:**
 
@@ -160,21 +175,16 @@ Delete image from ImageKit CDN by fileId.
 }
 ```
 
-**Error Response (400):**
+**Error Responses:**
 
-```json
-{
-  "error": "File ID is required"
-}
-```
+| Status | Penyebab                                |
+| ------ | --------------------------------------- |
+| `400`  | `fileId` tidak ada atau bukan string    |
+| `401`  | Tidak ada session admin                 |
+| `403`  | File berada di luar folder `/portfolio` |
+| `500`  | ImageKit gagal menghapus file           |
 
-**Error Response (500):**
-
-```json
-{
-  "error": "Failed to delete image"
-}
-```
+**Idempotent:** kalau file sudah tidak ada di ImageKit (misalnya dihapus langsung dari dashboard), endpoint membalas `200` dengan `{ "success": true, "alreadyDeleted": true }` alih-alih `500`. Tanpa ini, baris database yang menunjuk ke file tersebut tidak akan pernah bisa dibersihkan dari studio.
 
 **Note:** `fileId` is returned by ImageKit during upload and stored with images in database.
 
@@ -270,11 +280,13 @@ GET /api/projects?featured=true&limit=6
   "slug": "new-project",
   "description": "Project description",
   "technologies": [
-    { "name": "Next.js", "icon": "devicon-nextjs-plain", "icon_svg": "https://..." }
+    {
+      "name": "Next.js",
+      "icon": "devicon-nextjs-plain",
+      "icon_svg": "https://..."
+    }
   ],
-  "images": [
-    { "url": "https://...", "fileId": "..." }
-  ],
+  "images": [{ "url": "https://...", "fileId": "..." }],
   "image_url": "https://...",
   "project_url": "https://...",
   "github_url": "https://...",
@@ -774,8 +786,8 @@ Planned webhooks for future implementation:
 ### v1.2.0 (February 9, 2026)
 
 - **ImageKit Integration** - Image upload and delete via CDN
-  - `GET /api/imagekit-auth` - Generate upload authentication
-  - `POST /api/imagekit-delete` - Delete image by fileId
+  - `POST /api/imagekit-upload` - Upload image (auth required)
+  - `POST /api/imagekit-delete` - Delete image by fileId (auth required)
 - **ImageUploader Component** - Drag & drop with preview and delete
 - **ImageCarousel Component** - Responsive slider with swipe/keyboard navigation
 - Project images now stored as `{url, fileId}[]` for deletion support
