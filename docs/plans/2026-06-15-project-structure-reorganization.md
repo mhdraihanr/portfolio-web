@@ -801,7 +801,7 @@ portfolio-web/
 │   ├── api/                                # Route handlers
 │   │   ├── auth/
 │   │   ├── contact/
-│   │   ├── imagekit-auth/
+│   │   ├── imagekit-upload/
 │   │   └── imagekit-delete/
 │   └── projects/                           # Public /projects + /projects/[slug]
 │       ├── layout.tsx

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Upload, Trash2 } from "lucide-react";
 import { Button } from "./button";
@@ -26,6 +26,7 @@ interface UploadProgress {
   status: "uploading" | "success" | "error";
   url?: string;
   fileId?: string;
+  error?: string;
 }
 
 export function ImageUploader({
@@ -39,7 +40,14 @@ export function ImageUploader({
   const [uploadProgress, setUploadProgress] = useState<UploadProgress[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [deletingIndex, setDeletingIndex] = useState<number | null>(null);
+  const [missingIndexes, setMissingIndexes] = useState<number[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // The list can be reordered or replaced by the parent form, so stale indexes
+  // would flag the wrong thumbnails.
+  useEffect(() => {
+    setMissingIndexes([]);
+  }, [currentImages]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -66,13 +74,6 @@ export function ImageUploader({
     setUploadProgress(initialProgress);
 
     try {
-      // Get auth parameters
-      const authResponse = await fetch("/api/imagekit-auth");
-      if (!authResponse.ok) {
-        throw new Error("Failed to get authentication parameters");
-      }
-      const authParams = await authResponse.json();
-
       // Upload each file sequentially
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
@@ -80,14 +81,9 @@ export function ImageUploader({
         try {
           const formData = new FormData();
           formData.append("file", file);
-          formData.append("fileName", file.name);
-          formData.append("folder", "/portfolio");
-          formData.append("publicKey", authParams.publicKey);
-          formData.append("signature", authParams.signature);
-          formData.append("expire", authParams.expire);
-          formData.append("token", authParams.token);
 
-          // Upload to ImageKit
+          // Upload through our own route so the ImageKit private key stays on
+          // the server and the bytes are validated before they are stored.
           const xhr = new XMLHttpRequest();
           const uploadPromise = new Promise<UploadedImage>(
             (resolve, reject) => {
@@ -111,7 +107,15 @@ export function ImageUploader({
                   const response = JSON.parse(xhr.responseText);
                   resolve({ url: response.url, fileId: response.fileId });
                 } else {
-                  reject(new Error(`Upload failed: ${xhr.statusText}`));
+                  const message =
+                    (() => {
+                      try {
+                        return JSON.parse(xhr.responseText).error;
+                      } catch {
+                        return null;
+                      }
+                    })() ?? `Upload failed (${xhr.status})`;
+                  reject(new Error(message));
                 }
               });
 
@@ -119,10 +123,7 @@ export function ImageUploader({
                 reject(new Error("Network error during upload"));
               });
 
-              xhr.open(
-                "POST",
-                "https://upload.imagekit.io/api/v1/files/upload",
-              );
+              xhr.open("POST", "/api/imagekit-upload");
               xhr.send(formData);
             },
           );
@@ -148,7 +149,14 @@ export function ImageUploader({
           console.error(`Error uploading ${file.name}:`, error);
           setUploadProgress((prev) =>
             prev.map((item, index) =>
-              index === i ? { ...item, status: "error" } : item,
+              index === i
+                ? {
+                    ...item,
+                    status: "error",
+                    error:
+                      error instanceof Error ? error.message : "Upload failed",
+                  }
+                : item,
             ),
           );
         }
@@ -190,14 +198,28 @@ export function ImageUploader({
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete image");
+        // The server distinguishes "already gone" from real failures, and that
+        // detail is the only way to tell why the delete was refused. Falling
+        // back to a generic line would hide it again.
+        const serverMessage = await response
+          .json()
+          .then((body: { error?: string }) => body.error)
+          .catch(() => null);
+
+        throw new Error(
+          serverMessage || `Delete failed (HTTP ${response.status})`,
+        );
       }
 
       // Call parent callback to update state
       onDelete?.(image, index);
     } catch (error) {
       console.error("Delete error:", error);
-      alert("Failed to delete image. Please try again.");
+      alert(
+        error instanceof Error
+          ? `Gagal menghapus gambar: ${error.message}`
+          : "Failed to delete image. Please try again.",
+      );
     } finally {
       setDeletingIndex(null);
     }
@@ -272,6 +294,11 @@ export function ImageUploader({
                   />
                 </div>
               )}
+              {progress.status === "error" && progress.error && (
+                <p className="text-xs text-red-600 dark:text-red-400">
+                  {progress.error}
+                </p>
+              )}
             </div>
           ))}
         </div>
@@ -280,32 +307,53 @@ export function ImageUploader({
       {/* Current Images Preview */}
       {currentImages.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {currentImages.map((image, index) => (
-            <div key={index} className="relative group">
-              <Image
-                src={image.url}
-                alt={`Upload ${index + 1}`}
-                width={160}
-                height={128}
-                unoptimized
-                className="w-full h-32 object-cover rounded-lg border border-gray-300 dark:border-gray-600"
-              />
-              {/* Delete button */}
-              <button
-                type="button"
-                onClick={() => handleDelete(image, index)}
-                disabled={deletingIndex !== null || disabled}
-                className="absolute top-2 right-2 p-1.5 bg-red-500 hover:bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 disabled:opacity-50"
-                title="Delete image"
-              >
-                {deletingIndex === index ? (
-                  <Spinner size="sm" className="w-4 h-4" />
-                ) : (
-                  <Trash2 className="w-4 h-4" />
+          {currentImages.map((image, index) => {
+            const isMissing = missingIndexes.includes(index);
+
+            return (
+              <div key={index} className="relative group">
+                <Image
+                  src={image.url}
+                  alt={`Upload ${index + 1}`}
+                  width={160}
+                  height={128}
+                  unoptimized
+                  onError={() =>
+                    setMissingIndexes((prev) =>
+                      prev.includes(index) ? prev : [...prev, index],
+                    )
+                  }
+                  className={`w-full h-32 object-cover rounded-lg border ${
+                    isMissing
+                      ? "border-red-400 dark:border-red-500/70 opacity-40"
+                      : "border-gray-300 dark:border-gray-600"
+                  }`}
+                />
+                {/* An already-removed file still has a database row, so the
+                    broken image is the only visible hint that it needs
+                    deleting. */}
+                {isMissing && (
+                  <span className="absolute bottom-2 left-2 text-xs px-2 py-0.5 rounded bg-red-500 text-white">
+                    File hilang di ImageKit
+                  </span>
                 )}
-              </button>
-            </div>
-          ))}
+                {/* Delete button */}
+                <button
+                  type="button"
+                  onClick={() => handleDelete(image, index)}
+                  disabled={deletingIndex !== null || disabled}
+                  className="absolute top-2 right-2 p-1.5 bg-red-500 hover:bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 disabled:opacity-50"
+                  title="Delete image"
+                >
+                  {deletingIndex === index ? (
+                    <Spinner size="sm" className="w-4 h-4" />
+                  ) : (
+                    <Trash2 className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

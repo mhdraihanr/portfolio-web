@@ -52,7 +52,7 @@ const securityHeaders = [
   // Strict Transport Security (HSTS) - Forces HTTPS
   {
     key: "Strict-Transport-Security",
-    value: "max-age=31536000",
+    value: "max-age=31536000; includeSubDomains; preload",
   },
 ];
 
@@ -65,6 +65,8 @@ const immutableAssetHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Drop the `X-Powered-By: Next.js` fingerprint from every response.
+  poweredByHeader: false,
   experimental: {
     // ponytail: add more entries only when a barrel-imported lib shows up in bundle analyzer.
     optimizePackageImports: ["lucide-react", "motion"],

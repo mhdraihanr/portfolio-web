@@ -275,8 +275,8 @@ Project ini menggunakan modern web development stack dengan fokus pada:
 
 **API Routes:**
 
-- `GET /api/imagekit-auth` - Generate upload authentication
-- `POST /api/imagekit-delete` - Delete image by fileId
+- `POST /api/imagekit-upload` - Upload image (auth required)
+- `POST /api/imagekit-delete` - Delete image by fileId (auth required)
 
 **Components:**
 
