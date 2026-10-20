@@ -1,10 +1,10 @@
 /**
- * Next.js Middleware for Route Protection
+ * Next.js Route Protection
  *
- * Location: Must be at project root (Next.js convention)
- * Purpose: Protect admin routes with authentication
- *
- * @see https://nextjs.org/docs/app/building-your-application/routing/middleware
+ * Next.js 16 renamed the `middleware` convention to `proxy`: the file must be
+ * `proxy.ts` and export a function named `proxy`. A `middleware.ts` file is no
+ * longer executed, which silently disables every guard in this file.
+ * @see https://nextjs.org/docs/app/api-reference/file-conventions/proxy
  */
 
 import { type NextRequest } from "next/server";
@@ -20,7 +20,7 @@ import {
   createIPBlockedResponse,
 } from "@/lib/middleware/auth-middleware";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const { adminRoute } = getMiddlewareConfig();
 
@@ -31,6 +31,10 @@ export async function middleware(request: NextRequest) {
   if (!isAdminRoute) {
     return;
   }
+
+  // Expose the pathname to server components (the studio layout needs it to
+  // tell the login page apart from protected pages).
+  request.headers.set("x-pathname", pathname);
 
   // IP Whitelist check (optional - only if ADMIN_IP_WHITELIST is set)
   const isWhitelisted = checkIPWhitelist(request);
@@ -64,6 +68,10 @@ export async function middleware(request: NextRequest) {
     return createDashboardRedirect(request, adminRoute);
   }
 
+  // Carry the pathname header on the Supabase response so cookie refreshes and
+  // the layout's login-page check both work.
+  response.headers.set("x-pathname", pathname);
+  request.headers.set("x-pathname", pathname);
   return response;
 }
 
