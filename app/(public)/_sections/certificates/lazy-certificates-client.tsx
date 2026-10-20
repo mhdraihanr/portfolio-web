@@ -49,7 +49,15 @@ export function LazyCertificatesClient({
   }, [shouldRender]);
 
   return (
-    <div ref={ref} style={{ minHeight: "420px" }}>
+    // The anchor lives on the always-rendered wrapper, not on the lazily
+    // mounted section. Otherwise #certificates does not exist on first load and
+    // the navbar link is a dead link until the user scrolls past it (R-24).
+    <div
+      id="certificates"
+      ref={ref}
+      style={{ minHeight: "420px" }}
+      className="scroll-mt-24"
+    >
       {shouldRender ? (
         <CertificatesClient certificates={certificates} />
       ) : (

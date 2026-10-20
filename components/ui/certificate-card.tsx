@@ -10,7 +10,10 @@ export interface CertificateCardProps {
 
 export function CertificateCard({ certificate }: CertificateCardProps) {
   return (
-    <Card className="h-[340px] min-w-[280px] max-w-[320px] flex flex-col hover:shadow-lg transition-all duration-300 border-border/50 bg-card/50 backdrop-blur-sm">
+    // antislop R-10: solid surface, no backdrop-filter. These cards sit on a
+    // flat section background, so blurring them bought no depth and only
+    // stacked compositing layers (one per card in the loop).
+    <Card className="h-[340px] min-w-[280px] max-w-[320px] flex flex-col hover:shadow-lg transition-all duration-300 border-border/50 bg-card">
       {/* Certificate Icon/Image */}
       <div className="p-6 pb-4 flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5 rounded-t-lg">
         {certificate.image ? (

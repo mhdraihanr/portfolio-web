@@ -120,6 +120,20 @@ html {
   animation: mobile-soft-in-down 0.45s ease-out forwards;
 }
 
+/* Reduced motion: these classes start at opacity 0 and rely on the animation to
+   reveal the element. Without this override, users with "reduce motion" get a
+   permanently invisible navbar and hero copy. Show the final state instead. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-fade-in-down,
+  .animate-mobile-soft-in-up,
+  .animate-mobile-soft-in-down {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
 .animate-scroll {
   animation: scroll 2s ease-in-out infinite;
 }
@@ -178,16 +192,27 @@ html {
       background-position: 0% 0%;
     }
   }
-  --animate-shiny-text: shiny-text 3s infinite;
+  /* One sweep per cycle. The old 0/30/60/90 shape parked the highlight
+     off-screen for 900ms of every 3s, which read as the shimmer vanishing. */
+  --animate-shiny-text: shiny-text 2.4s infinite;
   @keyframes shiny-text {
     0%,
-    90%,
     100% {
       background-position: calc(-100% - var(--shiny-width)) 0;
     }
-    30%,
-    60% {
+    50% {
       background-position: calc(100% + var(--shiny-width)) 0;
     }
+  }
+}
+
+/* Tailwind v4 Preflight dropped the v3 default of `cursor: pointer` on buttons,
+   so every button fell back to the arrow cursor. Restoring it here covers raw
+   <button> elements too, which the Button component never sees.
+   @see https://tailwindcss.com/docs/upgrade-guide#buttons-use-the-default-cursor */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
   }
 }
