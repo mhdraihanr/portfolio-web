@@ -46,11 +46,7 @@ export function CertificatesClient({ certificates }: CertificatesClientProps) {
   );
 
   return (
-    <section
-      id="certificates"
-      ref={sectionRef}
-      className="pt-12 pb-20 bg-white dark:bg-gray-950"
-    >
+    <section ref={sectionRef} className="pt-12 pb-20 bg-white dark:bg-gray-950">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}

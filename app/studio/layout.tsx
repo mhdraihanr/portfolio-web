@@ -1,4 +1,5 @@
-import { getUser, getAdminRoute } from "@/lib/auth";
+import { getUser, getAdminRoute, requireAuth } from "@/lib/auth";
+import { headers } from "next/headers";
 import { Sidebar } from "@/components/admin";
 
 export default async function AdminLayout({
@@ -6,9 +7,18 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Get user but don't require auth (middleware handles redirects)
   const user = await getUser();
   const adminRoute = getAdminRoute();
+
+  // Defence in depth: proxy.ts only protects at the network boundary. If the
+  // proxy is misconfigured or not executed, every studio page would render for
+  // anonymous visitors. The login page is the one route that must stay public.
+  const pathname = (await headers()).get("x-pathname") ?? "";
+  const isLoginPage = pathname === `/${adminRoute}/login`;
+
+  if (!user && !isLoginPage) {
+    await requireAuth();
+  }
 
   return (
     <>
@@ -19,7 +29,7 @@ export default async function AdminLayout({
       />
 
       {/* If no user, just render children (for login page)
-      Middleware will handle redirect for protected routes */}
+      Proxy handles redirect for protected routes */}
       {!user ? (
         <>{children}</>
       ) : (

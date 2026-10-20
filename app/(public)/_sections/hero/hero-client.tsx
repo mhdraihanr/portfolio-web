@@ -13,8 +13,7 @@ import { usePageLoading } from "@/contexts/page-loading-context";
 import { useMobileWidth } from "@/hooks/use-mobile-width";
 import type { Profile } from "@/types/profile";
 
-// ponytail: BlurText (motion runtime) is code-split; chunk is preloaded on mount
-// so the title renders the moment animationsReady flips.
+// Code-split, and preloaded on mount so the title paints immediately.
 const BlurText = dynamic(() => import("@/components/effects/blur-text"), {
   ssr: false,
 });
@@ -40,15 +39,12 @@ export function HeroClient({ profile }: HeroClientProps) {
   const { setPageReady } = usePageLoading();
   const isMobileWidth = useMobileWidth();
 
-  // Prevent hydration mismatch
   useEffect(() => {
     setMounted(true);
-    // Warm the BlurText chunk so the title paints the moment animationsReady flips.
     void import("@/components/effects/blur-text");
   }, []);
 
-  // Let the browser paint the static hero first, then load the WebGL layer.
-  // This keeps the global loader flow while reducing initial main-thread pressure.
+  // Paint the static hero first, then load WebGL.
   useEffect(() => {
     if (!mounted) return;
 
@@ -96,21 +92,62 @@ export function HeroClient({ profile }: HeroClientProps) {
   // Theme-based configurations
   const currentTheme = mounted ? theme || resolvedTheme : "dark";
   const isDark = currentTheme === "dark";
-  const raysColor = isDark ? "#ffffff" : "#1f2937"; // white for dark, gray-800 for light
+  // LightRays multiplies raysColor into an additive glow, so a dark color on
+  // white reads as smoke. Light mode uses a dimmed brand-tinted ray instead.
+  const lightRaysStyle = isDark
+    ? {
+        raysColor: "#ffffff",
+        lightSpread: 2.5,
+        rayLength: 2.8,
+        saturation: 1,
+        distortion: 0,
+        fadeDistance: 1,
+      }
+    : {
+        // Additive glow blooms wider on white than on black, so the beam is
+        // narrowed here and dimmed with layer opacity (fadeDistance is clamped).
+        raysColor: "#ef4444", // primary-500
+        lightSpread: 0.55,
+        rayLength: 0.7,
+        saturation: 0.22,
+        distortion: 0.1,
+        fadeDistance: 1,
+      };
   const bgClass = isDark ? "bg-gray-950" : "bg-white";
-  const textGreeting = isDark ? "text-gray-300" : "text-gray-600";
   const textTitle = isDark ? "text-white" : "text-gray-900";
   const textTagline = isDark ? "text-gray-200" : "text-gray-900";
   const socialBg = isDark ? "bg-white/15" : "bg-gray-900/5";
-  const socialBorder = isDark ? "border-white/30" : "border-gray-900/70";
+  const socialBorder = isDark ? "border-white/30" : "border-gray-900/20";
   const socialHoverBg = isDark ? "hover:bg-white/25" : "hover:bg-gray-900/15";
   const socialText = isDark ? "text-white" : "text-gray-900";
   const socialHoverText = isDark
     ? "hover:text-primary-500"
     : "hover:text-primary-700";
+  // Solid chips, not glass: blur had no visible effect on a smooth gradient
+  // but still cost a compositing layer each (antislop R-10).
+  const socialLink = `p-3 rounded-full ${socialBg} border-2 ${socialBorder} ${socialHoverBg} hover:scale-110 transition-all duration-300 ${socialText} ${socialHoverText}`;
 
-  // Greeting: editable full line from profile. When empty, fall back to the
-  // legacy "Hello, I'm {first name of full_name}" behavior.
+  // Solid brand core + translucent casing (inset bevel, top sheen, halo).
+  // No backdrop-filter: nothing behind the CTA to refract, and it keeps the
+  // page at the R-10 cap of 2 blur elements.
+  // Sheen is primary-400, not white: white sheen desaturates the red and drops
+  // text contrast below AA. Hover darkens to primary-700 (6.47:1).
+  const ctaButton = [
+    "group relative overflow-hidden rounded-full px-8",
+    "bg-primary-600",
+    "before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-1/2",
+    "before:bg-linear-to-b before:from-primary-400/14 before:to-transparent",
+    "before:content-['']",
+    "transition-all duration-300 ease-out",
+    "shadow-[inset_0_1px_0_0_rgba(255,255,255,0.32),inset_0_-1px_0_0_rgba(0,0,0,0.18),0_10px_30px_-10px_rgba(239,68,68,0.55)]",
+    "hover:-translate-y-0.5 hover:bg-primary-700",
+    "hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.38),inset_0_-1px_0_0_rgba(0,0,0,0.18),0_16px_38px_-12px_rgba(239,68,68,0.7)]",
+    "active:translate-y-0 active:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.24),inset_0_-1px_0_0_rgba(0,0,0,0.18),0_6px_18px_-10px_rgba(239,68,68,0.5)]",
+    "focus-visible:ring-2 focus-visible:ring-primary-300 focus-visible:ring-offset-2",
+  ].join(" ");
+  const ctaShade = isDark ? "ring-offset-gray-950" : "ring-offset-white";
+
+  // Falls back to "Hello, I'm {first name}" when hero_greeting is empty.
   const greeting =
     profile?.hero_greeting?.trim() ||
     (() => {
@@ -131,19 +168,19 @@ export function HeroClient({ profile }: HeroClientProps) {
           }`}
         >
           <LightRays
-            raysOrigin="right"
-            raysColor={raysColor}
+            raysOrigin={isDark ? "right" : "top-right"}
+            raysColor={lightRaysStyle.raysColor}
             raysSpeed={1.2}
-            lightSpread={2.5}
-            rayLength={2.8}
+            lightSpread={lightRaysStyle.lightSpread}
+            rayLength={lightRaysStyle.rayLength}
             pulsating={false}
-            fadeDistance={1}
-            saturation={1}
+            fadeDistance={lightRaysStyle.fadeDistance}
+            saturation={lightRaysStyle.saturation}
             followMouse={!isMobileWidth}
             mouseInfluence={isMobileWidth ? 0 : 0.15}
             noiseAmount={0}
-            distortion={0}
-            className="w-full h-full"
+            distortion={lightRaysStyle.distortion}
+            className={`w-full h-full ${isDark ? "opacity-100" : "opacity-35"}`}
             mounted={showLightRays}
             onReady={handleBackgroundReady}
           />
@@ -171,8 +208,8 @@ export function HeroClient({ profile }: HeroClientProps) {
             }
           >
             <AnimatedShinyText
-              className={`text-lg md:text-xl ${textGreeting} font-medium inline-block`}
-              shimmerWidth={150}
+              className="text-lg md:text-xl font-medium inline-block"
+              shimmerWidth={220}
             >
               {greeting}
             </AnimatedShinyText>
@@ -218,8 +255,12 @@ export function HeroClient({ profile }: HeroClientProps) {
                 <Link href={profile.cv_url} target="_blank">
                   <Button
                     size="lg"
-                    className="rounded-full px-8"
-                    rightIcon={<FileText className="h-5 w-5" />}
+                    className={`${ctaButton} ${ctaShade}`}
+                    rightIcon={
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/12 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.18)] transition-transform duration-300 group-hover:scale-105">
+                        <FileText className="h-4 w-4" />
+                      </span>
+                    }
                   >
                     See My CV
                   </Button>
@@ -252,7 +293,7 @@ export function HeroClient({ profile }: HeroClientProps) {
               href="https://github.com/mhdraihanr"
               target="_blank"
               rel="noopener noreferrer"
-              className={`p-3 rounded-full ${socialBg} backdrop-blur-md border-2 ${socialBorder} ${socialHoverBg} hover:scale-110 transition-all duration-300 ${socialText} ${socialHoverText} shadow-lg`}
+              className={socialLink}
               aria-label="GitHub"
             >
               <Github className="h-6 w-6" />
@@ -261,14 +302,14 @@ export function HeroClient({ profile }: HeroClientProps) {
               href="https://linkedin.com/in/mhdraihanr09"
               target="_blank"
               rel="noopener noreferrer"
-              className={`p-3 rounded-full ${socialBg} backdrop-blur-md border-2 ${socialBorder} ${socialHoverBg} hover:scale-110 transition-all duration-300 ${socialText} ${socialHoverText} shadow-lg`}
+              className={socialLink}
               aria-label="LinkedIn"
             >
               <Linkedin className="h-6 w-6" />
             </a>
             <a
               href="mailto:raihanrafliansyah1234@gmail.com"
-              className={`p-3 rounded-full ${socialBg} backdrop-blur-md border-2 ${socialBorder} ${socialHoverBg} hover:scale-110 transition-all duration-300 ${socialText} ${socialHoverText} shadow-lg`}
+              className={socialLink}
               aria-label="Email"
             >
               <Mail className="h-6 w-6" />
