@@ -14,6 +14,7 @@ interface FormData {
   email: string;
   subject: string;
   message: string;
+  website: string;
 }
 
 interface FormErrors {
@@ -32,6 +33,7 @@ export default function ContactPage() {
     email: "",
     subject: "",
     message: "",
+    website: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -124,6 +126,7 @@ export default function ContactPage() {
           email: "",
           subject: "",
           message: "",
+          website: "",
         });
       } else {
         setSubmitStatus({
@@ -246,6 +249,18 @@ export default function ContactPage() {
                   required
                 />
 
+                {/* Honeypot field (hidden from real users, bots will fill it) */}
+                <input
+                  type="text"
+                  name="website"
+                  value={formData.website}
+                  onChange={handleChange}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  className="absolute left-[-9999px]"
+                  aria-hidden="true"
+                />
+
                 {/* Submit Button */}
                 <div className="flex gap-4">
                   <Button
@@ -268,6 +283,7 @@ export default function ContactPage() {
                         email: "",
                         subject: "",
                         message: "",
+                        website: "",
                       });
                       setErrors({});
                       setSubmitStatus({ type: null, message: "" });
