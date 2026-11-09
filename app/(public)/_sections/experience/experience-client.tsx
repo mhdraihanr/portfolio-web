@@ -86,10 +86,6 @@ export function ExperienceClient({ experiences }: ExperienceClientProps) {
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <ScrollReveal className="text-center mb-12" once>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4">
-              <Briefcase className="w-4 h-4" />
-              <span className="text-sm font-medium">Career</span>
-            </div>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               Work Experience
             </h2>

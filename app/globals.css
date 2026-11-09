@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* animate-in / zoom-in-95 / slide-in-from-* used by modal + toast. The plugin
+   is a v3 legacy plugin, so v4 only loads it through @plugin. */
+@plugin "tailwindcss-animate";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme {
@@ -30,10 +34,28 @@
   --color-secondary-700: #047857;
   --color-secondary-800: #065f46;
   --color-secondary-900: #064e3b;
+
+  /* Semantic aliases. Components use bg-card, border-border, text-foreground,
+     text-muted-foreground, text-primary, text-destructive. Without these the
+     utilities emitted no CSS and inherited the parent colour instead. */
+  --color-primary: #dc2626; /* primary-600, 4.83:1 on white */
+  --color-destructive: #dc2626;
+  --color-card: #ffffff;
+  --color-border: #e5e7eb; /* gray-200 */
+  --color-foreground: #111827; /* gray-900 */
+  --color-muted-foreground: #6b7280; /* gray-500 */
 }
 
-/* Tailwind v4: Enable class-based dark mode */
-@variant dark (.dark &);
+/* Dark overrides sit outside @theme so the same utility resolves per theme.
+   primary-500 is the dark accent used across the codebase (5.35:1 on gray-950). */
+.dark {
+  --color-primary: #ef4444;
+  --color-destructive: #ef4444;
+  --color-card: #111827;
+  --color-border: #1f2937;
+  --color-foreground: #ffffff;
+  --color-muted-foreground: #9ca3af;
+}
 
 /* Smooth Scrolling */
 html {
@@ -131,6 +153,28 @@ html {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+  }
+}
+
+/* `scale` is separate from `transform`, so this does not fight BlurText's y-animation.
+   Fine pointers only: a tap on mobile would otherwise leave a word stuck scaled. */
+@media (hover: hover) and (pointer: fine) {
+  .blur-text > span {
+    transition: scale 200ms ease-out;
+  }
+
+  .blur-text > span:hover {
+    scale: 1.04;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blur-text > span {
+    transition: none;
+  }
+
+  .blur-text > span:hover {
+    scale: none;
   }
 }
 

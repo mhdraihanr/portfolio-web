@@ -26,6 +26,15 @@ const sizeClasses = {
   full: "max-w-full mx-4",
 };
 
+const FOCUSABLE_SELECTOR = [
+  "a[href]",
+  "button:not([disabled])",
+  "textarea:not([disabled])",
+  "input:not([disabled])",
+  "select:not([disabled])",
+  '[tabindex]:not([tabindex="-1"])',
+].join(", ");
+
 export function Modal({
   isOpen,
   onClose,
@@ -67,6 +76,45 @@ export function Modal({
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
 
+  // aria-modal is a promise that focus stays inside; keep it true and hand focus
+  // back to the trigger on close so keyboard users do not land on <body>.
+  const panelRef = React.useRef<HTMLDivElement>(null);
+  const previousFocusRef = React.useRef<HTMLElement | null>(null);
+
+  React.useEffect(() => {
+    if (!isOpen || !mounted) return;
+
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    const panel = panelRef.current;
+    panel?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)?.focus();
+
+    const handleTab = (event: KeyboardEvent) => {
+      if (event.key !== "Tab" || !panel) return;
+
+      const focusable = Array.from(
+        panel.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+      );
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleTab);
+    return () => {
+      document.removeEventListener("keydown", handleTab);
+      previousFocusRef.current?.focus();
+    };
+  }, [isOpen, mounted]);
+
   if (!mounted || !isOpen) return null;
 
   const modalContent = (
@@ -86,6 +134,7 @@ export function Modal({
 
       {/* Modal */}
       <div
+        ref={panelRef}
         className={cn(
           "relative z-50 w-full my-auto max-h-[calc(100vh-2rem)] flex flex-col overflow-hidden bg-white dark:bg-gray-900 rounded-lg shadow-lg",
           "animate-in zoom-in-95 duration-200",

@@ -2,9 +2,9 @@
 
 Modern portfolio website dengan admin panel untuk manage projects dan work experience secara dinamis.
 
-![Next.js](https://img.shields.io/badge/Next.js-15-black)
+![Next.js](https://img.shields.io/badge/Next.js-16-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-38bdf8)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8)
 ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ecf8e)
 
 ## ✨ Features
@@ -12,7 +12,7 @@ Modern portfolio website dengan admin panel untuk manage projects dan work exper
 ### Public Website
 
 - 🎨 Modern, responsive design dengan dark mode (default)
-- ⚡ Fast performance dengan Next.js 15 App Router
+- ⚡ Fast performance dengan Next.js 16 App Router
 - 🎭 Smooth animations (Framer Motion + GSAP via React Bits)
 - 🔄 Global loading state dengan page transitions
 - 📱 Mobile-first responsive design
@@ -43,7 +43,7 @@ Modern portfolio website dengan admin panel untuk manage projects dan work exper
 
 ## 🛠 Tech Stack
 
-- **Framework**: Next.js 15 (App Router)
+- **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **Animation**: Framer Motion, GSAP (React Bits), CSS Animations

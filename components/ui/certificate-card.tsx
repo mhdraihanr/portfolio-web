@@ -15,7 +15,7 @@ export function CertificateCard({ certificate }: CertificateCardProps) {
     // stacked compositing layers (one per card in the loop).
     <Card className="h-[340px] min-w-[280px] max-w-[320px] flex flex-col hover:shadow-lg transition-all duration-300 border-border/50 bg-card">
       {/* Certificate Icon/Image */}
-      <div className="p-6 pb-4 flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5 rounded-t-lg">
+      <div className="p-6 pb-4 flex items-center justify-center">
         {certificate.image ? (
           <Image
             src={certificate.image}
@@ -25,7 +25,7 @@ export function CertificateCard({ certificate }: CertificateCardProps) {
             className="h-16 w-16 object-contain"
           />
         ) : (
-          <div className="h-16 w-16 rounded-full bg-primary/20 flex items-center justify-center">
+          <div className="h-16 w-16 flex items-center justify-center">
             <svg
               className="w-8 h-8 text-primary"
               fill="none"

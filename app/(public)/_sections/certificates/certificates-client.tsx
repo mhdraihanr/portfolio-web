@@ -3,7 +3,6 @@
 import { CertificateCard } from "@/components/ui/certificate-card";
 import type { Certificate } from "@/types/certificate";
 import LogoLoop from "@/components/effects/logo-loop";
-import { Award } from "lucide-react";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
 import { useMobileWidth } from "@/hooks/use-mobile-width";
 import { useEffect, useMemo, useRef } from "react";
@@ -51,10 +50,6 @@ export function CertificatesClient({ certificates }: CertificatesClientProps) {
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <ScrollReveal className="text-center mb-6" once>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4">
-              <Award className="w-4 h-4" />
-              <span className="text-sm font-medium">Certifications</span>
-            </div>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               Professional Certificates
             </h2>

@@ -186,11 +186,11 @@ app/
 │       └── page.tsx ← URL: /admin/projects
 ```
 
-### Middleware Protection
+### Proxy Protection
 
 ```typescript
-// middleware.ts
-const adminRoute = process.env.ADMIN_ROUTE_SECRET || "admin";
+// proxy.ts
+const adminRoute = process.env.ADMIN_ROUTE_SECRET || "studio";
 
 // If path starts with `/${adminRoute}`, check authentication
 if (pathname.startsWith(`/${adminRoute}`)) {

@@ -30,10 +30,10 @@ portfolio-web/
 ├── .env.local               # Environment variables (not committed)
 ├── .env.example             # Example environment variables
 ├── .gitignore               # Git ignore rules
-├── middleware.ts            # Next.js middleware
+├── proxy.ts                 # Route protection (Next.js 16 proxy convention)
 ├── next.config.ts           # Next.js configuration
 ├── package.json             # Project dependencies
-├── tailwind.config.ts       # Tailwind CSS configuration
+├── app/globals.css          # Tailwind v4 theme (CSS-first config)
 ├── tsconfig.json            # TypeScript configuration
 ├── supabase-schema.sql      # Database schema
 ├── README.md                # Project overview
@@ -50,21 +50,23 @@ portfolio-web/
 
 ### `/app` - Next.js App Router
 
-Main application directory menggunakan Next.js 15 App Router.
+Main application directory menggunakan Next.js 16 App Router.
 
 ```
 app/
 ├── (public)/                    # Public routes group
 │   ├── layout.tsx              # Public layout with Navbar, Footer
 │   ├── page.tsx                # Homepage
-│   └── components/             # Public page components
-│       ├── hero.tsx            # Hero section ✅
-│       ├── about.tsx           # About section (with integrated skills) ✅
-│       ├── lazy-home-client-sections.tsx # Lazy client wrapper for below-fold sections ✅
-│       ├── certificates.tsx    # Certificates section ✅
-│       ├── projects.tsx        # Projects showcase ✅
-│       ├── WorkExperience.tsx  # Work experience section
-│       └── Contact.tsx         # Contact form
+│   ├── _sections/              # Homepage sections (server wrapper + client)
+│   │   ├── hero/               # Hero section
+│   │   │   ├── index.tsx       # Server component, fetches profile
+│   │   │   └── hero-client.tsx # Hero UI + LightRays + BlurText
+│   │   ├── about/              # About + skills (index.tsx, about-client.tsx)
+│   │   ├── certificates/       # Certificates (index.tsx, client, lazy client)
+│   │   ├── projects/           # Projects (index.tsx, client, lazy client)
+│   │   └── experience/         # Experience timeline (index.tsx, client, lazy client)
+│   └── contact/
+│       └── page.tsx            # Contact form page
 │
 ├── projects/                    # Project pages (outside public group)
 │   ├── layout.tsx              # Projects layout (Footer, BackToTop) ✅
@@ -461,7 +463,7 @@ Modular middleware utilities:
 - `createDashboardRedirect()` - Create redirect to dashboard
 - `getMiddlewareConfig()` - Get middleware config
 
-**Note:** Main `middleware.ts` must stay at root level (Next.js convention)
+**Note:** Main `proxy.ts` must stay at root level (Next.js 16 convention)
 
 #### `lib/supabase/helpers.ts` ✅
 
@@ -707,9 +709,9 @@ public/
 
 ### Configuration Files
 
-#### `middleware.ts`
+#### `proxy.ts`
 
-Next.js middleware untuk:
+Next.js 16 proxy (pengganti `middleware.ts`) untuk:
 
 - Protect admin routes
 - Check authentication
@@ -725,14 +727,14 @@ Next.js configuration:
 - Redirects/rewrites
 - Headers
 
-#### `tailwind.config.ts`
+#### `app/globals.css`
 
-Tailwind CSS configuration:
+Tailwind v4 CSS-first configuration:
 
-- Custom colors
-- Custom fonts
+- `@theme` tokens (colors, fonts)
 - Custom animations
-- Dark mode settings
+- Dark mode variant
+- `@plugin "tailwindcss-animate"`
 
 #### `tsconfig.json`
 

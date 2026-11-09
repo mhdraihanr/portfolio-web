@@ -48,7 +48,7 @@ logo wall, no feature-card grid, no fake metrics.
 
 | Role                  | Face                                 | Size / weight                          | Why                                                                                                                       |
 | --------------------- | ------------------------------------ | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| Display (hero title)  | **Delargo DT Condensed** Bold        | `text-5xl` mobile → `text-7xl` desktop | Condensed bold reads as an editorial masthead, not a product headline. It gives the page a voice that Inter/Geist cannot. |
+| Display (hero title)  | **Delargo DT Condensed** Bold        | `text-6xl` mobile → `text-8xl` desktop | Condensed bold reads as an editorial masthead, not a product headline. It gives the page a voice that Inter/Geist cannot. |
 | Display (alt weights) | Delargo DT Condensed Regular / Black | on demand                              | Shipped alongside Bold; use only when a hierarchy step needs it.                                                          |
 | Body / UI             | **Geist** sans                       | `text-base` body, `text-lg` greeting   | Neutral, highly legible at small sizes, and keeps the display font as the only loud voice.                                |
 
@@ -73,8 +73,13 @@ Defined in `app/globals.css` as Tailwind v4 `@theme` tokens.
 | ------------- | --------- | ----------------------------------- |
 | `primary-600` | `#dc2626` | CTA fill, active states             |
 | `primary-700` | `#b91c1c` | CTA hover (see contrast rule below) |
-| `primary-500` | `#ef4444` | Light-mode rays tint                |
+| `primary-500` | `#ef4444` | Hover accents, icon tints           |
 | `primary-100` | `#fee2e2` | Tinted backgrounds, chips (light)   |
+
+> **Off-palette value (antislop R-29):** the light-mode `LightRays` tint is
+> `#ff7272`, a lightened red that is **not** a theme token. It is lighter than
+> `primary-500` so the beam stays legible over white without reading as a stain.
+> Recorded here as a deliberate choice; do not reuse it as a general accent.
 
 ### Neutrals
 
@@ -98,6 +103,25 @@ the same accent on every element reads as a default. Concretely:
 > this document. Either bring it onto the brand red, drop it, or amend this file
 > with a written reason for blue. Until then it is a known conflict, not an
 > approved choice.
+
+### Semantic aliases
+
+Components address colour by role, not by shade (`bg-card`, `text-muted-foreground`,
+`text-primary`). Those utilities only exist if the token exists, so the aliases
+are part of this palette, not an implementation detail:
+
+| Token                      | Light     | Dark      | Used by                              |
+| -------------------------- | --------- | --------- | ------------------------------------ |
+| `--color-primary`          | `#dc2626` | `#ef4444` | eyebrow badges, links, 404, studio   |
+| `--color-destructive`      | `#dc2626` | `#ef4444` | error page heading                   |
+| `--color-card`             | `#ffffff` | `#111827` | certificate cards                    |
+| `--color-border`           | `#e5e7eb` | `#1f2937` | card borders                         |
+| `--color-foreground`       | `#111827` | `#ffffff` | card titles                          |
+| `--color-muted-foreground` | `#6b7280` | `#9ca3af` | card provider, dates, secondary copy |
+
+**Rule:** a new colour role gets a token here before it gets a class in a
+component. A utility that resolves to nothing fails silently and inherits the
+parent colour, which is how this table came to be written.
 
 ---
 
@@ -131,12 +155,12 @@ tint it with `primary-400` instead.
 The hero uses a real WebGL light source (`LightRays`), so light is part of the
 composition, not decoration. That makes restraint more important, not less.
 
-| Element                | Allowed | Reason                                                                                                                   |
-| ---------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `LightRays` background | ✅      | It _is_ the hero's subject. Dark = `#ffffff`; light = `#ef4444` at `saturation 0.55`, tighter `lightSpread`/`rayLength`. |
-| Primary CTA shadow     | ✅      | Elevation marker (R-12): it lifts the one action off the page.                                                           |
-| Social icon buttons    | ❌ flat | They sit over the rays. Adding shadow would compete with the CTA and triplicate the glow.                                |
-| Cards, badges, borders | ❌      | No glow.                                                                                                                 |
+| Element                | Allowed | Reason                                                                                                                                                |
+| ---------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `LightRays` background | ✅      | It _is_ the hero's subject. Dark = `#ffffff` at full opacity; light = `#ff7272` at `saturation 1`, `lightSpread 0.55`, `rayLength 1.4`, `opacity-90`. |
+| Primary CTA shadow     | ✅      | Elevation marker (R-12): it lifts the one action off the page.                                                                                        |
+| Social icon buttons    | ❌ flat | They sit over the rays. Adding shadow would compete with the CTA and triplicate the glow.                                                             |
+| Cards, badges, borders | ❌      | No glow.                                                                                                                                              |
 
 **Dose cap:** at most **2** glow sources on the hero (rays + CTA). Cap is
 deliberate — glow everywhere amplifies nothing.
@@ -198,6 +222,19 @@ Radius communicates function, not decoration.
 **Rule:** pill shape is reserved for the hero CTA and icon-only controls. If
 every button, input, and badge is a pill, the shape stops signalling anything.
 
+### Section headers
+
+A section header is **the heading plus one sentence**. Nothing above it.
+
+**No eyebrow badges.** Certificates, Projects, and Experience each carried a
+pill (`Certifications`, `Portfolio`, `Career`) whose label repeated the heading
+directly beneath it. That is a line of reading with no new fact, and it made the
+pill shape the most repeated shape on the page, against the rule above. Removed
+2026-11-09; About never had one, so headers are now consistent (RHYTHM 2).
+
+If a label ever carries something the heading does not say, fold it into the
+heading or the sentence. Do not rebuild the pill.
+
 ---
 
 ## Section rhythm
@@ -228,12 +265,13 @@ colour. Alternating backgrounds alone is not rhythm.
 MOTION 2. Every animation must answer "what does this help the visitor
 understand?"
 
-| Motion                   | Purpose                                                  | Constraint                                                                      |
-| ------------------------ | -------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `BlurText` hero entrance | Directs attention to the one-sentence pitch              | Runs once; gated so it never replays over a painted title                       |
-| `LightRays` drift        | Makes the light source feel alive, not a static gradient | Pauses when hidden or out of viewport; DPR capped at 1.5                        |
-| Scroll reveal            | Orients the reader as new sections arrive                | Skipped entirely at `width <= 767px` (`use-mobile-width`); plays once on mobile |
-| `Orb` (Experience)       | Ambient depth on large screens                           | Desktop only (`!isMobileWidth`); never on phone                                 |
+| Motion                   | Purpose                                                  | Constraint                                                                                                                      |
+| ------------------------ | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `BlurText` hero entrance | Directs attention to the one-sentence pitch              | Runs once; gated so it never replays over a painted title                                                                       |
+| `LightRays` drift        | Makes the light source feel alive, not a static gradient | Pauses when hidden or out of viewport; DPR capped at 1.5                                                                        |
+| Scroll reveal            | Orients the reader as new sections arrive                | Disabled at `width <= 767px` and under `prefers-reduced-motion` (`scroll-reveal.tsx`); content shows in its final state instead |
+| Headline word hover      | Confirms the word under the cursor is interactive        | `scale: 1.04` over 200ms on `.blur-text > span`; fine pointers only, disabled under `prefers-reduced-motion`                    |
+| `Orb` (Experience)       | Ambient depth on large screens                           | Desktop only (`!isMobileWidth`); never on phone                                                                                 |
 
 **Not allowed:** simultaneous Fade Up + Float + Scale + Bounce on every element.
 That is the template-animation pattern, not motion design.
@@ -270,7 +308,7 @@ Run before shipping any visual change:
 - [ ] Does every colour trace back to a token listed above?
 - [ ] Is red still the only accent?
 - [ ] Is the CTA still the only opaque, glowing, pill-shaped action?
-- [ ] Is glass still limited to the social icon cluster?
+- [ ] Is glass still limited to the floating navbar and its mobile overlay?
 - [ ] Do both themes render correctly?
 - [ ] Does any hover/focus state fail WCAG AA via `contrast-check.py`?
 - [ ] Does the motion have a stated purpose, and does it respect `prefers-reduced-motion`?

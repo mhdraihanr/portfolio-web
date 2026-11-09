@@ -19,7 +19,7 @@ Project ini menggunakan modern web development stack dengan fokus pada:
 
 ### Frontend Framework
 
-#### Next.js 15 (App Router)
+#### Next.js 16 (App Router)
 
 **Why Next.js?**
 

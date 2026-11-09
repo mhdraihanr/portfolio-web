@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui";
-import { Github, Linkedin, Mail, FileText } from "lucide-react";
+import { ArrowUpRight, Download, Github, Linkedin, Mail } from "lucide-react";
 import Link from "next/link";
 import LightRays from "@/components/effects/light-rays";
 import { useTheme } from "next-themes";
@@ -104,18 +104,18 @@ export function HeroClient({ profile }: HeroClientProps) {
         fadeDistance: 1,
       }
     : {
-        // Additive glow blooms wider on white than on black, so the beam is
-        // narrowed here and dimmed with layer opacity (fadeDistance is clamped).
-        raysColor: "#ef4444", // primary-500
+        // Over white the shader alpha-composites, so a wide spread smears into a
+        // flat pink veil: narrow beams + high layer opacity keep rays readable.
+        raysColor: "#ff7272", // lightened red: legible over white, off-palette
         lightSpread: 0.55,
-        rayLength: 0.7,
-        saturation: 0.22,
+        rayLength: 1.4,
+        saturation: 1,
         distortion: 0.1,
         fadeDistance: 1,
       };
   const bgClass = isDark ? "bg-gray-950" : "bg-white";
   const textTitle = isDark ? "text-white" : "text-gray-900";
-  const textTagline = isDark ? "text-gray-200" : "text-gray-900";
+  const textTagline = isDark ? "text-gray-300" : "text-gray-600";
   const socialBg = isDark ? "bg-white/15" : "bg-gray-900/5";
   const socialBorder = isDark ? "border-white/30" : "border-gray-900/20";
   const socialHoverBg = isDark ? "hover:bg-white/25" : "hover:bg-gray-900/15";
@@ -146,6 +146,16 @@ export function HeroClient({ profile }: HeroClientProps) {
     "focus-visible:ring-2 focus-visible:ring-primary-300 focus-visible:ring-offset-2",
   ].join(" ");
   const ctaShade = isDark ? "ring-offset-gray-950" : "ring-offset-white";
+  // dark:bg-transparent is required: primary's dark:bg-primary-600 outranks a
+  // bare bg-transparent and would refill this outline pill.
+  const ctaOutline = [
+    "group rounded-full px-8 border bg-transparent dark:bg-transparent",
+    isDark
+      ? "border-primary-400/35 text-white hover:border-primary-400/70 hover:bg-primary-500/10 dark:hover:bg-primary-500/10"
+      : "border-primary-600/30 text-gray-900 hover:border-primary-600/60 hover:bg-primary-600/5",
+    "transition-all duration-300 hover:-translate-y-0.5",
+    "focus-visible:ring-2 focus-visible:ring-primary-300 focus-visible:ring-offset-2",
+  ].join(" ");
 
   // Falls back to "Hello, I'm {first name}" when hero_greeting is empty.
   const greeting =
@@ -180,7 +190,7 @@ export function HeroClient({ profile }: HeroClientProps) {
             mouseInfluence={isMobileWidth ? 0 : 0.15}
             noiseAmount={0}
             distortion={lightRaysStyle.distortion}
-            className={`w-full h-full ${isDark ? "opacity-100" : "opacity-35"}`}
+            className={`w-full h-full ${isDark ? "opacity-100" : "opacity-90"}`}
             mounted={showLightRays}
             onReady={handleBackgroundReady}
           />
@@ -232,49 +242,68 @@ export function HeroClient({ profile }: HeroClientProps) {
                 animateBy="words"
                 direction="top"
                 once
-                className={`text-5xl md:text-6xl lg:text-7xl font-bold ${textTitle} leading-tight ${delargoDT.className}`}
+                className={`text-6xl md:text-7xl lg:text-8xl font-bold ${textTitle} leading-tight ${delargoDT.className}`}
               />
             )}
           </div>
 
-          {/* Tagline & CTA Button - Horizontal Layout */}
+          {/* Sub-headline - directly under the headline */}
           <div
             className={
               isMobileWidth
-                ? "flex flex-col md:flex-row items-start gap-6 pt-10 opacity-100 animate-mobile-soft-in-up"
-                : `flex flex-col md:flex-row items-start gap-6 pt-10 transition-opacity duration-700 ${
+                ? "pt-2 opacity-100 animate-mobile-soft-in-up"
+                : `pt-2 transition-opacity duration-700 ${
+                    animationsReady
+                      ? "opacity-100 animate-fade-in-up delay-400"
+                      : "opacity-0"
+                  }`
+            }
+          >
+            <p
+              className={`max-w-2xl text-lg md:text-xl ${textTagline} leading-relaxed`}
+            >
+              {profile?.hero_tagline ??
+                "I'm a Fullstack Developer passionate about building web applications that are fast, responsive and easy to use. From designing interfaces to structuring backend systems, focus on writing clean code and using modern tools to bring ideas to life."}
+            </p>
+          </div>
+
+          {/* CTA Buttons */}
+          <div
+            className={
+              isMobileWidth
+                ? "flex flex-wrap items-center gap-4 pt-8 opacity-100 animate-mobile-soft-in-up"
+                : `flex flex-wrap items-center gap-4 pt-8 transition-opacity duration-700 ${
                     animationsReady
                       ? "opacity-100 animate-fade-in-up delay-600"
                       : "opacity-0"
                   }`
             }
           >
-            {/* CTA Button - Left */}
-            <div className="order-2 md:order-1">
-              {profile?.cv_url ? (
-                <Link href={profile.cv_url} target="_blank">
-                  <Button
-                    size="lg"
-                    className={`${ctaButton} ${ctaShade}`}
-                    rightIcon={
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/12 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.35),inset_0_0_0_1px_rgba(255,255,255,0.18)] transition-transform duration-300 group-hover:scale-105">
-                        <FileText className="h-4 w-4" />
-                      </span>
-                    }
-                  >
-                    See My CV
-                  </Button>
-                </Link>
-              ) : null}
-            </div>
+            <Link href="/projects">
+              <Button
+                size="lg"
+                className={`${ctaButton} ${ctaShade}`}
+                rightIcon={
+                  <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                }
+              >
+                View Projects
+              </Button>
+            </Link>
 
-            {/* Tagline - Right */}
-            <div className="order-1 md:order-2 md:text-right md:pl-16 flex-1">
-              <p className={`text-base ${textTagline} leading-relaxed`}>
-                {profile?.hero_tagline ??
-                  "I'm a Fullstack Developer passionate about building web applications that are fast, responsive and easy to use. From designing interfaces to structuring backend systems, focus on writing clean code and using modern tools to bring ideas to life."}
-              </p>
-            </div>
+            {profile?.cv_url ? (
+              <Link href={profile.cv_url} target="_blank">
+                <Button
+                  size="lg"
+                  className={`${ctaOutline} ${ctaShade}`}
+                  rightIcon={
+                    <Download className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
+                  }
+                >
+                  Download CV
+                </Button>
+              </Link>
+            ) : null}
           </div>
 
           {/* Social Links */}

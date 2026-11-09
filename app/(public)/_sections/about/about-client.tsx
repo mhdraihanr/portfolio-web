@@ -3,7 +3,6 @@
 import { Code2, Database, Globe, MapPin } from "lucide-react";
 import Image from "next/image";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
-import { useMobileWidth } from "@/hooks/use-mobile-width";
 import { getDeviconSvgUrl, localizeIconSvgUrl } from "@/lib/devicon";
 import type { HomepageSkillsByCategory } from ".";
 import type { Profile } from "@/types/profile";
@@ -54,8 +53,6 @@ function SkillBadge({
 }
 
 export function AboutClient({ skills, profile }: AboutClientProps) {
-  useMobileWidth();
-
   return (
     <section id="about" className="py-15 bg-white dark:bg-gray-950">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
