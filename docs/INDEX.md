@@ -175,7 +175,7 @@ File konfigurasi (tidak perlu dibaca, tapi penting):
 - `app/globals.css` - Tailwind v4 CSS-first configuration
 - `tsconfig.json` - TypeScript configuration
 - `package.json` - Project dependencies
-- `middleware.ts` - Route protection middleware
+- `proxy.ts` - Route protection (Next.js 16 proxy convention; replaces `middleware.ts`)
 - `.gitignore` - Git ignore rules
 
 **Special Topics:**

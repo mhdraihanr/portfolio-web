@@ -27,13 +27,23 @@ export default {
 ```css
 /* app/globals.css */
 @import "tailwindcss";
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-primary-600: #4f46e5;
+  --color-primary-600: #dc2626;
 }
-
-@variant dark (.dark &);
 ```
+
+> **Important:** use `@custom-variant` for the dark variant. `@variant dark (.dark &)`
+> is not a variant definition in v4, so it is a no-op.
+
+### Plugins
+
+`tailwindcss-animate` is a legacy (v3) JS plugin. In v4 it only loads through
+`@plugin`, so `animate-in`, `zoom-in-95`, `fade-in`, and `slide-in-from-*` emit
+no CSS until the directive is present.
 
 ### Dark Mode Configuration
 
@@ -129,13 +139,13 @@ Tailwind v4 does NOT use this file. All configuration is in CSS.
 
 ```css
 /* This enables dark: prefix in all components */
-@variant dark (.dark &);
+@custom-variant dark (&:is(.dark *));
 ```
 
 **How it works:**
 
-- `@variant dark` defines a custom variant named "dark"
-- `(.dark &)` means: apply when `.dark` class exists on parent element
+- `@custom-variant dark` defines a custom variant named "dark"
+- `(&:is(.dark *))` means: apply when the element is inside `.dark`
 - Result: `dark:bg-gray-900` only applies when `<html class="dark">` exists
 
 ### 3. Theme Toggle Component
@@ -181,7 +191,8 @@ If you need to migrate from v3 to v4:
 - [x] Install Tailwind v4: `npm install tailwindcss@^4 @tailwindcss/postcss@^4`
 - [x] Update `postcss.config.mjs` to use `@tailwindcss/postcss`
 - [x] Move colors from `tailwind.config.ts` to `@theme` in CSS
-- [x] Add `@variant dark (.dark &);` for dark mode
+- [x] Add `@custom-variant dark (&:is(.dark *));` for dark mode
+- [x] Load `tailwindcss-animate` with `@plugin "tailwindcss-animate";`
 - [x] Backup or remove `tailwind.config.ts`
 - [x] Test all components in light and dark mode
 - [x] Update documentation
@@ -196,10 +207,11 @@ If you need to migrate from v3 to v4:
 ## ⚠️ Important Notes
 
 1. **No `tailwind.config.ts`**: Tailwind v4 ignores this file. Use CSS only.
-2. **Color Format**: Use CSS custom properties: `--color-primary-600: #4f46e5`
-3. **Dark Mode**: Must explicitly enable with `@variant dark (.dark &)`
-4. **System Preference**: Disabled via `enableSystem={false}` for manual control
-5. **Persistence**: Theme saved in localStorage as `portfolio-theme`
+2. **Color Format**: Use CSS custom properties: `--color-primary-600: #dc2626`
+3. **Dark Mode**: Define it once with `@custom-variant dark (&:is(.dark *))`
+4. **Plugins**: Legacy plugins need `@plugin "<package-name>";`
+5. **System Preference**: Disabled via `enableSystem={false}` for manual control
+6. **Persistence**: Theme saved in localStorage as `portfolio-theme`
 
 ## 🐛 Troubleshooting
 

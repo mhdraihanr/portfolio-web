@@ -19,11 +19,16 @@ Dokumentasi lengkap tentang arsitektur middleware untuk route protection.
 
 ## 🎯 Overview
 
-Project ini menggunakan **modular middleware architecture** untuk memisahkan concerns dan meningkatkan maintainability.
+Project ini menggunakan **modular proxy architecture** untuk memisahkan concerns dan meningkatkan maintainability.
+
+> **Next.js 16:** konvensi `middleware` diganti menjadi `proxy`. File harus bernama
+> `proxy.ts` di root dan mengekspor fungsi `proxy`. `middleware.ts` tidak lagi
+> dieksekusi, sehingga guard di dalamnya mati tanpa error. Repo ini sudah
+> memakai `proxy.ts` sejak commit `f259c0d`.
 
 ### Key Components
 
-1. **`middleware.ts`** (root) - Main middleware file (Next.js convention)
+1. **`proxy.ts`** (root) - Entry point route protection (Next.js 16 convention)
 2. **`lib/middleware/auth-middleware.ts`** - Modular utility functions
 3. **`lib/auth.ts`** - Server-side auth helpers
 
@@ -35,23 +40,24 @@ Project ini menggunakan **modular middleware architecture** untuk memisahkan con
 
 ```
 portfolio-web/
-├── middleware.ts                      ← Main middleware (MUST be at root)
+├── proxy.ts                          ← Entry point (MUST be at root)
 ├── lib/
 │   ├── middleware/
 │   │   ├── auth-middleware.ts        ← Modular utilities
 │   │   └── README.md                 ← Documentation
 │   └── auth.ts                        ← Auth helpers
 └── app/
-    └── admin/                    ← Protected admin routes
+    └── studio/                   ← Protected admin routes
 ```
 
 ### ❌ **INCORRECT Locations:**
 
 ```
-❌ app/middleware.ts                   (Next.js won't recognize)
-❌ lib/middleware.ts                   (Next.js won't recognize)
-❌ src/middleware.ts                   (Only if using src/ directory)
-❌ components/middleware.ts            (Wrong location)
+❌ middleware.ts                       (ignored in Next.js 16, guard never runs)
+❌ app/proxy.ts                        (Next.js won't recognize)
+❌ lib/proxy.ts                        (Next.js won't recognize)
+❌ src/proxy.ts                        (Only if using src/ directory)
+❌ components/proxy.ts                 (Wrong location)
 ```
 
 ---
@@ -62,23 +68,23 @@ portfolio-web/
 
 #### **1. Next.js Convention (Required)**
 
-**Rule:** `middleware.ts` MUST be at project root.
+**Rule:** `proxy.ts` MUST be at project root.
 
 ```typescript
-// ✅ CORRECT: middleware.ts at root
+// ✅ CORRECT: proxy.ts at root
 portfolio-web/
-├── middleware.ts          ← Next.js finds this
+├── proxy.ts               ← Next.js finds this
 ├── app/
 └── lib/
 ```
 
 **Reason:**
 
-- Next.js only recognizes middleware at root level
-- Edge runtime requires specific file location
-- Single middleware file per project (Next.js limitation)
+- Next.js only recognizes the proxy file at root level
+- Edge runtime requires that specific file location
+- One proxy file per project (Next.js limitation)
 
-**Source:** [Next.js 15 Middleware Docs](https://nextjs.org/docs/app/building-your-application/routing/middleware)
+**Source:** [Next.js Proxy File Convention](https://nextjs.org/docs/app/api-reference/file-conventions/proxy)
 
 #### **2. Modular Utilities (Best Practice)**
 
@@ -102,7 +108,7 @@ lib/middleware/
 
 ## 🔧 Implementation
 
-### Main Middleware (`middleware.ts`)
+### Main Proxy (`proxy.ts`)
 
 **Location:** Root level (required by Next.js)
 
@@ -110,9 +116,9 @@ lib/middleware/
 
 ```typescript
 /**
- * Next.js Middleware for Route Protection
+ * Next.js Proxy for Route Protection
  *
- * Location: Must be at project root (Next.js convention)
+ * Location: Must be at project root (Next.js 16 convention)
  * Purpose: Protect admin routes with authentication
  */
 
@@ -125,7 +131,7 @@ import {
   getMiddlewareConfig,
 } from "@/lib/middleware/auth-middleware";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const { adminRoute } = getMiddlewareConfig();
 
@@ -174,25 +180,21 @@ export const config = {
 **Available Functions:**
 
 1. **`createMiddlewareSupabaseClient(request)`**
-
    - Create Supabase client for middleware
    - Handle cookies properly
    - Return client and response
 
 2. **`isProtectedRoute(pathname, adminRoute)`**
-
    - Check if route is admin route
    - Check if route is login page
    - Check if route is API route
 
 3. **`createAuthRedirect(request, adminRoute, pathname)`**
-
    - Create redirect to login page
    - Add `redirectTo` query parameter
    - Preserve original destination
 
 4. **`createDashboardRedirect(request, adminRoute)`**
-
    - Create redirect to dashboard
    - For authenticated users on login page
 
@@ -209,14 +211,14 @@ export const config = {
 ### Before (Monolithic)
 
 ```typescript
-// middleware.ts (80 lines)
+// proxy.ts (80 lines)
 // ❌ All logic in one file
 // ❌ Hard to test
 // ❌ Hard to maintain
 // ❌ Repeated code
 // ❌ No documentation
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // ... 80 lines of mixed logic ...
 }
 ```
@@ -224,7 +226,7 @@ export async function middleware(request: NextRequest) {
 ### After (Modular)
 
 ```typescript
-// middleware.ts (40 lines)
+// proxy.ts (40 lines)
 // ✅ Clean and readable
 // ✅ Well documented
 // ✅ Single responsibility
@@ -232,7 +234,7 @@ export async function middleware(request: NextRequest) {
 
 import { ... } from "@/lib/middleware/auth-middleware";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // ... clean, high-level logic ...
 }
 
@@ -267,7 +269,7 @@ import { isProtectedRoute } from "@/lib/middleware/auth-middleware";
 
 const { isAdminRoute, isLoginPage } = isProtectedRoute(
   "/admin/dashboard",
-  "admin"
+  "admin",
 );
 
 console.log(isAdminRoute); // true
@@ -349,19 +351,17 @@ describe("isProtectedRoute", () => {
 Test middleware with mock requests:
 
 ```typescript
-// __tests__/middleware.test.ts
-import { middleware } from "@/middleware";
+// __tests__/proxy.test.ts
+import { proxy } from "@/proxy";
 import { NextRequest } from "next/server";
 
-describe("middleware", () => {
+describe("proxy", () => {
   it("should redirect unauthenticated users to login", async () => {
-    const request = new NextRequest(
-      "http://localhost:3000/admin/dashboard"
-    );
-    const response = await middleware(request);
+    const request = new NextRequest("http://localhost:3000/studio/dashboard");
+    const response = await proxy(request);
 
     expect(response.status).toBe(307); // Redirect
-    expect(response.headers.get("location")).toContain("/admin/login");
+    expect(response.headers.get("location")).toContain("/studio/login");
   });
 });
 ```
@@ -370,13 +370,13 @@ describe("middleware", () => {
 
 ## 📖 Best Practices
 
-### 1. Keep Main Middleware Clean
+### 1. Keep the Proxy Clean
 
 **DO:**
 
 ```typescript
-// middleware.ts
-export async function middleware(request: NextRequest) {
+// proxy.ts
+export async function proxy(request: NextRequest) {
   // High-level orchestration only
   const { isAdminRoute } = isProtectedRoute(pathname, adminRoute);
   if (!isAdminRoute) return;
@@ -390,8 +390,8 @@ export async function middleware(request: NextRequest) {
 **DON'T:**
 
 ```typescript
-// middleware.ts
-export async function middleware(request: NextRequest) {
+// proxy.ts
+export async function proxy(request: NextRequest) {
   // ❌ Don't put all logic here
   const supabase = createServerClient(/* ... 20 lines ... */);
   const user = await supabase.auth.getUser();
@@ -415,7 +415,7 @@ export interface MiddlewareConfig {
 
 export function getMiddlewareConfig(): MiddlewareConfig {
   return {
-    adminRoute: process.env.ADMIN_ROUTE_SECRET || "admin",
+    adminRoute: process.env.ADMIN_ROUTE_SECRET || "studio",
     publicRoutes: ["/", "/about"],
   };
 }
@@ -502,23 +502,23 @@ export const config = {
 
 ## 🔗 Related Files
 
-- **`middleware.ts`** - Main middleware (root)
+- **`proxy.ts`** - Route protection entry point (root)
 - **`lib/middleware/auth-middleware.ts`** - Utility functions
 - **`lib/middleware/README.md`** - API documentation
 - **`lib/auth.ts`** - Server-side auth helpers
 - **`lib/supabase/server.ts`** - Supabase server client
-- **`app/admin/layout.tsx`** - Admin layout
+- **`app/studio/layout.tsx`** - Admin layout
 
 ---
 
 ## 📚 References
 
-- [Next.js 15 Middleware Docs](https://nextjs.org/docs/app/building-your-application/routing/middleware)
+- [Next.js Proxy File Convention](https://nextjs.org/docs/app/api-reference/file-conventions/proxy)
 - [Supabase SSR Guide](https://supabase.com/docs/guides/auth/server-side/nextjs)
 - [Edge Runtime](https://nextjs.org/docs/app/api-reference/edge)
 
 ---
 
-**Last Updated:** 2026-01-31
+**Last Updated:** 2026-11-09
 **Status:** ✅ Production Ready
 **Architecture:** Modular with utilities in `lib/middleware/`

@@ -4,7 +4,7 @@ import type { Project } from "@/types/project";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Github, Code2, ArrowRight } from "lucide-react";
+import { ExternalLink, Github, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
@@ -20,10 +20,6 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <ScrollReveal className="text-center mb-12" once>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4">
-              <Code2 className="w-4 h-4" />
-              <span className="text-sm font-medium">Portfolio</span>
-            </div>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               Featured Projects
             </h2>
@@ -77,7 +73,7 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
                             size="lg"
                             className="shadow-lg backdrop-blur-sm bg-white/95 dark:bg-gray-900/95 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700"
                             rightIcon={
-                              <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                             }
                           >
                             See Details
@@ -100,7 +96,7 @@ export function ProjectsClient({ projects }: ProjectsClientProps) {
                               size="lg"
                               className="shadow-lg backdrop-blur-sm bg-white/95 dark:bg-gray-900/95 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700"
                               rightIcon={
-                                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                               }
                             >
                               See Details
