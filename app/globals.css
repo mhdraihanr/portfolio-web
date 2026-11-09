@@ -178,6 +178,26 @@ html {
   }
 }
 
+@keyframes code-window-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-code-window-float {
+  animation: code-window-float 7s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-code-window-float {
+    animation: none;
+  }
+}
+
 .animate-scroll {
   animation: scroll 2s ease-in-out infinite;
 }

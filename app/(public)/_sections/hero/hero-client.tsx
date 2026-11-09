@@ -4,6 +4,7 @@ import { Button } from "@/components/ui";
 import { ArrowUpRight, Download, Github, Linkedin, Mail } from "lucide-react";
 import Link from "next/link";
 import LightRays from "@/components/effects/light-rays";
+import CodeWindow from "@/components/effects/code-window";
 import { useTheme } from "next-themes";
 import { useCallback, useEffect, useRef, useState } from "react";
 import localFont from "next/font/local";
@@ -204,145 +205,155 @@ export function HeroClient({ profile }: HeroClientProps) {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto mt-12 px-4 sm:px-6 lg:px-8">
-        <div className="space-y-4">
-          {/* Greeting with Shiny Text Animation */}
-          <div
-            className={
-              isMobileWidth
-                ? "opacity-100 animate-mobile-soft-in-down"
-                : `transition-opacity duration-700 ${
-                    animationsReady
-                      ? "opacity-100 animate-fade-in-down delay-200"
-                      : "opacity-0"
-                  }`
-            }
-          >
-            <AnimatedShinyText
-              className="text-lg md:text-xl font-medium inline-block"
-              shimmerWidth={220}
+        <div className="space-y-4 lg:grid lg:grid-cols-12 lg:items-center lg:gap-12 lg:space-y-0">
+          <div className="space-y-4 lg:col-span-7">
+            {/* Greeting with Shiny Text Animation */}
+            <div
+              className={
+                isMobileWidth
+                  ? "opacity-100 animate-mobile-soft-in-down"
+                  : `transition-opacity duration-700 ${
+                      animationsReady
+                        ? "opacity-100 animate-fade-in-down delay-200"
+                        : "opacity-0"
+                    }`
+              }
             >
-              {greeting}
-            </AnimatedShinyText>
+              <AnimatedShinyText
+                className="text-lg md:text-xl font-medium inline-block"
+                shimmerWidth={220}
+              >
+                {greeting}
+              </AnimatedShinyText>
+            </div>
+
+            {/* Main Title with Blur Text Animation */}
+            <div
+              className={`transition-opacity duration-500 ${
+                animationsReady ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              {animationsReady && (
+                <BlurText
+                  text={
+                    profile?.hero_title ??
+                    "Fullstack Developer turning ideas into working products."
+                  }
+                  delay={isMobileWidth ? 60 : 120}
+                  stepDuration={isMobileWidth ? 0.55 : 1}
+                  animateBy="words"
+                  direction="top"
+                  once
+                  className={`text-5xl md:text-6xl lg:text-7xl font-bold ${textTitle} leading-tight ${delargoDT.className}`}
+                />
+              )}
+            </div>
+
+            {/* Sub-headline - directly under the headline */}
+            <div
+              className={
+                isMobileWidth
+                  ? "pt-2 opacity-100 animate-mobile-soft-in-up"
+                  : `pt-2 transition-opacity duration-700 ${
+                      animationsReady
+                        ? "opacity-100 animate-fade-in-up delay-400"
+                        : "opacity-0"
+                    }`
+              }
+            >
+              <p
+                className={`max-w-2xl text-lg md:text-xl ${textTagline} leading-relaxed`}
+              >
+                {profile?.hero_tagline ??
+                  "I'm a Fullstack Developer passionate about building web applications that are fast, responsive and easy to use. From designing interfaces to structuring backend systems, focus on writing clean code and using modern tools to bring ideas to life."}
+              </p>
+            </div>
+
+            {/* CTA Buttons */}
+            <div
+              className={
+                isMobileWidth
+                  ? "flex flex-wrap items-center gap-4 pt-8 opacity-100 animate-mobile-soft-in-up"
+                  : `flex flex-wrap items-center gap-4 pt-8 transition-opacity duration-700 ${
+                      animationsReady
+                        ? "opacity-100 animate-fade-in-up delay-600"
+                        : "opacity-0"
+                    }`
+              }
+            >
+              <Link href="/projects">
+                <Button
+                  size="lg"
+                  className={`${ctaButton} ${ctaShade}`}
+                  rightIcon={
+                    <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  }
+                >
+                  View Projects
+                </Button>
+              </Link>
+
+              {profile?.cv_url ? (
+                <Link href={profile.cv_url} target="_blank">
+                  <Button
+                    size="lg"
+                    className={`${ctaOutline} ${ctaShade}`}
+                    rightIcon={
+                      <Download className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
+                    }
+                  >
+                    Download CV
+                  </Button>
+                </Link>
+              ) : null}
+            </div>
+
+            {/* Social Links */}
+            <div
+              className={
+                isMobileWidth
+                  ? `flex gap-4 pt-4 opacity-100 animate-mobile-soft-in-up delay-200 ${socialText}`
+                  : `flex gap-4 pt-4 transition-opacity duration-700 ${
+                      animationsReady
+                        ? "opacity-100 animate-fade-in-up delay-800"
+                        : "opacity-0"
+                    }`
+              }
+            >
+              <a
+                href="https://github.com/mhdraihanr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={socialLink}
+                aria-label="GitHub"
+              >
+                <Github className="h-6 w-6" />
+              </a>
+              <a
+                href="https://linkedin.com/in/mhdraihanr09"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={socialLink}
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="h-6 w-6" />
+              </a>
+              <a
+                href="mailto:raihanrafliansyah1234@gmail.com"
+                className={socialLink}
+                aria-label="Email"
+              >
+                <Mail className="h-6 w-6" />
+              </a>
+            </div>
           </div>
 
-          {/* Main Title with Blur Text Animation */}
           <div
-            className={`transition-opacity duration-500 ${
+            className={`hidden lg:col-span-5 lg:block transition-opacity duration-700 ${
               animationsReady ? "opacity-100" : "opacity-0"
             }`}
           >
-            {animationsReady && (
-              <BlurText
-                text={
-                  profile?.hero_title ??
-                  "Fullstack Developer turning ideas into working products."
-                }
-                delay={isMobileWidth ? 60 : 120}
-                stepDuration={isMobileWidth ? 0.55 : 1}
-                animateBy="words"
-                direction="top"
-                once
-                className={`text-6xl md:text-7xl lg:text-8xl font-bold ${textTitle} leading-tight ${delargoDT.className}`}
-              />
-            )}
-          </div>
-
-          {/* Sub-headline - directly under the headline */}
-          <div
-            className={
-              isMobileWidth
-                ? "pt-2 opacity-100 animate-mobile-soft-in-up"
-                : `pt-2 transition-opacity duration-700 ${
-                    animationsReady
-                      ? "opacity-100 animate-fade-in-up delay-400"
-                      : "opacity-0"
-                  }`
-            }
-          >
-            <p
-              className={`max-w-2xl text-lg md:text-xl ${textTagline} leading-relaxed`}
-            >
-              {profile?.hero_tagline ??
-                "I'm a Fullstack Developer passionate about building web applications that are fast, responsive and easy to use. From designing interfaces to structuring backend systems, focus on writing clean code and using modern tools to bring ideas to life."}
-            </p>
-          </div>
-
-          {/* CTA Buttons */}
-          <div
-            className={
-              isMobileWidth
-                ? "flex flex-wrap items-center gap-4 pt-8 opacity-100 animate-mobile-soft-in-up"
-                : `flex flex-wrap items-center gap-4 pt-8 transition-opacity duration-700 ${
-                    animationsReady
-                      ? "opacity-100 animate-fade-in-up delay-600"
-                      : "opacity-0"
-                  }`
-            }
-          >
-            <Link href="/projects">
-              <Button
-                size="lg"
-                className={`${ctaButton} ${ctaShade}`}
-                rightIcon={
-                  <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                }
-              >
-                View Projects
-              </Button>
-            </Link>
-
-            {profile?.cv_url ? (
-              <Link href={profile.cv_url} target="_blank">
-                <Button
-                  size="lg"
-                  className={`${ctaOutline} ${ctaShade}`}
-                  rightIcon={
-                    <Download className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
-                  }
-                >
-                  Download CV
-                </Button>
-              </Link>
-            ) : null}
-          </div>
-
-          {/* Social Links */}
-          <div
-            className={
-              isMobileWidth
-                ? `flex gap-4 pt-4 opacity-100 animate-mobile-soft-in-up delay-200 ${socialText}`
-                : `flex gap-4 pt-4 transition-opacity duration-700 ${
-                    animationsReady
-                      ? "opacity-100 animate-fade-in-up delay-800"
-                      : "opacity-0"
-                  }`
-            }
-          >
-            <a
-              href="https://github.com/mhdraihanr"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={socialLink}
-              aria-label="GitHub"
-            >
-              <Github className="h-6 w-6" />
-            </a>
-            <a
-              href="https://linkedin.com/in/mhdraihanr09"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={socialLink}
-              aria-label="LinkedIn"
-            >
-              <Linkedin className="h-6 w-6" />
-            </a>
-            <a
-              href="mailto:raihanrafliansyah1234@gmail.com"
-              className={socialLink}
-              aria-label="Email"
-            >
-              <Mail className="h-6 w-6" />
-            </a>
+            <CodeWindow className="ml-auto w-full max-w-md lg:-translate-y-6" />
           </div>
         </div>
       </div>

@@ -48,7 +48,7 @@ logo wall, no feature-card grid, no fake metrics.
 
 | Role                  | Face                                 | Size / weight                          | Why                                                                                                                       |
 | --------------------- | ------------------------------------ | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| Display (hero title)  | **Delargo DT Condensed** Bold        | `text-6xl` mobile → `text-8xl` desktop | Condensed bold reads as an editorial masthead, not a product headline. It gives the page a voice that Inter/Geist cannot. |
+| Display (hero title)  | **Delargo DT Condensed** Bold        | `text-5xl` mobile → `text-7xl` desktop | Condensed bold reads as an editorial masthead, not a product headline. It gives the page a voice that Inter/Geist cannot. |
 | Display (alt weights) | Delargo DT Condensed Regular / Black | on demand                              | Shipped alongside Bold; use only when a hierarchy step needs it.                                                          |
 | Body / UI             | **Geist** sans                       | `text-base` body, `text-lg` greeting   | Neutral, highly legible at small sizes, and keeps the display font as the only loud voice.                                |
 
@@ -158,12 +158,42 @@ composition, not decoration. That makes restraint more important, not less.
 | Element                | Allowed | Reason                                                                                                                                                |
 | ---------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `LightRays` background | ✅      | It _is_ the hero's subject. Dark = `#ffffff` at full opacity; light = `#ff7272` at `saturation 1`, `lightSpread 0.55`, `rayLength 1.4`, `opacity-90`. |
+| `CodeWindow` panel     | ✅      | See "Hero composition" below. Static, unlit, desktop only.                                                                                            |
 | Primary CTA shadow     | ✅      | Elevation marker (R-12): it lifts the one action off the page.                                                                                        |
 | Social icon buttons    | ❌ flat | They sit over the rays. Adding shadow would compete with the CTA and triplicate the glow.                                                             |
 | Cards, badges, borders | ❌      | No glow.                                                                                                                                              |
 
 **Dose cap:** at most **2** glow sources on the hero (rays + CTA). Cap is
 deliberate — glow everywhere amplifies nothing.
+
+### Hero composition
+
+The hero is a 7/5 grid on `lg+`: copy left, `CodeWindow` right. Below `lg` the
+panel is removed (`hidden`) and the copy stacks single-column, so a phone never
+pays for it.
+
+> **Decision (2026-11-09, antislop R-07 exception):** a tilted editor window sits
+> in the right-hand void. Alone, not as a cluster — no orbit ring, no sphere, no
+> extra glow. Its justification is that a developer's portfolio is judged on code,
+> so showing code is content, not decoration. The panel carries **no** light
+> source of its own; `LightRays` remains the only one. If a second ambient effect
+> is ever bolted onto it, this exception is void and the panel comes out.
+>
+> Syntax colours resolve to `primary-400` / `primary-300` / `gray-*` only. No
+> second accent. Copy inside it is real Go code, not motivational
+> filler — a fake snippet is decoration and would fail the purpose test.
+>
+> Depth comes from two `translate3d` layers offset **up-left and back**, never
+> right: the panel is `ml-auto`, so any rightward offset escapes the hero's
+> `overflow-hidden` clip. Width caps at `max-w-md` for the same reason.
+>
+> **Both themes.** The panel is light-first with `dark:` overrides: `bg-white/70`
+> → `dark:bg-gray-950/35`, `border-gray-900/10` → `dark:border-white/10`. Syntax
+> tokens pair the same way — light resolves to `primary-600` / `gray-900` /
+> `gray-700` / `gray-600`, because `primary-400` on white is 2.6:1 and fails AA.
+>
+> The snippet must fit `max-w-md` without horizontal scroll. Long composite
+> literals get broken across lines the way `gofmt` would, not truncated.
 
 ### Glass
 
